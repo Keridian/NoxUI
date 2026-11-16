@@ -1396,7 +1396,7 @@ local REFRESH_ADDON_STEPS = {
             if _G._ECME_Apply then _G._ECME_Apply() end
         end
     end,
-    -- Cursor (style + position), Crosshair, Self Combat Text, and the QoL
+    -- Cursor (style + position), Crosshair and the QoL
     -- extras (FPS counter + Secondary Stats -- one call for both: the FPS
     -- readout may be drawn by the Secondary Stats block, so the two owners
     -- re-evaluate together).
@@ -1406,7 +1406,6 @@ local REFRESH_ADDON_STEPS = {
         if _G._ECL_ApplyGCDCircle then _G._ECL_ApplyGCDCircle() end
         if _G._ECL_ApplyCastCircle then _G._ECL_ApplyCastCircle() end
         if NoxUI._applyCrosshair then NoxUI._applyCrosshair() end
-        if NoxUI._applySelfCombatText then NoxUI._applySelfCombatText() end
         if NoxUI._applyUpgradeTooltips then NoxUI._applyUpgradeTooltips() end
         if NoxUI._applyFPSDisplay then
             NoxUI._applyFPSDisplay()

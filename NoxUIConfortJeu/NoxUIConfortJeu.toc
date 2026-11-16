@@ -24,7 +24,6 @@ NoxUIConfortJeu_Shifter.lua
 NoxUIConfortJeu_MovementAlert.lua
 NoxUIConfortJeu_RaidTools.lua
 NoxUIConfortJeu_RaidBuffCheck.lua
-NoxUIConfortJeu_SelfCombatText.lua
 NoxUIConfortJeu_Alerts.lua
 NoxUIConfortJeu_UpgradeTooltip.lua
 nui_amelioration_calcul.lua

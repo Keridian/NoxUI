@@ -75,8 +75,6 @@ qolFrame:SetScript("OnEvent", function(self)
     -- Transparent World Map Sidebars (NoxUI._applyMapSidebars, further down;
     -- not on WoW Forever): nothing is built while off.
     if NoxUIDB.mapSidebarsClear and NoxUI._applyMapSidebars then NoxUI._applyMapSidebars() end
-    -- Self Combat Text (NoxUIConfortJeu_SelfCombatText.lua): nothing is built while off.
-    ns.SCT_Refresh()
     if NoxUI._applyUpgradeTooltips then NoxUI._applyUpgradeTooltips() end
 
     ---------------------------------------------------------------------------

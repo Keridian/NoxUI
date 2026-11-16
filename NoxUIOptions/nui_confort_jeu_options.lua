@@ -270,129 +270,6 @@ local function ShowTransformsPopup()
     transformsPopup._dimmer:Show()
 end
 
--------------------------------------------------------------------------------
---  SELF COMBAT TEXT section of the QoL page (runtime:
---  NoxUIConfortJeu_SelfCombatText.lua, settings through its SCT_Get/SCT_Set)
--------------------------------------------------------------------------------
-local function BuildCombatTextSection(parent, y, target)
-    local W = NoxUI.Widgets
-    local qns = NoxUI._ModuleNS["NoxUIConfortJeu"]
-    local SCTGet, SCTSet = qns.SCT_Get, qns.SCT_Set
-    if target then SCTGet, SCTSet = qns.TargetCombatText.Get, qns.TargetCombatText.Set end
-    local title = target and "Target Combat Text" or "Self Combat Text"
-    local tooltip = target
-        and "Shows damage above the target frame. On Forever, target events do not identify the attacker, so this display is limited to solo combat."
-        or "Shows your damage taken, healing, avoids and combat enter/leave above the player frame instead of Blizzard's combat text, whose other messages are hidden while this is on. Move it in Unlock Mode."
-    local _, h, hdr
-
-    hdr, h = W:SectionHeader(parent, target and "TARGET COMBAT TEXT" or "SELF COMBAT TEXT", y);  y = y - h
-
-    local function sctOff() return not SCTGet("enabled") end
-    NoxUI.BuildSectionUnlockJump(hdr, { key = target and "NUI_TargetCombatText" or "EUI_SelfCombatText", disabled = sctOff, disabledTooltip = title })
-    local function sctToggle(text, key)
-        return { type="toggle", text=text,
-          disabled=sctOff, disabledTooltip=title,
-          getValue=function() return SCTGet(key) end,
-          setValue=function(v) SCTSet(key, v); NoxUI:RefreshPage() end }
-    end
-    local function sctDropdown(text, key, values, order)
-        return { type="dropdown", text=text, values=values, order=order,
-          disabled=sctOff, disabledTooltip=title,
-          getValue=function() return SCTGet(key) end,
-          setValue=function(v) SCTSet(key, v) end }
-    end
-    -- A category toggle's colour, locked while the feature or that category is off
-    local function sctSwatch(rgn, key, colorKey, label)
-        if NoxUI._prebuilding then return end
-        NoxUI.BuildInlineSwatches(rgn, { {
-            disabled = function() return sctOff() or not SCTGet(key) end,
-            disabledTooltip = function() return sctOff() and title or label end,
-            getValue = function() local c = SCTGet(colorKey); return c.r, c.g, c.b end,
-            setValue = function(r, g, b) SCTSet(colorKey, { r = r, g = g, b = b }) end,
-        } })
-    end
-
-    local sctRow
-    sctRow, h = W:DualRow(parent, y,
-        { type="toggle", text=title,
-          tooltip=tooltip,
-          getValue=function() return not sctOff() end,
-          setValue=NoxUI.SectionToggleSetValue(function(v) SCTSet("enabled", v) end) },
-        { type="slider", text="Combat Text Size", min=10, max=48, step=1,
-          disabled=sctOff, disabledTooltip=title,
-          getValue=function() return SCTGet("size") end,
-          setValue=function(v) SCTSet("size", v) end });  y = y - h
-    do
-        NoxUI.BuildInlineCog(sctRow._leftRegion, { disabled = sctOff, disabledTooltip = title,
-            title = title,
-            rows = {
-                { type="slider", label="Scroll Distance", min=20, max=300, step=5,
-                  get=function() return SCTGet("rise") end,
-                  set=function(v) SCTSet("rise", v) end },
-                { type="slider", label="Scroll Duration", min=0.5, max=4, step=0.1,
-                  get=function() return SCTGet("duration") end,
-                  set=function(v) SCTSet("duration", v) end },
-                { type="slider", label="Crit Scale", min=1, max=3, step=0.1,
-                  get=function() return SCTGet("critScale") end,
-                  set=function(v) SCTSet("critScale", v) end },
-                { type="toggle", label="Stagger Hits",
-                  tooltip="Spaces out hits that land together so none hides another.",
-                  get=function() return SCTGet("stagger") end,
-                  set=function(v) SCTSet("stagger", v) end },
-            },
-        })
-    end
-
-    -- Section gate: the rows below exist only while Self Combat Text is on (the
-    -- toggle's SectionToggleSetValue rebuilds the page).
-    if sctOff() then return y end
-
-    _, h = W:DualRow(parent, y,
-        sctDropdown("Animation", "anim",
-            { straight = "Straight", fountain = "Fountain", static = "Static" },
-            { "straight", "fountain", "static" }),
-        sctDropdown("Scroll Direction", "direction",
-            { up = "Up", down = "Down" }, { "up", "down" }));  y = y - h
-
-    local fontValues, fontOrder = NoxUI.BuildFontDropdownData()
-    fontValues["__combat"] = { text = "Combat Text Font" }
-    table.insert(fontOrder, 1, "__combat")
-    _, h = W:DualRow(parent, y,
-        sctDropdown("Font", "font", fontValues, fontOrder),
-        sctDropdown("Outline", "outline",
-            { NONE = "None", OUTLINE = "Outline", THICKOUTLINE = "Thick Outline" },
-            { "NONE", "OUTLINE", "THICKOUTLINE" }));  y = y - h
-
-    _, h = W:DualRow(parent, y,
-        sctToggle("Text Shadow", "shadow"),
-        sctToggle("Abbreviate Numbers", "abbreviate"));  y = y - h
-
-    if target then
-        local label = "Show Target Damage"
-        local row
-        row, h = W:DualRow(parent, y, sctToggle(label, "damage"),
-            { type="button", text="Preview Target Combat Text", onClick=qns.TargetCombatText.Preview })
-        sctSwatch(row._leftRegion, "damage", "damageColor", label)
-        return y - h
-    end
-
-    local sctRow2
-    sctRow2, h = W:DualRow(parent, y,
-        sctToggle("Show Damage Taken", "damage"),
-        sctToggle("Show Healing Received", "heal"));  y = y - h
-    sctSwatch(sctRow2._leftRegion, "damage", "damageColor", "Show Damage Taken")
-    sctSwatch(sctRow2._rightRegion, "heal", "healColor", "Show Healing Received")
-
-    local sctRow3
-    sctRow3, h = W:DualRow(parent, y,
-        sctToggle("Show Avoidance", "avoid"),
-        sctToggle("Show Combat Enter/Leave", "combat"));  y = y - h
-    sctSwatch(sctRow3._leftRegion, "avoid", "avoidColor", "Show Avoidance")
-    sctSwatch(sctRow3._rightRegion, "combat", "combatColor", "Show Combat Enter/Leave")
-
-    return y
-end
-
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:SetScript("OnEvent", function(self)
@@ -2398,13 +2275,6 @@ initFrame:SetScript("OnEvent", function(self)
 
         _, h = W:Spacer(parent, y, 20);  y = y - h
 
-        y = BuildCombatTextSection(parent, y)
-        if NoxUI.IS_FOREVER then
-            _, h = W:Spacer(parent, y, 20); y = y - h
-            y = BuildCombatTextSection(parent, y, true)
-        end
-        _, h = W:Spacer(parent, y, 20);  y = y - h
-
         ---------------------------------------------------------------------------
         --  GROUP FINDER (INSTANCES on WoW Forever)
         ---------------------------------------------------------------------------
@@ -2908,7 +2778,6 @@ initFrame:SetScript("OnEvent", function(self)
             if NoxUI._applyAutoOpenContainers then NoxUI._applyAutoOpenContainers() end
             if NoxUI._ShutdownShifter then NoxUI._ShutdownShifter() end
             if _G._EUI_AutoLogging_Check then _G._EUI_AutoLogging_Check() end
-            NoxUI._ModuleNS["NoxUIConfortJeu"].SCT_Reset()
             NoxUI:InvalidatePageCache()
         end,
         -- Tears down Duration Warning, Raid Tools, and Movement Alert
