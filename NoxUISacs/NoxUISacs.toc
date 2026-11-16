@@ -1,0 +1,35 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Sacs
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: A beautiful visual refresh of Blizzard Bags with intuitive organization.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIBagsDB, NoxUIBagsInventoryDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Module database (options page lives in NoxUIOptions)
+NoxUISacs_DB.lua
+
+# Core
+NoxUISacs_Categories.lua
+NoxUISacs.lua
+nui_sacs_style.lua
+nui_sacs_donnees.lua
+nui_sacs_entete.lua
+nui_sacs_pied.lua
+nui_sacs_partage.lua
+nui_sacs_emplacements.lua
+nui_sacs_selectionner.lua
+nui_sacs_barre_laterale.lua
+nui_sacs_actualiser.lua
+nui_sacs_debut.lua
+NoxUISacs_Grid.lua
+NoxUISacs_List.lua
+NoxUISacs_Compact.lua
+NoxUISacs_Bank.lua
+NoxUISacs_QuickActions.lua
+NoxUISacs_Offline.lua
+NoxUISacs_OfflineView.lua
+NoxUISacs_AutoGold.lua

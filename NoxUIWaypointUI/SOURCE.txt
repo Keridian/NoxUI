@@ -1,0 +1,3 @@
+Waypoint UI 1.7.5 par AdaptiveX
+https://github.com/Adaptvx/Waypoint-UI/tree/1.7.5
+Licence GPL version 3. Modifications NoxUI du manifeste et du nom du dossier.

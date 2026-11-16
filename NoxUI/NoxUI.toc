@@ -1,0 +1,118 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r
+## Notes: Shared framework for the NoxUI addon suite
+## Author: Nox
+## Version: 0.2.3.4
+## SavedVariables: NoxUIDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Pre-12.1 client failsafe -- MUST load first (arms the per-file guard line)
+NoxUI_ClientGate.lua
+NoxUI_FrancisationModules.lua
+
+# Libraries
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibSharedMedia-3.0\LibSharedMedia-3.0.lua
+Libs\LibDeflate\LibDeflate.lua
+Libs\LibKeystone\LibKeystone.lua [AllowLoadGameType standard]
+Libs\LibSpecialization\LibSpecialization.lua [AllowLoadGameType standard]
+
+# Lightweight addon framework (replaces Ace3)
+NoxUI_Lite.lua
+
+# Game settings NoxUI changes, recorded so Uninstall EUI can put them back
+# (before any file that changes one)
+NoxUI_Uninstall.lua
+
+# Central multi-language engine (resolves locale + glyph font; defines L/Lf/EnKey)
+# Translation data lives in the LoadOnDemand NoxUILangues child addon,
+# loaded by the engine at ADDON_LOADED for non-English locales only.
+NoxUI_Locale.lua
+
+# Central number-abbreviation engine (K/M/B by default; CJK wan/yi grouping
+# tables keyed by locale; a locale file may register its own algorithm).
+NoxUI_NumberFormat.lua
+
+# One-time data migration (runs before child addons init)
+NoxUI_Migration.lua
+
+# Early startup -- applies engine-cached settings before PLAYER_LOGIN
+NoxUI_Startup.lua
+
+NoxUI_GoldLedger.lua
+
+# Shared NoxUI Files
+NoxUI_PixelPerfect.lua
+NoxUI.lua
+NoxUI_AbsorbGlow.lua
+NoxUI_Panel.lua
+NoxUI_VisibilityRules.lua
+NoxUI_SharedHelpers.lua
+NoxUI_Popups.lua
+NoxUI_TextTags.lua
+NoxUI_Colors.lua
+NoxUI_Fonts.lua
+NoxUI_ProfileSync.lua
+NoxUI_RetailAtlas.lua
+NoxUI_BuffPresets.lua
+NoxUI_UICore.lua
+NoxUI_Ticker.lua
+NoxUI_Mouse.lua
+NoxUI_BlizzardParty.lua
+NoxUI_KickData.lua
+NoxUI_Kick.lua
+NoxUI_MenuFallbacks.lua
+NoxUI_SignupHelpers.lua
+NoxUI_GlobalSearch.lua
+NoxUI_Visibility.lua
+NoxUI_Presets.lua
+NoxUI_Profiles.lua
+nui_macro_fabrique.lua
+nui_deverrouillage_mode_point_ancrages.lua
+nui_deverrouillage_mode.lua
+nui_deverrouillage_mode_ancrages.lua
+nui_deverrouillage_mode_positions.lua
+nui_deverrouillage_mode_outils.lua
+nui_deverrouillage_mode_point_visuels.lua
+nui_deverrouillage_mode_point_selection.lua
+nui_deverrouillage_mode_deplacements.lua
+nui_deverrouillage_mode_session.lua
+nui_deverrouillage_mode_filtre.lua
+NoxUI_Glows.lua
+NoxUI_RoundedCorners.lua
+NoxUI_ClassicArt.lua
+NoxUI_Range.lua
+NoxUI_AuraKit.lua
+NoxUI_WarriorCharges.lua
+NoxUI_ManaRegenSpark.lua
+NoxUI_SpellCostPrediction.lua
+# Friends list kit: realm regions, the 12.1 Social UI tiles and invite auto-accept,
+# shared by the Friends List module (retail) and Blizzard Skins+ (WoW Forever)
+NoxUI_FriendsKit.lua
+# Custom friends list: rows of our own over the Social UI friends list, for a
+# tile height and friend groups (its hosts start it after the kit's tiles)
+NoxUI_FriendsList.lua
+NoxUI_FirstInstall.lua
+NoxUI_StyleCards.lua
+NoxUI_StyleChoicePopup.lua
+NoxUI_KickTrackerPopup.lua
+NoxUI_VideoGuides.lua
+
+# Spec Overrides (per-spec setting overrides within a profile)
+NoxUI_SpecOverrides.lua
+nui_specialisation_exceptions_collecte.lua
+nui_specialisation_exceptions_couches.lua
+nui_specialisation_exceptions_conditionnel.lua
+nui_specialisation_exceptions_bordures.lua
+nui_specialisation_exceptions_session.lua
+nui_specialisation_exceptions_fenetres.lua
+nui_specialisation_exceptions_liste_page.lua
+nui_specialisation_exceptions_liaisons.lua
+
+# Conditional Overrides engine (Dungeon/Raid/Arena/BG/Solo/Keybind conditions;
+# override integration lives in nui_specialisation_exceptions_conditionnel.lua)
+NoxUI_Conditions.lua
+
+nui_xp_quetes.lua

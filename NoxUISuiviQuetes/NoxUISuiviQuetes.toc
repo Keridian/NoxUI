@@ -1,0 +1,26 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Suivi des quêtes
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: A clean, updated reskin of Blizzard's Quest Tracker.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIQuestTrackerDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Loader
+NoxUISuiviQuetes.lua
+
+# Modules
+NoxUISuiviQuetes_Skin.lua
+NoxUISuiviQuetes_Visibility.lua
+NoxUISuiviQuetes_QoL.lua
+NoxUISuiviQuetes_Position.lua
+NoxUISuiviQuetes_Forever.lua
+NoxUISuiviQuetes_Custom.lua
+NoxUISuiviQuetes_QuestAudio.lua
+NoxUISuiviQuetes_Details.lua
+NoxUISuiviQuetes_QuestLinks.lua
+
+# Options

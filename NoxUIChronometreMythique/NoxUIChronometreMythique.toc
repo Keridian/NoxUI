@@ -1,0 +1,26 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## AllowLoadGameType: standard
+## Title: |cffB8C3CCNoxUI|r Chronomètre mythique
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: A simple Mythic+ timer with full tracking customizations.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIMythicTimerDB
+## SavedVariablesPerCharacter: NoxUIMythicRunsDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Lua
+NoxUIChronometreMythique.lua
+
+# Mythic+ Tools features
+nui_mythique_chronometre_ou.lua
+nui_mythique_chronometre_cible_sort_barres.lua
+nui_mythique_chronometre_cible_focus_barres.lua
+nui_mythique_chronometre_parcours_resume.lua
+nui_mythique_chronometre_interruption_moteur.lua
+nui_mythique_chronometre_interruption_plaques.lua
+nui_mythique_chronometre_interruption_barres.lua
+
+# Options

@@ -1,0 +1,62 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Gestion des recharges
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: A CDM replacement focused on performance, customizations and alerts.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUICooldownManagerDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Lua
+NoxUIGestionRecharges.lua
+nui_gestion_recharges_stockage.lua
+nui_gestion_recharges_specialisation.lua
+nui_gestion_recharges_lueurs.lua
+nui_gestion_recharges_blizzard.lua
+nui_gestion_recharges_barres.lua
+nui_gestion_recharges_icones.lua
+nui_gestion_recharges_focus_interruption.lua
+nui_gestion_recharges_reconstruction.lua
+nui_gestion_recharges_synchronisation.lua
+nui_gestion_recharges_cycle_vie.lua
+nui_gestion_recharges_rotation.lua
+nui_gestion_recharges_evenements.lua
+NoxUICdmKeybindStyle.lua
+NoxUICdmRotationIcon.lua
+NoxUICdmHooks.lua
+nui_gestion_recharges_liaison_resolution.lua
+nui_gestion_recharges_liaison_icone_style.lua
+nui_gestion_recharges_liaison_icone_surveillance.lua
+nui_gestion_recharges_liaison_decorer.lua
+nui_gestion_recharges_liaison_bijoux.lua
+nui_gestion_recharges_liaison_prereglage_cadres.lua
+nui_gestion_recharges_liaison_prereglage_recharges.lua
+nui_gestion_recharges_liaison_reancrage.lua
+nui_gestion_recharges_liaison_personnalise_ameliorations.lua
+nui_gestion_recharges_liaison_visionneuses.lua
+nui_gestion_recharges_liaison_pression_miroir.lua
+NoxUICdmSpellPicker.lua
+NoxUICdmBarGlows.lua
+NoxUICdmBarGlowConditions.lua
+NoxUICdmBuffBars.lua
+nui_gestion_recharges_amelioration_barre_stockage.lua
+nui_gestion_recharges_amelioration_barre_groupes.lua
+nui_gestion_recharges_amelioration_barre_cadres.lua
+nui_gestion_recharges_amelioration_barre_attribuer.lua
+nui_gestion_recharges_amelioration_barre_prereglages.lua
+nui_gestion_recharges_amelioration_barre_recharge.lua
+nui_gestion_recharges_amelioration_barre_actualisation.lua
+nui_gestion_recharges_amelioration_barre_construction.lua
+nui_gestion_recharges_amelioration_barre_deverrouillage.lua
+NoxUICdmTbbDecimals.lua
+NoxUICdmFakeActive.lua
+NoxUICdmRPTSync.lua
+NoxUICdmTalentConditions.lua
+NoxUICdmStanceBar.lua
+nui_gestion_recharges_forever_anti_rognage.lua
+nui_gestion_recharges_aura_icones.lua
+nui_gestion_recharges_aura_liee_forever.lua
+
+# Options

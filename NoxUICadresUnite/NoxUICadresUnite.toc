@@ -1,0 +1,46 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Cadres d’unité
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Simple unit frames with a modern visual style.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIUnitFramesDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+nui_unite_cadres_moteur.lua
+NoxUICadresUnite.lua
+nui_unite_cadres_texte.lua
+nui_unite_cadres_portrait.lua
+nui_unite_cadres_barre_incantation.lua
+nui_unite_cadres_disposition.lua
+nui_unite_cadres_absorption.lua
+nui_unite_cadres_puissance.lua
+nui_unite_cadres_constructeurs.lua
+nui_unite_cadres_classe_puissance.lua
+nui_unite_cadres_menace.lua
+nui_unite_cadres_origine_styles.lua
+nui_unite_cadres_recharger.lua
+nui_unite_cadres_forever_supplements.lua
+nui_unite_cadres_visibilite.lua
+nui_unite_cadres_initialisation.lua
+nui_unite_cadres_options_configuration.lua
+nui_unite_cadres_deverrouillage.lua
+nui_unite_cadres_cycle_vie.lua
+nui_unite_cadres_forever_forme_barre.lua
+NoxUICadresUnite_PlayerAuraBars.lua
+nui_joueur_aura_barres_style.lua
+nui_joueur_aura_barres_groupes.lua
+nui_joueur_aura_barres_configuration.lua
+nui_joueur_aura_barres_barres.lua
+nui_joueur_aura_barres_visibilite.lua
+nui_joueur_aura_barres_filtres.lua
+nui_joueur_aura_barres_personnalise_barres.lua
+nui_joueur_aura_barres_apercu.lua
+nui_joueur_aura_barres_cycle_vie.lua
+nui_unite_cadres_forever_enchantements.lua
+nui_unite_cadres_aura_conteneurs.lua
+
+# Options

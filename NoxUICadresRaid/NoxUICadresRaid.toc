@@ -1,0 +1,72 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Cadres de raid et de groupe
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Incredibly light performance, modern raid and party frames with endless flexibility.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIRaidFramesDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUICadresRaid.lua
+nui_raid_cadres_texte_touches.lua
+nui_raid_cadres_couleurs.lua
+nui_raid_cadres_texte_dessin.lua
+nui_raid_cadres_compact.lua
+nui_raid_cadres_absorption.lua
+nui_raid_cadres_style.lua
+nui_raid_cadres_mise_a_jour.lua
+nui_raid_cadres_boss_cadres.lua
+nui_raid_cadres_supplement_cadres.lua
+nui_raid_cadres_familier_cadres.lua
+nui_raid_cadres_tri.lua
+nui_raid_cadres_disposition.lua
+nui_raid_cadres_recharger.lua
+nui_raid_cadres_visibilite.lua
+nui_raid_cadres_evenements.lua
+nui_raid_cadres_groupe.lua
+nui_raid_cadres_groupe_cibles.lua
+nui_raid_cadres_groupe_disposition.lua
+nui_raid_cadres_supplements.lua
+nui_raid_cadres_cycle_vie.lua
+
+# Options preview (fake raid/party members while the options panel is open)
+nui_raid_cadres_apercu.lua
+nui_raid_cadres_apercu_auras.lua
+nui_raid_cadres_apercu_ameliorations.lua
+nui_raid_cadres_apercu_cadre.lua
+nui_raid_cadres_apercu_roles.lua
+nui_raid_cadres_apercu_donnees.lua
+nui_raid_cadres_apercu_raid.lua
+nui_raid_cadres_apercu_taille.lua
+nui_raid_cadres_apercu_groupe.lua
+
+# Blizzard Style / Classic WoW UI (edge, highlights, defaults)
+nui_raid_cadres_origine.lua
+
+# Party portrait (every style)
+nui_raid_cadres_portrait.lua
+
+# Click Casting
+nui_raid_cadres_clic_incantation.lua
+
+# Buff Manager
+nui_raid_cadres_amelioration_gestionnaire.lua
+
+# 12.1 Aura Containers
+nui_raid_cadres_aura_conteneurs.lua
+
+# 12.1 Debuff Manager (self-gated; inert on 12.0)
+nui_raid_cadres_affaiblissement_gestionnaire.lua
+
+# 12.1 Buff Manager v2: spell -> filter -> indicator model (self-gated)
+nui_raid_cadres_amelioration_gestionnaire_2.lua
+
+# WoW Forever: Missing Buffs indicator (returns on every other client)
+nui_raid_cadres_forever_manquant_ameliorations.lua
+
+# 12.1 Manager options pages (self-gated; inert on 12.0)
+
+# Options

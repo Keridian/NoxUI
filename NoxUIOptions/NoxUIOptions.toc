@@ -1,0 +1,126 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Options
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: NoxUI settings panel. Loads on demand when you open NoxUI options.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## LoadOnDemand: 1
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Frame pool first (page reuse: the widget factory and the page builders create
+# through it), then the widget factory: everything below builds pages with it.
+# File order mirrors the original suite load order (parent files, then children A-Z).
+NoxUI_FramePool.lua
+NoxUI_Widgets.lua
+NoxUI_Widgets_Color.lua
+NoxUI_Widgets_Rows.lua
+NoxUI_Widgets_CogPopup.lua
+NoxUI_Widgets_SegmentedControl.lua
+NoxUI_Widgets_ApplyToAll.lua
+NoxUI_Widgets_RowAddons.lua
+NoxUI_Widgets_AuraPopups.lua
+NoxUI_Widgets_CheckboxDropdowns.lua
+NoxUI_Widgets_Visibility.lua
+NoxUI_Widgets_PageParts.lua
+NoxUI_GlowOptions.lua
+NoxUI_TalentConditionsPopup.lua
+nui_couleurs_options.lua
+nui_profils_options.lua
+nui_quoi_nouveau_options.lua
+nui_general_options.lua
+nui_graphismes_options.lua
+nui_reglages_natifs.lua
+nui_openmap_options.lua
+nui_butin_lumineux_options.lua
+nui_waypoint_options.lua
+nui_dialogue_options.lua
+nui_polices_options.lua
+nui_textures_options.lua
+nui_lueurs_options.lua
+nui_manette_options.lua
+nui_nombre_format_options.lua
+nui_style_options.lua
+
+ActionBars_Options\AnimationsPage_Options.lua
+ActionBars_Options\BarAppearance_Options.lua
+ActionBars_Options\BarVisibilityLayout_Options.lua
+ActionBars_Options\LivePreview_Options.lua
+ActionBars_Options\XPBarPage_Options.lua
+ActionBars_Options\MenuBagsRepPage_Options.lua
+nui_action_barres_options.lua
+nui_aura_amelioration_rappels_options.lua
+nui_sacs_options.lua
+nui_blizzard_apparence_options.lua
+nui_discussion_options.lua
+CooldownManager_Options\BarsPage_Options.lua
+CooldownManager_Options\BuffBarsPage_Options.lua
+CooldownManager_Options\LivePreview_Options.lua
+CooldownManager_Options\Pickers_Options.lua
+CooldownManager_Options\SpellPicker_Options.lua
+nui_recharge_gestionnaire_options.lua
+nui_recharge_gestionnaire_talent_conditions.lua
+nui_recharge_gestionnaire_barre_lueur_conditions.lua
+nui_degats_compteurs_options.lua
+NoxUIBarresDonnees_Options.lua
+nui_forever_essentiels_options.lua
+nui_forever_essentiels_general_options.lua
+nui_forever_essentiels_voyage_options.lua
+nui_forever_essentiels_menace_options.lua
+nui_forever_essentiels_butin_options.lua
+nui_forever_essentiels_macro_modele_options.lua
+nui_forever_essentiels_macros_options.lua
+nui_amis_options.lua
+nui_equipement_gestionnaire_options.lua
+nui_groupe_recherche_options.lua
+nui_simple_butin_conseil_options.lua
+nui_minicarte_options.lua
+nui_mythique_chronometre_interruption_suivi_options.lua
+nui_mythique_chronometre_options.lua
+Nameplates_Options\ColorsPage_Options.lua
+Nameplates_Options\CoreTextColoring_Options.lua
+Nameplates_Options\DisplayBars_Options.lua
+Nameplates_Options\DisplayLayout_Options.lua
+Nameplates_Options\JoueursAllies_Options.lua
+Nameplates_Options\ApercuAllies_Options.lua
+Nameplates_Options\GeneralPage_Options.lua
+Nameplates_Options\NameplatePreview_Options.lua
+Nameplates_Options\CiblesSurvol_Options.lua
+nui_plaques_noms_options.lua
+nui_confort_jeu_options.lua
+nui_confort_jeu_statistique_selection.lua
+nui_confort_jeu_curseur_options.lua
+nui_confort_jeu_combat_ressusciter_options.lua
+nui_confort_jeu_alertes_options.lua
+nui_confort_jeu_auto_journalisation_options.lua
+nui_confort_jeu_transformation_options.lua
+nui_confort_jeu_mouvement_alerte_options.lua
+nui_confort_jeu_raid_outils_options.lua
+nui_amelioration_calcul_options.lua
+nui_quete_suivi_options.lua
+nui_selection_rapide_options.lua
+nui_raid_cadres_gestionnaire_pages.lua
+RaidFrames_Options\FramesPages_Options.lua
+RaidFrames_Options\VisualBars_Options.lua
+RaidFrames_Options\nui_raid_cadres_texte_affichage_options.lua
+RaidFrames_Options\VisualIndicators_Options.lua
+nui_raid_cadres_options.lua
+ResourceBars_Options\HealthSection_Options.lua
+ResourceBars_Options\PowerSection_Options.lua
+ResourceBars_Options\ClassResourceSection_Options.lua
+ResourceBars_Options\BarDisplayPage_Options.lua
+ResourceBars_Options\CastBarPage_Options.lua
+ResourceBars_Options\TotemBarPage_Options.lua
+ResourceBars_Options\GCDBarPage_Options.lua
+ResourceBars_Options\SwingTimerPage_Options.lua
+ResourceBars_Options\Minuteurs_Options.lua
+nui_ressource_barres_options.lua
+UnitFrames_Options\TextSlots_Options.lua
+UnitFrames_Options\MiniFrames_Options.lua
+UnitFrames_Options\SharedAppearance_Options.lua
+UnitFrames_Options\SharedBars_Options.lua
+UnitFrames_Options\SharedCastAuras_Options.lua
+UnitFrames_Options\UnitPreview_Options.lua
+nui_unite_cadres_options.lua
+nui_joueur_aura_barres_gestionnaire_pages.lua

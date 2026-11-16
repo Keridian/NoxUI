@@ -1,0 +1,65 @@
+## Interface: 16001
+## AllowLoadGameType: camelot
+## Title: |cffB8C3CCNoxUI|r Outils essentiels Forever
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Essential tools for WoW Forever.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Lua
+NoxUIEssentielsForever.lua
+NoxUIEssentielsForever_PhaseGroupe.lua
+
+# General (spell uprank, classic spellbook and talents, junk items, simplified stats, gathering skill, map fade, active stance icon, map reveal, map markers, quest rewards)
+..\NoxUILangues\deDE_GameNames.lua [AllowLoadTextLocale deDE]
+..\NoxUILangues\esES_GameNames.lua [AllowLoadTextLocale esES]
+..\NoxUILangues\esMX_GameNames.lua [AllowLoadTextLocale esMX]
+..\NoxUILangues\frFR_GameNames.lua [AllowLoadTextLocale frFR]
+..\NoxUILangues\koKR_GameNames.lua [AllowLoadTextLocale koKR]
+..\NoxUILangues\ptBR_GameNames.lua [AllowLoadTextLocale ptBR]
+..\NoxUILangues\ruRU_GameNames.lua [AllowLoadTextLocale ruRU]
+..\NoxUILangues\zhCN_GameNames.lua [AllowLoadTextLocale zhCN]
+..\NoxUILangues\zhTW_GameNames.lua [AllowLoadTextLocale zhTW]
+NoxUIEssentielsForever_Uprank.lua
+NoxUIEssentielsForever_ClassicSpellbook.lua
+NoxUIEssentielsForever_ClassicTalents.lua
+NoxUIEssentielsForever_JunkItems.lua
+NoxUIEssentielsForever_SimplifiedStats.lua
+NoxUIEssentielsForever_GatherSkill.lua
+NoxUIEssentielsForever_MapFade.lua
+nui_furtivite.lua
+NoxUIEssentielsForever_ActiveForm.lua
+NoxUIEssentielsForever_MapRevealData.lua
+NoxUIEssentielsForever_MapReveal.lua
+NoxUIEssentielsForever_MapTravelData.lua
+NoxUIEssentielsForever_MapTravel.lua
+NoxUIEssentielsForever_QuestRewards.lua
+
+# Travel (flight timer)
+NoxUIEssentielsForever_FlightTimerData.lua
+NoxUIEssentielsForever_FlightTimer.lua
+nui_campement.lua
+
+# World map zone levels
+NoxUIEssentielsForever_ZoneLevels.lua
+
+# Threat (threat meter)
+NoxUIEssentielsForever_ThreatData.lua
+NoxUIEssentielsForever_Window.lua
+NoxUIEssentielsForever_ThreatMeter.lua
+NoxUIEssentielsForever_ThreatFeed.lua
+
+# Companion pets (auto summon)
+NoxUIEssentielsForever_PetSummon.lua
+
+# Loot (loot feed)
+NoxUIEssentielsForever_LootFeed.lua
+
+# Macros (macro manager)
+NoxUIEssentielsForever_MacroManager.lua
+
+# Fishing (key, double-click, bobber indicator, sounds)
+NoxUIEssentielsForever_Fishing.lua

@@ -1,0 +1,18 @@
+<Bindings>
+	<Binding name="EUI_RADIAL1" header="EUI_RADIAL" category="NoxUI" />
+	<Binding name="EUI_RADIAL2" category="NoxUI" />
+	<Binding name="EUI_RADIAL3" category="NoxUI" />
+	<Binding name="EUI_RADIAL4" category="NoxUI" />
+	<Binding name="EUI_RADIAL5" category="NoxUI" />
+	<Binding name="EUI_RADIAL6" category="NoxUI" />
+	<Binding name="EUI_RADIAL7" category="NoxUI" />
+	<Binding name="EUI_RADIAL8" category="NoxUI" />
+	<Binding name="EUI_RADIAL9" category="NoxUI" />
+	<Binding name="EUI_RADIAL10" category="NoxUI" />
+	<Binding name="EUI_RADIAL11" category="NoxUI" />
+	<Binding name="EUI_RADIAL12" category="NoxUI" />
+	<Binding name="EUI_RADIAL13" category="NoxUI" />
+	<Binding name="EUI_RADIAL14" category="NoxUI" />
+	<Binding name="EUI_RADIAL15" category="NoxUI" />
+	<Binding name="EUI_RADIAL16" category="NoxUI" />
+</Bindings>

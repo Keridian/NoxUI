@@ -1,0 +1,39 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Confort de jeu
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Lightweight quality of life tools and enhancements.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIQoLDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUIConfortJeu_ForeverStats.lua
+NoxUIConfortJeu.lua
+NoxUIConfortJeu_Cursor.lua
+NoxUIConfortJeu_BattleRes.lua
+NoxUIConfortJeu_Bloodlust.lua
+NoxUIConfortJeu_AutoLogging.lua
+NoxUIConfortJeu_Keys.lua
+NoxUIConfortJeu_TeleportPrompt.lua
+NoxUIConfortJeu_Waypoint.lua
+NoxUIConfortJeu_CommandesGroupees.lua
+NoxUIConfortJeu_Shifter.lua
+NoxUIConfortJeu_MovementAlert.lua
+NoxUIConfortJeu_RaidTools.lua
+NoxUIConfortJeu_RaidBuffCheck.lua
+NoxUIConfortJeu_SelfCombatText.lua
+NoxUIConfortJeu_Alerts.lua
+NoxUIConfortJeu_UpgradeTooltip.lua
+nui_amelioration_calcul.lua
+
+nui_quete_materiaux.lua
+nui_remerciements_buffs.lua
+nui_demandes_forever.lua
+nui_ravitaillement.lua
+nui_personnages.lua
+nui_son_encheres.lua
+
+# Options

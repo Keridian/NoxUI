@@ -1,0 +1,31 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Rappels d’auras
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Simple raid buff, auras, consumables and talent reminders.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIAuraBuffRemindersDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Lua
+NoxUIRappelsAuras.lua
+nui_aura_amelioration_rappels_auras.lua
+nui_aura_amelioration_rappels_donnees.lua
+nui_aura_amelioration_rappels_valeurs_defaut.lua
+nui_aura_amelioration_rappels_icones.lua
+nui_aura_amelioration_rappels_collecte.lua
+nui_aura_amelioration_rappels_actualiser.lua
+nui_aura_amelioration_rappels_deverrouillage.lua
+nui_aura_amelioration_rappels_balise.lua
+nui_aura_amelioration_rappels_cycle_vie.lua
+nui_aura_amelioration_rappels_pret_verification.lua
+
+# Beacon M+ Reminders (retail, Holy Paladin)
+NoxUIABR_BeaconMPlus.lua
+
+# Talent Reminders (standalone, no ABR dependency)
+NoxUIABR_TalentReminders.lua
+
+# Options

@@ -1,0 +1,18 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## AllowLoadGameType: standard
+## Title: |cffB8C3CCNoxUI|r Gestion des équipements
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Applies gear sets and talent loadouts automatically per instance type and specialization.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+# Held back (NoxUI.HELD_BACK_ADDONS): load on demand, and nothing loads
+# it, so it never loads and its saved data stays untouched. Drop this to ship.
+## LoadOnDemand: 1
+## SavedVariablesPerCharacter: NoxUILoadoutManagerDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Runtime. The settings page lives in the LoadOnDemand NoxUIOptions addon
+# (nui_equipement_gestionnaire_options.lua), like every other module.
+NoxUIGestionEquipements.lua

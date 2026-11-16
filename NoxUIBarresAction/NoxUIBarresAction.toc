@@ -1,0 +1,49 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Barres d’action
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Modern action bars built for performance and clarity.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## OptionalDeps: Masque
+## SavedVariables: NoxUIActionBarsDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUIBarresAction.lua
+nui_action_barres_suppression.lua
+nui_action_barres_controleurs.lua
+nui_action_barres_securise.lua
+nui_action_barres_pagination.lua
+nui_action_barres_barres.lua
+nui_action_barres_disposition.lua
+nui_action_barres_fondu.lua
+nui_action_barres_visibilite_gestionnaires.lua
+nui_action_barres_raccourcis.lua
+nui_action_barres_vehicule.lua
+nui_action_barres_appliquer_tous.lua
+nui_action_barres_deverrouillage.lua
+nui_action_barres_initialisation.lua
+nui_action_barres_configuration.lua
+nui_action_barres_bouton_graphisme.lua
+nui_action_barres_masque.lua
+nui_action_barres_portee.lua
+nui_action_barres_appliquer.lua
+nui_action_barres_lueurs.lua
+nui_action_barres_enfonce.lua
+nui_action_barres_visibilite.lua
+nui_action_barres_evenements.lua
+nui_action_barres_habillage.lua
+nui_action_barres_donnees_barres.lua
+nui_action_barres_supplement_barres.lua
+nui_action_barres_rapide_raccourci.lua
+nui_action_barres_experience_barre.lua
+nui_action_barres_menu_deroulant.lua
+
+# Options
+
+# Note: Bindings.xml (custom Bar9/Bar10 keybind commands) is intentionally NOT
+# listed here -- WoW auto-loads a file named Bindings.xml from the addon root.
+# Listing it would load it a second time through the UI-XML parser ("Unrecognized
+# XML: Binding").

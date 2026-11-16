@@ -1,0 +1,26 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Minicarte
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: A new age minimap with clean styling and square layout options.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIMinimapDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUIMinicarte.lua
+nui_minicarte_vue_carree.lua
+nui_minicarte_menu_deroulant.lua
+nui_minicarte_information.lua
+nui_minicarte_boutons.lua
+nui_minicarte_indicateurs.lua
+nui_minicarte_infobulles.lua
+nui_minicarte_disposition.lua
+nui_minicarte_styles.lua
+nui_minicarte_appliquer.lua
+nui_minicarte_cycle_vie.lua
+nui_minicarte_teleportation.lua
+
+# Options

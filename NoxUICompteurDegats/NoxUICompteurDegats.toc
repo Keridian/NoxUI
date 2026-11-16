@@ -1,0 +1,28 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Compteur de dégâts
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Lightweight damage meters with simple but powerful customization.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIDamageMetersDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUICompteurDegats.lua
+nui_degats_compteurs_style.lua
+nui_degats_compteurs_etat.lua
+nui_degats_compteurs_format.lua
+nui_degats_compteurs_apparence.lua
+nui_degats_compteurs_saison_monstres.lua
+nui_degats_compteurs_saison_raids.lua
+nui_degats_compteurs_infobulle.lua
+nui_degats_compteurs_fenetre.lua
+nui_degats_compteurs_appliquer.lua
+nui_degats_compteurs_chronometre.lua
+nui_degats_compteurs_cycle_vie.lua
+NoxUICompteurDegats_SpellHistory.lua
+NoxUICompteurDegats_ForeverThreat.lua
+
+# Options

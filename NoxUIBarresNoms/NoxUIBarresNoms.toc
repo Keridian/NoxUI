@@ -1,0 +1,33 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Barres de noms
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Clean, lightweight nameplates with endless customization.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUINameplatesDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+NoxUIBarresNoms.lua
+nui_plaques_noms_styles.lua
+nui_plaques_noms_disposition.lua
+nui_plaques_noms_superpositions.lua
+nui_plaques_noms_plaque_reserve.lua
+nui_plaques_noms_incantation_etat.lua
+nui_plaques_noms_classe_puissance.lua
+nui_plaques_noms_couleurs.lua
+nui_plaques_noms_plaque.lua
+nui_plaques_noms_vie.lua
+nui_plaques_noms_nom.lua
+nui_plaques_noms_incantation.lua
+nui_plaques_noms_evenements.lua
+nui_plaques_noms_initialisation.lua
+nui_plaques_noms_aura_conteneurs.lua
+NoxUIBarresNoms_DebuffColors.lua
+NoxUIBarresNomsFriendly.lua
+NoxUIBarresNoms_Faction.lua
+NoxUIBarresNoms_CastOverlay.lua
+
+# Options

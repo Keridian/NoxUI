@@ -1,0 +1,37 @@
+## Interface: 120000, 120001, 120005, 120007, 120100, 120105, 16001
+## Title: |cffB8C3CCNoxUI|r Barres de ressources
+## Category: |cffB8C3CCNox|rUI
+## Group: NoxUI
+## Notes: Custom Resource Bars with thresholds, hash lines and more.
+## Author: Nox
+## Version: 0.2.3.4
+## Dependencies: NoxUI
+## SavedVariables: NoxUIResourceBarsDB
+## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
+
+# Main Luas
+nui_ressource_barres_vie_indicateurs.lua
+NoxUIBarresRessources.lua
+nui_ressource_barres_seuils.lua
+nui_ressource_barres_valeurs_defaut.lua
+nui_ressource_barres_cadres.lua
+nui_ressource_barres_ancrages.lua
+nui_ressource_barres_construction.lua
+nui_ressource_barres_mise_a_jour.lua
+nui_ressource_barres_style.lua
+nui_ressource_barres_groupes.lua
+nui_ressource_barres_incantation_barre.lua
+nui_ressource_barres_recharge_globale.lua
+nui_ressource_barres_totem.lua
+nui_ressource_barres_evenements.lua
+nui_ressource_barres_ebene_puissance_121.lua
+nui_ressource_barres_arcane_ame.lua
+nui_ressource_barres_attaque_chronometre.lua
+nui_ressource_barres_minuteurs.lua
+nui_ressource_barres_forever_druide_mana.lua
+nui_ressource_barres_appel_totem_barre.lua
+nui_ressource_barres_guerrier_charges.lua
+nui_ressource_barres_blizzard_classe_graphisme.lua
+
+# Options
+nui_ressource_barres_assistants.lua

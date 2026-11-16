@@ -1,0 +1,267 @@
+if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGate.lua)
+--------------------------------------------------------------------------------
+--  NoxUI_Locale.lua
+--  Central multi-language engine for the NoxUI options panel, unlock mode,
+--  and custom popups/tooltips. Short in-game STATUS text is also in scope where a
+--  locale provides it (raid frame DEAD/OFFLINE/AFK, nameplate "Interrupted",
+--  auto-repair chat feedback) -- untranslated keys fall back to English silently
+--  (esMX first falls back to esES per key, see FALLBACK).
+--
+--  Design: "translate the pixels, never the data." Translation is applied at the
+--  render boundary (the :SetText call) inside the shared widget builders, so the
+--  English identity fields used for search, page dispatch, and unlock-mode routing
+--  keep byte-matching English for free. This file owns only the primitives.
+--
+--  TIMING: SavedVariables (NoxUIDB, which holds the manual language override)
+--  are NOT available at file-scope -- they load at ADDON_LOADED. So the engine
+--  resolves the EFFECTIVE locale (client locale + override) at ADDON_LOADED, loads
+--  the locale files then (only that locale's file builds its catalog) and
+--  activates it. The options panel renders much later, so this is always in time.
+--
+--  Zero cost on English: when the effective locale is enUS/enGB, the active
+--  catalog is nil and L/Lf/EnKey return the input unchanged, so every :SetText
+--  receives byte-identical text -- and the NoxUILangues data addon is
+--  never even loaded, so English clients never parse the translation files.
+--------------------------------------------------------------------------------
+local ADDON_NAME = ...
+
+NoxUI = NoxUI or {}
+local NoxUI = NoxUI
+
+local type, tonumber, pairs, select = type, tonumber, pairs, select
+local GetLocale = GetLocale
+local issecretvalue = issecretvalue
+local CreateFrame = CreateFrame
+
+local SUPPORTED = {
+    enUS = true, deDE = true, esES = true, esMX = true, frFR = true,
+    itIT = true, ptBR = true, ruRU = true, koKR = true, zhCN = true, zhTW = true,
+}
+
+-- Per-locale translation tables, keyed by locale code. Filled by the
+-- NoxUILangues files via RegisterLocale() when that LoadOnDemand child
+-- loads (ADDON_LOADED below; English clients never load it). The active one
+-- is selected later.
+local localeData = {}
+
+-- Per-key fallback: a key the active locale leaves out takes this locale's
+-- entry before English. esMX reads esES (same language, far more complete).
+local FALLBACK = { esMX = "esES" }
+
+-- The currently active translation table (nil = English / identity), and the
+-- reverse (translation -> English) map used by EnKey. Both are (re)assigned by
+-- Activate(); L/EnKey close over these upvalues so they always see the latest.
+local activeCatalog = nil
+local reverse = {}
+
+--------------------------------------------------------------------------------
+--  Translation API
+--------------------------------------------------------------------------------
+
+-- The translator. Identity when no catalog is active (English, or before the
+-- catalog is resolved). Otherwise looks up the English key; guards short-circuit
+-- anything that must never be translated (non-strings, empty, secret combat
+-- values, pure numbers, letterless strings like hex/coords) before the lookup.
+local function L(s)
+    local cat = activeCatalog
+    if not cat then return s end
+    if type(s) ~= "string" or s == "" then return s end
+    if issecretvalue and issecretvalue(s) then return s end
+    if tonumber(s) ~= nil then return s end
+    if not s:find("%a") then return s end
+    local v = cat[s]
+    if type(v) == "string" then return v end
+    return s   -- untranslated key -> silent English fallback
+end
+NoxUI.L = L
+
+-- Format helper for the hard-case long tail. Uses WoW positional %1$s / %2$d
+-- specifiers so translators can reorder placeholders for other word orders.
+NoxUI.Lf = function(s, ...)
+    local t = L(s)
+    if type(t) ~= "string" or select("#", ...) == 0 then return t end
+    return t:format(...)
+end
+
+-- Reverse-map identity primitive. Where code reads a rendered FontString back
+-- and compares it to an English literal, EnKey maps the on-screen translation
+-- back to English so the comparison still matches. Identity on English.
+NoxUI.EnKey = function(s)
+    if type(s) ~= "string" then return s end
+    return reverse[s] or s
+end
+
+-- Effective locale (client locale + override), recorded at ADDON_LOADED below
+-- right before the NoxUILangues child loads. nil until then.
+local effectiveLocale = nil
+
+-- Entry point every NoxUILangues/<code>.lua file calls. Returns the
+-- per-locale table to populate, or nil for every code but the effective
+-- locale (and its FALLBACK) once that is recorded, so only the active catalog
+-- builds (each locale file returns on nil). A load before then gets a table
+-- for every code; the engine selects the active one in Activate().
+NoxUI.RegisterLocale = function(code)
+    if effectiveLocale and code ~= effectiveLocale
+        and code ~= FALLBACK[effectiveLocale] then return nil end
+    local t = localeData[code]
+    if not t then t = {}; localeData[code] = t end
+    return t
+end
+
+-- A module's own translation file (NoxUILangues/<code>_<Module>.lua, e.g.
+-- ptBR_SLC.lua) builds only while that module will load this session: a held
+-- back, disabled or load-on-demand module reads false, so players who keep it
+-- off hold none of its strings. Called by those files while the locale addon
+-- loads, after RegisterLocale.
+NoxUI.LocaleModuleLoads = function(folder)
+    local held = NoxUI.HELD_BACK_ADDONS
+    if held and held[folder] then return false end
+    if not (C_AddOns and C_AddOns.IsAddOnLoadable) then return true end
+    local playerName = UnitName("player")
+    return C_AddOns.IsAddOnLoadable(folder, playerName) == true
+end
+
+-- World object names in the CLIENT's language whatever the options language,
+-- filled by NoxUILangues/<code>_GameNames.lua, to match the game's text.
+-- The module that reads them lists its client language's file in its own TOC
+-- (Forever Essentials), so the names come in with it and the locale addon is
+-- not loaded for them.
+local gameNames, gameNamesIn = {}, false
+local GAME_NAME_FILES = {
+    deDE = true, esES = true, esMX = true, frFR = true, koKR = true,
+    ptBR = true, ruRU = true, zhCN = true, zhTW = true,
+}
+NoxUI.RegisterGameNames = function(code)
+    if code ~= GetLocale() then return nil end
+    gameNamesIn = true
+    return gameNames
+end
+
+-- For a caller about to read GameName. Where the client's names did not come
+-- in with the caller's own TOC, the locale addon, which lists the files too,
+-- is loaded for them: it compiles the client's whole catalog, so only then.
+-- A client language with no names file (English among them) loads nothing.
+NoxUI.LoadGameNames = function()
+    if gameNamesIn or not GAME_NAME_FILES[GetLocale()] then return end
+    if C_AddOns and C_AddOns.LoadAddOn and not C_AddOns.IsAddOnLoaded("NoxUILangues") then
+        C_AddOns.LoadAddOn("NoxUILangues")
+    end
+end
+
+NoxUI.GameName = function(s)
+    return gameNames[s] or s
+end
+
+--------------------------------------------------------------------------------
+--  Resolve + activate the effective locale
+--------------------------------------------------------------------------------
+local function GlyphFont(locale)
+    -- Simplified Chinese and Traditional Chinese use different system fonts:
+    -- zhCN renders with the Simplified glyph set (ARKai_T), zhTW with the
+    -- Traditional glyph set (bLEI00D). Routing zhTW to ARKai_T would show
+    -- Simplified glyph forms to a Traditional reader, so keep them separate.
+    if locale == "zhCN" then return "Fonts\\ARKai_T.ttf"
+    elseif locale == "zhTW" then return "Fonts\\bLEI00D.ttf"
+    elseif locale == "koKR" then return "Fonts\\2002.TTF"
+    elseif locale == "ruRU" then return "Fonts\\FRIZQT___CYR.TTF" end
+    return nil
+end
+
+-- Script class behind the glyph font. The two classes are NOT interchangeable: several
+-- bundled faces carry the full Cyrillic block, so ruRU can honour a bundled pick
+-- (see NoxUI.FONT_CYRILLIC), while no bundled face has CJK coverage at all.
+local function GlyphScript(locale)
+    if locale == "zhCN" or locale == "zhTW" or locale == "koKR" then return "cjk" end
+    if locale == "ruRU" then return "cyrillic" end
+    return nil
+end
+-- Per-locale glyph font for callers that pin a font to a locale other than the
+-- active one (the language picker's native-script entries).
+NoxUI.LocaleGlyphFont = GlyphFont
+
+local function Activate()
+    local client = GetLocale()
+    if client == "enGB" then client = "enUS" end
+    if not SUPPORTED[client] then client = "enUS" end
+
+    -- Manual override (global saved var; nil/unavailable falls back to client).
+    local override = NoxUIDB and NoxUIDB.displayLocale
+    if override == "auto" or not SUPPORTED[override or ""] then override = nil end
+
+    local locale = override or client
+    NoxUI.LOCALE     = locale
+    NoxUI.IS_ENGLISH = (locale == "enUS")
+    NoxUI._localeFont = GlyphFont(locale)
+    NoxUI._localeScript = GlyphScript(locale)
+
+    reverse = {}
+    if locale == "enUS" then
+        activeCatalog = nil
+    else
+        local src = localeData[locale]
+        -- Fill keys this locale leaves out from its FALLBACK locale once here,
+        -- so L() stays one lookup. Own entries (including "= true") win; the
+        -- fallback table is released afterwards.
+        local fbCode = FALLBACK[locale]
+        local fb = fbCode and localeData[fbCode]
+        if fb then
+            if not src then src = {}; localeData[locale] = src end
+            for k, v in pairs(fb) do
+                if src[k] == nil then src[k] = v end
+            end
+            localeData[fbCode] = nil
+        end
+        if src then
+            -- Resolve the "= true" keep-English sentinel and build the reverse map.
+            for k, v in pairs(src) do
+                if v == true then src[k] = k; v = k end
+                -- Prefer all-uppercase keys when two keys share a translation
+                -- in some locales, so EnKey() resolves section headers correctly.
+                if type(v) == "string" and type(k) == "string"
+                    and (not reverse[v] or (k == k:upper() and reverse[v] ~= reverse[v]:upper())) then
+                    reverse[v] = k
+                end
+            end
+        end
+        activeCatalog = src   -- nil if no locale file shipped for this code
+    end
+end
+
+-- Preliminary pass at file-load: SavedVariables are not loaded yet, so this
+-- resolves the CLIENT locale only and sets the glyph font for NoxUI.lua
+-- (which reads NoxUI._localeFont at its own file-load). The active catalog
+-- is filled at ADDON_LOADED below, once the locale files have populated and the
+-- override is readable.
+Activate()
+
+-- Re-resolve once SavedVariables (the override) are available. Nothing renders
+-- before this point. Translation data lives in the LoadOnDemand
+-- NoxUILangues child: loaded here SYNCHRONOUSLY, before Activate(),
+-- whenever the effective locale needs it, with that locale recorded first so
+-- only its own file builds. Its TOC tags each file with the game client
+-- languages that read it (its own, its pair, English), so a non-English
+-- client parses only its own file and its pair, and an English client parses
+-- them all, only when the override picks a translation.
+-- localeData already populated (the child loaded before this point) skips
+-- the call.
+local f = CreateFrame("Frame")
+f:RegisterEvent("ADDON_LOADED")
+f:SetScript("OnEvent", function(self, _, loaded)
+    if loaded == ADDON_NAME then
+        self:UnregisterEvent("ADDON_LOADED")
+        local client = GetLocale()
+        if client == "enGB" then client = "enUS" end
+        local override = NoxUIDB and NoxUIDB.displayLocale
+        if override == "auto" or not SUPPORTED[override or ""] then override = nil end
+        local locale = override or client
+        effectiveLocale = locale
+        if locale ~= "enUS" and SUPPORTED[locale] and not localeData[locale]
+            and C_AddOns and C_AddOns.LoadAddOn then
+            C_AddOns.LoadAddOn("NoxUILangues")
+        end
+        Activate()
+        -- NoxUI.lua's font system captured _localeFont/_localeScript before
+        -- this override-aware Activate() ran; re-sync it now that they're final.
+        if NoxUI.RefreshLocaleFontFallback then NoxUI.RefreshLocaleFontFallback() end
+    end
+end)

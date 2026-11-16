@@ -1,0 +1,97 @@
+NoxUI 0.2.3.4
+16 novembre 2026
+
+Temps de recharge | Orientation des barres de suivi
+L’aperçu et la barre suivent le même axe, même avec une ancienne configuration. Le réglage indique si les icônes sont réparties en lignes ou en colonnes.
+
+Cadres de groupe et de raid | Aperçus et navigation
+Les aperçus Raid et Équipe sont ancrés au bord de la fenêtre pour dégager le menu latéral.
+
+Première configuration | Aperçu et validation du style
+Les libellés du choix de style sont traduits en français. Le clic sélectionne un aperçu et le bouton Appliquer le style valide le choix.
+
+Historique
+
+NoxUI 0.2.3.3
+15 novembre 2026
+
+Confort de jeu | Remerciements avec le nom complet
+Sur WoW Forever, le chuchotement et l’échange de langue exigent le prénom et le nom du destinataire. La réception du remerciement pour Bénédiction des rois a été confirmée en jeu.
+
+Carte du monde | Onglets en haut de la carte
+Les boutons OpenMap, Routes, 2D et 3D remplacent les anciens onglets en haut de la carte.
+
+Maintenance du 16 novembre 2026
+
+Carte du monde | Plafond d’images
+Le plafond choisi est conservé, y compris lorsqu’il est désactivé.
+
+Dialogues de quête | Caméra
+Le zoom initial est restauré même si le dialogue relance son cadrage. Le contrôle de DynamicCam est restitué à la fermeture.
+
+Marchand | Achat en quantité
+La disponibilité, la quantité et le prix sont vérifiés avant l’envoi de la demande.
+
+Interface | Menu de jeu
+Les boutons sont placés selon leur ordre dès le premier affichage.
+
+
+NoxUI 0.2.3
+15 novembre 2026
+
+Carte du monde | OpenMap par défaut
+Le raccourci de la carte ouvre OpenMap. Les boutons Routes, 2D et 3D donnent accès aux itinéraires et aux vues aériennes de Forever Maps.
+
+Journal des donjons | Habillage NoxUI
+DungeonJournal adopte des panneaux ardoise et des boutons plats. Les instances conservent leurs accents sur le bandeau, les titres et les sélections.
+
+Confort de jeu | Alertes de ravitaillement
+Des seuils réglables signalent le manque de munitions et de composants de sorts pris en charge. La durabilité conserve son réglage dédié.
+
+Marchand | Confirmation des achats en quantité
+Maj et clic ouvre le sélecteur. Le total est affiché avant validation et l’offre est vérifiée à nouveau au moment de l’achat.
+
+Personnages | Vue du compte et suivi des recettes
+Consulte l’or, les places libres, l’XP de repos et le dernier relevé du courrier. Les infobulles de recettes utilisent les métiers relevés sur tes autres personnages.
+
+Hôtel des ventes | Son de vente et aperçu
+Le son de caisse NoxUI dispose d’un canal réglable. L’aperçu utilise le canal principal si les effets sonores sont coupés.
+
+Inventaire | Quantités entre personnages
+Les infobulles peuvent inclure les objets relevés dans les sacs, la banque, le courrier et les enchères. Les sources distantes gardent leurs dates d’expiration.
+
+Placement | Accès direct aux réglages
+Alt et clic droit sur un élément en mode Placement ouvre sa page de réglages.
+
+Confort de jeu | Demandes en jeu
+Des options séparées permettent de refuser les duels d’inconnus et de gérer les invitations à une résurrection ou à une invocation hors combat. Maj rend la main.
+
+Interface | Formes des boutons et redimensionnement du chat
+Les barres d’action disposent de réglages de forme et de bordure appliqués aux boutons. Le chat peut s’agrandir vers le haut en gardant son bord inférieur en place.
+
+
+NoxUI 0.2.2
+15 novembre 2026
+
+Remerciements de buffs
+Dix formules pour chacune des langues française, anglaise et espagnole. Le mode Auto utilise la langue et le nom du buff transmis par le destinataire. Sans réponse, le texte utilise l’anglais et le nom du buff fourni par le client local. Les autres langues prises en charge conservent leur formule simple. Deux envois successifs dans une même langue évitent de répéter la formule.
+
+Interface et campement
+La liste des modules est plus haute et le curseur d’opacité est près de la version. Le raccourci Placement et plusieurs options du chat ont été harmonisés. L’alerte Leatrix Plus indique les options concernées. Le clic sur la feuille Sac de couchage utilise l’objet hors combat.
+
+
+NoxUI 0.2.1
+15 novembre 2026
+
+Distribution
+Les installateurs Windows et Linux embarquent les mêmes modules NoxUI.
+Les identifiants de publication des projets sources ont été retirés des manifestes NoxUI concernés.
+
+Cartes et dialogues
+OpenMap 0.8.9 est intégré. Le nom du fichier qui calcule l’heure d’arrivée dans Waypoint UI correspond au manifeste. Les manifestes XML de Dialogue UI déclarent leur espace de noms.
+
+Interface et jeu
+Cette version inclut le portage des correctifs des barres de noms et des recharges, ainsi que la migration des réglages par personnage. Elle réunit aussi les modifications du campement, de la pêche, du voile de furtivité, de la vente automatique et du contraste des commandes.
+
+Contrôles
+Les profils et réglages se trouvent dans WTF. La validation dans le client WoW Forever reste distincte des contrôles de fichiers.

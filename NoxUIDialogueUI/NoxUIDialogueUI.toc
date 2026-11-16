@@ -1,0 +1,45 @@
+## Interface: 16001
+## Version: 0.2.3.4
+## X-Upstream-Version: 1.0.7 c
+
+## Title: NoxUIDialogueUI
+## Dependencies: NoxUI
+## Notes: Quest Dialogue UI
+## Notes-zhTW: 沉浸式任務與 NPC 對話介面，支援快捷鍵、搖桿與自訂外觀
+
+## Author: Raenore, Peterodox
+## SavedVariables: DialogueUI_DB, DialogueUI_Saves
+
+## IconTexture: Interface\AddOns\NoxUIDialogueUI\Art\Icons\Logo
+## AddonCompartmentFunc: DialogueUI_ShowSettingsFrame
+
+## X-GameType: Camelot [AllowLoadGameType camelot]
+## X-GameType: Standard [AllowLoadGameType standard]
+## X-GameType: Vanilla [AllowLoadGameType vanilla]
+## X-GameType: TBC [AllowLoadGameType tbc]
+## X-GameType: Mists [AllowLoadGameType mists]
+
+
+Initialization.lua
+Locales\Localization.xml
+Fonts.xml
+API.xml
+
+Code\Utility\Utility.xml
+Code\Sound.lua
+Code\Camera.lua
+Code\SharedUITemplates\SharedUITemplates.xml
+Code\Tooltip\Tooltip.xml
+Code\Scroll\Scroll.xml
+Code\Settings\Settings.xml
+Code\GossipData\GossipDataProvider.xml
+Code\NameplateGossip.lua
+Code\Dialogue\DialogueUI.xml
+Code\Book\BookUI.xml
+Code\Widget\WidgetManager.xml
+Code\Core.lua
+
+#Code\Skimmer\Skimmer.xml
+
+Code\DialogueUIAPI\API.xml
+Code\SupportedAddOns\SupportedAddOns.xml
