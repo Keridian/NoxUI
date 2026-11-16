@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Information bar for NoxUI - clock, gold, reputation and more
 ## Author: Nox
-## Version: 0.2.3.4
+## Version: 0.2.3.5
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIDataBarsDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

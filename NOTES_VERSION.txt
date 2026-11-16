@@ -1,3 +1,23 @@
+NoxUI 0.2.3.5
+16 novembre 2026
+
+Carte du monde | Raccourci M
+Le raccourci utilise la commande native de la carte et conserve OpenMap comme vue par défaut.
+
+Canaux et messages | Journal de combat détachable
+L’habillage suit l’onglet pendant le déplacement et se resynchronise après réduction, restauration ou raccrochage.
+
+Combat | Retour aux chiffres flottants du jeu
+Les animations de texte de combat ajoutées au dessus des cadres du joueur et de la cible ont été retirées.
+
+Interface | Suppression du mode festif
+La page Ambiance de groupe, ses commandes, ses déclenchements et ses conditions de visibilité ont été retirés.
+
+Menus | Retrait des renvois promotionnels
+Les guides YouTube et les renvois promotionnels hérités ont été retirés. L’import et l’export de profils restent accessibles.
+
+Historique
+
 NoxUI 0.2.3.4
 16 novembre 2026
 
@@ -10,7 +30,6 @@ Les aperçus Raid et Équipe sont ancrés au bord de la fenêtre pour dégager l
 Première configuration | Aperçu et validation du style
 Les libellés du choix de style sont traduits en français. Le clic sélectionne un aperçu et le bouton Appliquer le style valide le choix.
 
-Historique
 
 NoxUI 0.2.3.3
 15 novembre 2026

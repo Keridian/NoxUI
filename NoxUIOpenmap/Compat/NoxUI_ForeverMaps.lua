@@ -310,27 +310,27 @@ local function InstallMapControls()
         button:SetScript("OnLeave", function() GameTooltip:Hide() end)
         strip[i] = button
     end
-    map:HookScript("OnShow", function()
-        if not InCombatLockdown() then ReturnToOpenMap() end
+    local function OnMapShown()
+        if not InCombatLockdown() then
+            local routeMap = _G.ForeverMapsRouteMap
+            if routeMap and routeMap:IsShown() then routeMap:Hide() end
+            ReturnToOpenMap()
+        end
         LayoutMapControls()
         C_Timer.After(0, LayoutMapControls)
-    end)
+    end
+    map:HookScript("OnShow", OnMapShown)
     map:HookScript("OnHide", function()
         if not InCombatLockdown() then ReturnToOpenMap() end
     end)
-    LayoutMapControls()
+    if map:IsShown() then
+        OnMapShown()
+    else
+        LayoutMapControls()
+    end
 end
 
 local keyOwner = CreateFrame("Frame")
-local keyButton = CreateFrame("Button", "NoxUIOpenMapWorldMapKey", UIParent)
-keyButton:SetScript("OnClick", function()
-    if InCombatLockdown() or type(ToggleWorldMap) ~= "function" then return end
-    local routeMap = _G.ForeverMapsRouteMap
-    if routeMap and routeMap:IsShown() then routeMap:Hide() end
-    if not WorldMapFrame or not WorldMapFrame:IsShown() then ReturnToOpenMap() end
-    ToggleWorldMap()
-end)
-
 local bindingPending, updatingBindings, bindingSignature
 local function SyncMapBindings()
     if InCombatLockdown() then bindingPending = true; return end
@@ -344,7 +344,7 @@ local function SyncMapBindings()
     ClearOverrideBindings(keyOwner)
     -- Forever Maps uses non-priority overrides of the same base shortcuts.
     for _, key in ipairs(keys) do
-        SetOverrideBindingClick(keyOwner, true, key, keyButton:GetName(), "LeftButton")
+        SetOverrideBinding(keyOwner, true, key, "TOGGLEWORLDMAP")
     end
     updatingBindings = nil
 end

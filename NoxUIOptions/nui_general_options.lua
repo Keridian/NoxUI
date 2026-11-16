@@ -110,6 +110,16 @@ end
 -------------------------------------------------------------------------------
 NoxUI._WHATSNEW_PATCHES = {
     {
+        version = "0.2.3.5",
+        features = {
+            { module = "Carte du monde", title = "Raccourci M", desc = "Le raccourci utilise la commande native de la carte et conserve OpenMap comme vue par défaut." },
+            { module = "Canaux et messages", title = "Journal de combat détachable", desc = "L’habillage suit l’onglet pendant le déplacement et se resynchronise après réduction, restauration ou raccrochage." },
+            { module = "Combat", title = "Retour aux chiffres flottants du jeu", desc = "Les animations de texte de combat ajoutées au dessus des cadres du joueur et de la cible ont été retirées." },
+            { module = "Interface", title = "Suppression du mode festif", desc = "La page Ambiance de groupe, ses commandes, ses déclenchements et ses conditions de visibilité ont été retirés." },
+            { module = "Menus", title = "Retrait des renvois promotionnels", desc = "Les guides YouTube et les renvois promotionnels hérités ont été retirés. L’import et l’export de profils restent accessibles." },
+        },
+    },
+    {
         version = "0.2.3.4",
         features = {
             { module = "Temps de recharge", title = "Orientation des barres de suivi", desc = "L’aperçu et la barre suivent le même axe, même avec une ancienne configuration. Le réglage indique si les icônes sont réparties en lignes ou en colonnes." },

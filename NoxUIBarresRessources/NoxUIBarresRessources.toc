@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Custom Resource Bars with thresholds, hash lines and more.
 ## Author: Nox
-## Version: 0.2.3.4
+## Version: 0.2.3.5
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIResourceBarsDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

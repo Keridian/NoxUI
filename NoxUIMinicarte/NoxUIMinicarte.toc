@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: A new age minimap with clean styling and square layout options.
 ## Author: Nox
-## Version: 0.2.3.4
+## Version: 0.2.3.5
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIMinimapDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
