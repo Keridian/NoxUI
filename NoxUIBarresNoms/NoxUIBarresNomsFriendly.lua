@@ -1039,15 +1039,40 @@ end
 -------------------------------------------------------------------------------
 local nameFSUnits = setmetatable({}, { __mode = "k" })   -- nameFS -> unit token
 local nameFSText  = setmetatable({}, { __mode = "k" })   -- nameFS -> { name=, guild= }
+local unitNameFS = setmetatable({}, { __mode = "v" })
 local hookedNameText = {}   -- nameFS -> true (permanent hooks, applied once)
 local _titledNameGuard = false
+
+local function DetachNameOnlyText(nameFS)
+    local unit = nameFSUnits[nameFS]
+    if unit and unitNameFS[unit] == nameFS then unitNameFS[unit] = nil end
+    nameFSUnits[nameFS], nameFSText[nameFS] = nil, nil
+    UpdateGroupMarker(nameFS, false)
+end
+
+-- SetText may fire during a Blizzard pool rebind, before NAME_PLATE_UNIT_ADDED.
+local function IsCurrentNameOwner(nameFS, unit)
+    local plate = C_NamePlate.GetNamePlateForUnit(unit)
+    local owner = nameFS:GetParent()
+    if not (plate and owner and plate.UnitFrame == owner and not owner:IsForbidden()) then
+        return false
+    end
+    local activeUnit = owner.unit
+    if issecretvalue and issecretvalue(activeUnit) then return false end
+    return activeUnit == unit
+end
 
 -- Compose and write the full name-only string: name (+ inline title) plus an
 -- optional second line for the guild. Also the restore path -- with the
 -- Subtitle Text setting off this resolves to the plain single-line name.
 local function UpdateNameOnlyText(nameFS)
     local unit = nameFSUnits[nameFS]
-    if not IsNameOnlyMode() or not unit or not UnitExists(unit) then
+    if not unit then return end
+    if not IsCurrentNameOwner(nameFS, unit) then
+        DetachNameOnlyText(nameFS)
+        return
+    end
+    if not IsNameOnlyMode() or not UnitExists(unit) then
         UpdateGroupMarker(nameFS, false)
         return
     end
@@ -1137,14 +1162,18 @@ end
 -- composition survives Blizzard's own name updates. The hook body is a
 -- field read or two while Subtitle Text and the Name Format are both off.
 local function AttachNameOnlyText(nameFS, unit)
+    if not IsCurrentNameOwner(nameFS, unit) then return end
+    local previous = unitNameFS[unit]
+    if previous and previous ~= nameFS then DetachNameOnlyText(previous) end
+    if nameFSUnits[nameFS] ~= unit then DetachNameOnlyText(nameFS) end
     -- Pair the width clear with the (longer) text write: a titled name must
     -- never hit a leftover constraint and ellipsize.
     EnsureNameUnconstrained(nameFS)
-    nameFSUnits[nameFS] = unit
+    nameFSUnits[nameFS], unitNameFS[unit] = unit, nameFS
     if not hookedNameText[nameFS] then
         hookedNameText[nameFS] = true
         hooksecurefunc(nameFS, "SetText", function(self)
-            if _titledNameGuard then return end
+            if _titledNameGuard or not nameFSUnits[self] then return end
             if GetBelowNameMode() == "none" and not FriendlyNameFormat()
                 and not ShowFriendlyLevel() and not (groupMarkers[self] and groupMarkers[self].active)
                 and not IsGroupMember(nameFSUnits[self] or "player") then
@@ -1382,6 +1411,7 @@ hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", function(_, unit)
     if IsNameOnlyMode() and UnitIsPlayer(unit) then
         local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
         if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.name then
+            DetachNameOnlyText(nameplate.UnitFrame.name)
             -- Name-only player plates render ONLY the name, but Blizzard's
             -- CompactUnitFrame keeps its full ~47-event surface live behind
             -- every one of them (incl. UNIT_AURA and UPDATE_MOUSEOVER_UNIT).
@@ -1414,14 +1444,11 @@ end)
 hooksecurefunc(NamePlateDriverFrame, "OnNamePlateRemoved", function(_, unit)
     -- Guard: Blizzard settings panel can fire this with "preview" which is not a valid unit
     if not unit or not unit:find("^nameplate") then return end
-    -- Clean up the NPC overlay if present. The player name-only text needs no
-    -- teardown here: Blizzard has already detached the plate's unit frame (its name
-    -- FontString went back to the pool with it), and a FontString that comes back
-    -- on another plate drops its stale unit in UpdateNameOnlyText.
+    -- The pool may have released UnitFrame before this callback runs.
+    local nameFS = unitNameFS[unit]
+    if nameFS then DetachNameOnlyText(nameFS) end
     local nameplate = C_NamePlate.GetNamePlateForUnit(unit)
     if nameplate then
-        local uf = nameplate.UnitFrame
-        if uf and uf.name then UpdateGroupMarker(uf.name, false) end
         HideNPCOverlay(nameplate)
         nameOnlyNPCSuppressed[nameplate] = nil
     end
