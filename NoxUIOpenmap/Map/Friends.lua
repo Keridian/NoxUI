@@ -233,6 +233,7 @@ sender:SetScript("OnUpdate", function(self, elapsed)
 	local m = outbox[key]
 	outbox[key] = nil
 	wait = SEND_GAP
+	if m.text:sub(1, 2) == "L1" and not mod.db.friendsShare then return end
 	if m.bn then
 		if BNSendGameData then pcall(BNSendGameData, m.bn, PREFIX, m.text) end
 	elseif C_ChatInfo and C_ChatInfo.SendAddonMessage then
@@ -434,7 +435,7 @@ local function Heard(full, text, guild, guid, sender)
 	if friends[full] then known[full] = true end
 	if kind == "H1" or kind == "H2" then
 		-- (a hello: answered with your place when you share it, so they know you use OpenMap either way)
-		if kind == "H1" and friends[full] then ToFriend(full, sharing and last.text or "H2") end
+		if kind == "H1" and friends[full] then ToFriend(full, sharing and mod.db.friendsShare and last.text or "H2") end
 		return
 	end
 	if not guild and not friends[full] then return end   -- (a whisper only from a friend)
