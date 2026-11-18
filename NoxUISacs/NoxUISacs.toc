@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: A beautiful visual refresh of Blizzard Bags with intuitive organization.
 ## Author: Nox
-## Version: 0.2.3.5
+## Version: 0.2.3.6
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIBagsDB, NoxUIBagsInventoryDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

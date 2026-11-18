@@ -427,3 +427,5 @@ L["Pin Class Trainer"] = MINIMAP_TRACKING_TRAINER_CLASS or "Class Trainer";
 L["Pin Transmogrification"] = TRANSMOGRIFICATION or "Transmogrification";
 L["Pin Void Storage"] = VOID_STORAGE or "Void Storage";
 L["Pin Vendor"] = BATTLE_PET_SOURCE_3 or "Vendor";
+
+L["Restart Quest"] = "Restart";

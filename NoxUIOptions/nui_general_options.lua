@@ -110,6 +110,15 @@ end
 -------------------------------------------------------------------------------
 NoxUI._WHATSNEW_PATCHES = {
     {
+        version = "0.2.3.6",
+        features = {
+            { module = "Dialogues de quête", title = "Corrections des quêtes", desc = "Les quêtes échouées peuvent être reprises. Les icônes et la difficulté des quêtes se mettent à jour et les évaluateurs d’objets sont enregistrés." },
+            { module = "Carte du monde", title = "Protection des réglages", desc = "La carte ignore les vues invalides et retire les valeurs numériques non valides avant sauvegarde." },
+            { module = "Carte du monde", title = "Partage de position", desc = "Une position en attente ne sera plus envoyée après la désactivation du partage." },
+            { module = "Noms des personnages", title = "Plaques réutilisées", desc = "Les noms flottants vérifient leur association au personnage avant de réutiliser une plaque." },
+        },
+    },
+    {
         version = "0.2.3.5",
         features = {
             { module = "Carte du monde", title = "Raccourci M", desc = "Le raccourci utilise la commande native de la carte et conserve OpenMap comme vue par défaut." },

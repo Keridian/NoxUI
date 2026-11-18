@@ -5,7 +5,7 @@
 ## Group: NoxUI
 ## Notes: A simple Mythic+ timer with full tracking customizations.
 ## Author: Nox
-## Version: 0.2.3.5
+## Version: 0.2.3.6
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIMythicTimerDB
 ## SavedVariablesPerCharacter: NoxUIMythicRunsDB

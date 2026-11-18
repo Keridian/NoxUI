@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: NoxUI community translations. Loads on demand for non-English locales.
 ## Author: Nox
-## Version: 0.2.3.5
+## Version: 0.2.3.6
 ## Dependencies: NoxUI
 ## LoadOnDemand: 1
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

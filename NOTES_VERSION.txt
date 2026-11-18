@@ -1,3 +1,20 @@
+NoxUI 0.2.3.6
+18 novembre 2026
+
+Dialogues de quête | Corrections des quêtes
+Les quêtes échouées peuvent être reprises. Les icônes et la difficulté des quêtes se mettent à jour et les évaluateurs d’objets sont enregistrés.
+
+Carte du monde | Protection des réglages
+La carte ignore les vues invalides et retire les valeurs numériques non valides avant sauvegarde.
+
+Carte du monde | Partage de position
+Une position en attente ne sera plus envoyée après la désactivation du partage.
+
+Noms des personnages | Plaques réutilisées
+Les noms flottants vérifient leur association au personnage avant de réutiliser une plaque.
+
+Historique
+
 NoxUI 0.2.3.5
 16 novembre 2026
 
@@ -16,7 +33,6 @@ La page Ambiance de groupe, ses commandes, ses déclenchements et ses conditions
 Menus | Retrait des renvois promotionnels
 Les guides YouTube et les renvois promotionnels hérités ont été retirés. L’import et l’export de profils restent accessibles.
 
-Historique
 
 NoxUI 0.2.3.4
 16 novembre 2026

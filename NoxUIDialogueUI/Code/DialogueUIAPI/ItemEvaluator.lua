@@ -96,7 +96,6 @@ local function AddItemEvaluator(addonName, isItemUpgrade, tooltipWritter)
 
     return true;
 end
-DialogueUIAPI.AddItemEvaluator = AddItemEvaluator;
 
 
 
@@ -107,6 +106,10 @@ function ItemEvaluator:AddThirdPartyEvaluator(addonName, isItemUpgrade, tooltipW
     if AddItemEvaluator(addonName, isItemUpgrade, tooltipWritter) then
         self:RefreshSettings();
     end
+end
+
+DialogueUIAPI.AddItemEvaluator = function(addonName, isItemUpgrade, tooltipWritter)
+    return ItemEvaluator:AddThirdPartyEvaluator(addonName, isItemUpgrade, tooltipWritter);
 end
 
 function ItemEvaluator:GetCurrentThirdPartyName()

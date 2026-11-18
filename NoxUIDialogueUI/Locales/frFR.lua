@@ -400,3 +400,5 @@ L["Nox Settings Context Hint"] = "Survole un réglage pour afficher son rôle et
 L["Hide UI Enhanced Mode"] = "Masquage renforcé";
 L["Hide UI Enhanced Mode Desc"] = "Masque aussi les portraits 3D, les noms et le cercle sous le PNJ ciblé.";
 L["Hide UI Enhanced Mode Warning"] = "Certains modules peuvent réagir au masquage complet de l’interface.";
+
+L["Restart Quest"] = "Recommencer";

@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Lightweight damage meters with simple but powerful customization.
 ## Author: Nox
-## Version: 0.2.3.5
+## Version: 0.2.3.6
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIDamageMetersDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
