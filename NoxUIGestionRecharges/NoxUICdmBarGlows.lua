@@ -667,6 +667,28 @@ local function SetupOverlays()
     wipe(lastStates)
 end
 
+local function MatchesPlayerThreshold(value, maximum, threshold, direction)
+    if issecretvalue and (issecretvalue(value) or issecretvalue(maximum)) then return false end
+    if type(value) ~= "number" or type(maximum) ~= "number" or maximum <= 0 then return false end
+    local boundary = maximum * threshold / 100
+    if direction == "below" then return value <= boundary end
+    return value >= boundary
+end
+
+local function PassesPlayerThresholds(entry)
+    local health = entry.healthThresholdMode
+    if health == "above" or health == "below" then
+        if not MatchesPlayerThreshold(UnitHealth("player"), UnitHealthMax("player"),
+            tonumber(entry.healthThreshold) or 50, health) then return false end
+    end
+    local power = entry.powerThresholdMode
+    if power == "above" or power == "below" then
+        return MatchesPlayerThreshold(UnitPower("player"), UnitPowerMax("player"),
+            tonumber(entry.powerThreshold) or 50, power)
+    end
+    return true
+end
+
 --- Update glow visuals based on current aura state.
 --- Called each CDM tick (~10Hz from BuffTicker).
 UpdateOverlayVisuals = function()
@@ -705,6 +727,8 @@ UpdateOverlayVisuals = function()
             if shouldGlow and onlyInCombat then
                 shouldGlow = (InCombatLockdown and InCombatLockdown()) or UnitAffectingCombat("player") or false
             end
+
+            if shouldGlow then shouldGlow = PassesPlayerThresholds(entry) end
 
             -- At Stacks (ACTIVE mode only): fed to the gate(s) every tick
             -- regardless of state-change dedupe below, so the mask tracks a

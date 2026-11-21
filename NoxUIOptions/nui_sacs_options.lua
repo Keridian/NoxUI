@@ -565,6 +565,13 @@ initFrame:SetScript("OnEvent", function(self)
                               db.profile.bagShowRecentClear = v
                               if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
                           end },
+                        { type="toggle", label="Show Picked Up Amount",
+                          tooltip="Groups recent pickups by item and displays the quantity picked up.",
+                          get=function() return db.profile.bagRecentPickupAmount == true end,
+                          set=function(v)
+                              db.profile.bagRecentPickupAmount = v
+                              if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
+                          end },
                         { type="toggle", label="New Items Only",
                           tooltip="Only lists items you were not already carrying. Gear, mail and trades always list.",
                           get=function() return db.profile.bagRecentNewOnly == true end,
@@ -1390,6 +1397,34 @@ initFrame:SetScript("OnEvent", function(self)
                       if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
                   end }
             ); y = y - h
+
+            _, h = W:DualRow(parent, y,
+                { type="toggle", text="Categorize Reagent Bag Items",
+                  tooltip="Classifies items in your reagent bag with other items of the same category.",
+                  getValue=function() return db.profile.bagCategorizeReagents == true end,
+                  setValue=function(v)
+                      db.profile.bagCategorizeReagents = v
+                      if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
+                  end },
+                NoxUI.BlankRowCfg()); y = y - h
+            _, h = W:DualRow(parent, y,
+                { type="toggle", text="Reagent Bag Item Marker",
+                  tooltip="Adds a small marker to items stored in the reagent bag.",
+                  getValue=function() return db.profile.bagShowReagentBadge == true end,
+                  setValue=function(v)
+                      db.profile.bagShowReagentBadge = v
+                      if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
+                  end },
+                { type="dropdown", text="Reagent Bag Marker Icon",
+                  values={ components="Components", materials="Materials", crafting="Crafting" },
+                  order={ "components", "materials", "crafting" },
+                  disabled=function() return db.profile.bagShowReagentBadge ~= true end,
+                  disabledTooltip="Reagent Bag Item Marker",
+                  getValue=function() return db.profile.bagReagentBadgeIcon or "components" end,
+                  setValue=function(v)
+                      db.profile.bagReagentBadgeIcon = v
+                      if _G.EUI_Bags and _G.EUI_Bags.RefreshInventory then _G.EUI_Bags:RefreshInventory() end
+                  end }); y = y - h
 
             _, h = W:Spacer(parent, y, 20); y = y - h
             return math.abs(y)

@@ -149,6 +149,16 @@ NoxUI._FONT_KEY_GLOBAL = "\1global"
 -- Dropdown sentinel for "Blizzard Default": resolves to the client's own
 -- standard UI font (STANDARD_TEXT_FONT, locale-aware) in ResolveFontName.
 NoxUI.BLIZZARD_FONT_KEY = "__blizzard"
+NoxUI.BLIZZARD_CHAT_FONT_KEY = "__blizzardChat"
+
+-- Capture the font before the global font pass edits ChatFontNormal.
+if ChatFontNormal and ChatFontNormal.GetFont then
+    NoxUI._clientChatFontPath = ChatFontNormal:GetFont()
+end
+
+function NoxUI.GetBlizzardChatFontPath()
+    return NoxUI._clientChatFontPath or NoxUI.GetBlizzardFontPath()
+end
 -- The client's standard UI font, read when used (another addon may set the global
 -- after this file loads). "Apply to All Game Text" overwrites STANDARD_TEXT_FONT,
 -- so the value it replaced is kept (_clientFontPath, ApplyGlobalFontToGameText) and wins.
@@ -194,6 +204,9 @@ local function ResolveFontName(fontName)
     -- Blizzard Default: the client's own standard UI font. Handled before the
     -- glyph-restriction branch because STANDARD_TEXT_FONT is already
     -- locale-aware (the engine picks the right face per client language).
+    if fontName == NoxUI.BLIZZARD_CHAT_FONT_KEY then
+        return NoxUI.GetBlizzardChatFontPath()
+    end
     if fontName == NoxUI.BLIZZARD_FONT_KEY then
         return NoxUI.GetBlizzardFontPath()
     end
@@ -1119,7 +1132,10 @@ function NoxUI.BuildFontDropdownData()
                          [NoxUI.SYSTEM_FONT_KEY] = { text = "System Default", font = NoxUI.LOCALE_FONT_FALLBACK },
                          [NoxUI.EXPRESSWAY_FORCED_KEY] = { text = "Expressway (Latin only)",
                              font = NoxUI.MEDIA_PATH .. "fonts\\Expressway.TTF" } }
-        local order  = { "__global", NoxUI.SYSTEM_FONT_KEY, NoxUI.EXPRESSWAY_FORCED_KEY }
+        values[NoxUI.BLIZZARD_CHAT_FONT_KEY] = {
+            text = "Blizzard Chat", font = NoxUI.GetBlizzardChatFontPath(),
+        }
+        local order = { "__global", NoxUI.SYSTEM_FONT_KEY, NoxUI.BLIZZARD_CHAT_FONT_KEY, NoxUI.EXPRESSWAY_FORCED_KEY }
         if NoxUI.AppendExternalSharedMediaFonts then
             NoxUI.AppendExternalSharedMediaFonts(values, order)
         end
@@ -1131,7 +1147,10 @@ function NoxUI.BuildFontDropdownData()
     local values = { ["__global"] = { text = "NoxUI Global Font" },
                      [NoxUI.BLIZZARD_FONT_KEY] = { text = "Blizzard Default",
                          font = NoxUI.GetBlizzardFontPath() } }
-    local order  = { "__global", NoxUI.BLIZZARD_FONT_KEY, "---" }
+    values[NoxUI.BLIZZARD_CHAT_FONT_KEY] = {
+        text = "Blizzard Chat", font = NoxUI.GetBlizzardChatFontPath(),
+    }
+    local order  = { "__global", NoxUI.BLIZZARD_FONT_KEY, NoxUI.BLIZZARD_CHAT_FONT_KEY, "---" }
     local FONT_DIR = NoxUI.MEDIA_PATH .. "fonts\\"
     for _, name in ipairs(NoxUI.FONT_ORDER) do
         if name == "---" then

@@ -2241,6 +2241,17 @@ function NoxUI.ApplyBlizzSkinGlobals(bundle)
     end
 end
 
+local function ExportDisplayMetadata()
+    local width, height
+    if GetPhysicalScreenSize then width, height = GetPhysicalScreenSize() end
+    local scale = NoxUIDB and NoxUIDB.ppUIScale or (UIParent and UIParent:GetScale()) or 1
+    return {
+        euiScale = scale,
+        screenW = width and math.floor(width) or 0,
+        screenH = height and math.floor(height) or 0,
+    }
+end
+
 function NoxUI.ExportProfile(profileName, includedFolders, includeLayout, includeCDM, cdmSpecs, includeGlobals, includeOverrides, includeBlizzSkin)
     if includeLayout == nil then includeLayout = true end  -- default ON
     -- Overrides (value stores + groups + unlock-layer forks + BM forks)
@@ -2420,6 +2431,7 @@ function NoxUI.ExportProfile(profileName, includedFolders, includeLayout, includ
     -- imports correctly into any build. No-op in the suite (canon == folder).
     exportData.addons = AddonsToCanon(exportData.addons)
     local payload = { version = NoxUI.LayoutExportVersion(exportData), type = "full", data = exportData }
+    if includeLayout then payload.meta = ExportDisplayMetadata() end
     NoxUI.StampPayloadClient(payload)
     local serialized = Serializer.Serialize(payload)
     if not LibDeflate then return nil end
@@ -2952,14 +2964,7 @@ function NoxUI.ExportCurrentProfile(includeLayout, includeCDM, cdmSpecs)
         profileData.unlockLayout, includeLayout, nil)
     profileData.unlockLayout     = fLayout
     profileData.unlockLayoutMeta = layoutMeta
-    local sw, sh = GetPhysicalScreenSize()
-    -- Use NoxUI's own stored scale (UIParent scale), not Blizzard's CVar
-    local euiScale = NoxUIDB and NoxUIDB.ppUIScale or (UIParent and UIParent:GetScale()) or 1
-    local meta = {
-        euiScale = euiScale,
-        screenW  = sw and math.floor(sw) or 0,
-        screenH  = sh and math.floor(sh) or 0,
-    }
+    local meta = includeLayout and ExportDisplayMetadata() or nil
     -- Normalize local db.folder keys -> canonical (suite) keys (no-op in suite).
     profileData.addons = AddonsToCanon(profileData.addons)
     local payload = { version = NoxUI.LayoutExportVersion(profileData), type = "full", data = profileData, meta = meta }

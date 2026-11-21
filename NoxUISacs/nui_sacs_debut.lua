@@ -613,6 +613,7 @@ local function StartAddon()
     -- Raised from 12 to 15.
     local RECENT_MAX = 15
     EUI_Bags._recentItems = {}      -- itemID -> pickup number (higher = newer; ns.RecentCompare sorts by it)
+    EUI_Bags._recentPickedUp = {}
     EUI_Bags._recentOrder = {}      -- ordered list of itemIDs (oldest first)
     EUI_Bags._recentSeq = 0         -- last pickup number handed out
     local _knownItemCounts = {} -- itemID -> highest carried count (bags + worn gear) since the last bank/mail resync
@@ -703,9 +704,12 @@ local function StartAddon()
                 end
                 EUI_Bags._recentSeq = EUI_Bags._recentSeq + 1
                 recent[itemID] = EUI_Bags._recentSeq
+                local pickups = EUI_Bags._recentPickedUp
+                pickups[itemID] = (pickups[itemID] or 0) + count - known
                 ro[#ro + 1] = itemID
                 while #ro > RECENT_MAX do
-                    recent[table.remove(ro, 1)] = nil
+                    local oldest = table.remove(ro, 1)
+                    recent[oldest], pickups[oldest] = nil, nil
                 end
             end
             if not atMail or count > known then
@@ -733,6 +737,7 @@ local function StartAddon()
     function EUI_Bags:ClearRecentItems()
         wipe(EUI_Bags._recentItems)
         wipe(EUI_Bags._recentOrder)
+        wipe(EUI_Bags._recentPickedUp)
         if EUI_Bags:IsVisible() then EUI_Bags:RefreshInventory() end
     end
 
@@ -1172,6 +1177,25 @@ function ns.RecentCompare(a, b)
     if a.bag ~= b.bag then return a.bag < b.bag end
     return a.slot < b.slot
 end
+-- Keep the pickup label on display copies so the regular slot still has its real count.
+function ns.RecentPickupRows(items)
+    local pickups = EUI_Bags._recentPickedUp
+    if BP().bagRecentPickupAmount ~= true or not pickups then return items end
+    local rows, seen = {}, {}
+    for _, data in ipairs(items) do
+        local id = data.info and data.info.itemID
+        if id and not seen[id] then
+            seen[id] = true
+            local row = I.AcquireSlotTable()
+            for key, value in pairs(data) do row[key] = value end
+            local amount = pickups[id]
+            if amount then row._recentPickupText = "+" .. amount end
+            rows[#rows + 1] = row
+        end
+    end
+    return rows
+end
+
 ns.VisualSortCompare = VisualSortCompare
 ns.MergeDuplicates = MergeDuplicates
 ns.ApplySavedOrder = ApplySavedOrder

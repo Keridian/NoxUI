@@ -1,7 +1,8 @@
 if NUI_CLIENT_BLOQUE or not (NoxUI and NoxUI.IS_FOREVER) then return end
 
 local nearby, cooldown = 1283391, 1308027
-local bagItem, bagSpell, bagBuff = 211527, 429961, 429959
+local bagItem, bagSpell, bagBuff, sleepAura = 211527, 429961, 429959, 1331671
+local sleepStarted, sleepStacks
 local bagPosition
 local resting = {1229739, 1289723}
 local bonuses = {
@@ -133,15 +134,33 @@ local function bagStacks()
     return type(stacks) == "number" and stacks or 0
 end
 
+local function SleepProgress(asleep, stacks, now)
+    if not asleep or type(stacks) ~= "number" then
+        sleepStarted, sleepStacks = nil, nil
+        return
+    end
+    if sleepStacks ~= stacks then
+        sleepStarted, sleepStacks = now, stacks
+    end
+    if stacks >= 3 then return end
+    local left = math.ceil(sleepStarted + (3 - stacks) * 60 - now)
+    if left > 0 then return left end
+end
+
 local function Update()
     if InCombatLockdown() then return end
     local cfg = db()
+    local asleep = cfg.enabled ~= false and cfg.showSleepProgress ~= false and aura(sleepAura)
+    local actualStacks = bagStacks()
+    local stacks = preview and 2 or actualStacks
+    local sleepTime = SleepProgress(asleep, actualStacks, GetTime())
+    if preview and cfg.showSleepProgress ~= false then asleep, sleepTime = true, 38 end
     local rest = aura(resting[1]) or aura(resting[2])
     local recharge = aura(cooldown)
     local nearBag = nearPosition(bagPosition)
     if not nearBag then bagPosition = nil end
     if not nearPosition(campPosition) then campPosition = nil end
-    local visible = preview or (cfg.enabled ~= false and (rest or aura(nearby) or campPosition or nearBag))
+    local visible = preview or (cfg.enabled ~= false and (asleep or rest or aura(nearby) or campPosition or nearBag))
     if not visible then
         if dragging then frame:StopMovingOrSizing(); dragging = nil end
         frame:Hide()
@@ -150,7 +169,13 @@ local function Update()
     end
     local seconds = preview and 38 or remaining(rest)
     status:SetText(seconds and (clock(seconds).."\nCampement") or "Campement")
-    restStatus:SetShown(not not (rest or preview))
+    if asleep and stacks then
+        local label = ("Repos : %d/3"):format(stacks)
+        restStatus:SetText(sleepTime and (label .. "  " .. clock(sleepTime)) or label)
+    else
+        restStatus:SetText("Repos en cours")
+    end
+    restStatus:SetShown(not not (asleep or rest or preview))
     frame:Show()
     bonusButton:SetShown(expanded == true)
     restButton:SetShown(expanded == true)
@@ -257,6 +282,7 @@ events:RegisterEvent("BAG_UPDATE_DELAYED")
 for _, name in ipairs({"PLAYER_ENTERING_WORLD","PLAYER_REGEN_DISABLED","PLAYER_REGEN_ENABLED"}) do events:RegisterEvent(name) end
 events:SetScript("OnEvent",function(_,event,_,_,spellID)
     if event == "PLAYER_REGEN_DISABLED" then
+        SleepProgress(false)
         expanded, showBonuses, showRest = nil,nil,nil
         return
     end
@@ -277,6 +303,8 @@ end)
 NoxUI.Campement = {
     Enabled = function() return db().enabled ~= false end,
     SetEnabled = function(value) db().enabled = value; Update() end,
+    ShowSleepProgress = function() return db().showSleepProgress ~= false end,
+    SetShowSleepProgress = function(value) db().showSleepProgress = value; Update() end,
     Preview = function()
         preview = not preview
         if preview then expanded, showBonuses = true,true end

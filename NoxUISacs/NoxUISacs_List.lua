@@ -741,6 +741,7 @@ local function RenderRow(btn, data, cols, rowW, x, y, stripe, dim)
     for _, fs in pairs(btn._cells) do fs:Hide() end
     btn._lvIcon:Hide()
     ns.PaintInventoryQuestBadge(btn, false)
+    ns.PaintReagentBadge(btn, false)
     for _, id in ipairs(cols) do
         local cx, cw = _colX[id], _colW[id]
         if id == "icon" then
@@ -765,6 +766,7 @@ local function RenderRow(btn, data, cols, rowW, x, y, stripe, dim)
             end
             icon:Show()
             ns.PaintInventoryQuestBadge(btn, data._isQuest, icon)
+            ns.PaintReagentBadge(btn, data._isReagentBagItem, icon)
             -- Quality Item Border: square icons only
             local ov = btn._textOverlay
             if not round and (BP().bagQualityBorder ~= false or ns.BagsForever()) then
@@ -801,7 +803,7 @@ local function RenderRow(btn, data, cols, rowW, x, y, stripe, dim)
                     local tc = data._giTrackColor
                     if tc then fs:SetTextColor(tc.r, tc.g, tc.b) end
                 elseif id == "count" then
-                    text = data._lvCount > 1 and data._lvCount or ""
+                    text = data._recentPickupText or (data._lvCount > 1 and data._lvCount or "")
                 elseif id == "sell" then
                     text = data._lvSell > 0 and C_CurrencyInfo.GetCoinTextureString(data._lvSell) or ""
                 end
@@ -975,7 +977,8 @@ function ns.RenderListView(items, opts)
             if pinnedSet and (not view or d._vgPin) and ns.IsItemPinned(pinnedSet, d.itemLink, d.info.itemID) then
                 Add("pinned", "", d)
             end
-            if recentSet and (not view or d._vgRec) and recentSet[d.info.itemID] and not d._pinnedOnly then
+            if not opts.recentOnly and recentSet and (not view or d._vgRec)
+                and recentSet[d.info.itemID] and not d._pinnedOnly then
                 Add("recent", "", d)
             end
             if opts.recentOnly then
@@ -1019,6 +1022,17 @@ function ns.RenderListView(items, opts)
                 b.subList[1] = sl
             end
             sl[#sl + 1] = d
+        end
+    end
+    for _, bucket in ipairs(order) do
+        if bucket.key == "recent" then
+            local rows = bucket.subs[""]
+            local projected = ns.RecentPickupRows(rows)
+            if projected ~= rows then
+                projected.label, projected.order = rows.label, rows.order
+                bucket.subs[""], bucket.subList[1], bucket.n = projected, projected, #projected
+            end
+            break
         end
     end
     -- Pinned first, category (or bag) order, Junk after the last saved category

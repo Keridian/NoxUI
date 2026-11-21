@@ -1621,7 +1621,7 @@ initFrame:SetScript("OnEvent", function(self)
                   if ECHAT.EngineQueueRebuildAll then ECHAT.EngineQueueRebuildAll() end
                   NoxUI:RefreshPage()
               end },
-            { type="toggle", text="Class Colored Names",
+            { type="toggle", text="Class Colors for Names in Messages",
               tooltip="Colors group and raid member names by their class when they appear in the text of Say, Yell, Party, and Raid messages.",
               getValue=function() return Cfg("classColorNames") == true end,
               setValue=function(v)
@@ -1649,6 +1649,16 @@ initFrame:SetScript("OnEvent", function(self)
                 },
             })
         end
+        y = y - h
+        _, h = W:DualRow(parent, y,
+            { type="toggle", text="Class Colors for Senders",
+              tooltip="Uses the game's class colors for senders of new messages. When disabled, their names use the channel color.",
+              getValue=function() return Cfg("classColorSender") ~= false end,
+              setValue=function(v)
+                  Set("classColorSender", v)
+                  ECHAT.ApplySenderClassColor()
+              end },
+            NoxUI.BlankRowCfg())
         y = y - h
 
         end -- isChat

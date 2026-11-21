@@ -174,6 +174,18 @@ function KeyboardControl:OnKeyDown(key, fromGamePad)
         action = BindingUtil:GetActiveKeyAction(key);
     end
 
+    if not fromGamePad and not inCombat and not IsModifierKeyDown() and action
+        and KeyboardControl.parent == addon.DialogueUI and addon.DialogueUI:IsChoosingReward() then
+        local index = tonumber(action:match("^Option([1-9])$"));
+        if index then
+            if not (GetCurrentKeyBoardFocus and GetCurrentKeyBoardFocus()) then
+                valid = addon.DialogueUI:SelectRewardFromKeyboard(index);
+            end
+            KeyboardControl:SetPropagateKeyboardInput(not valid);
+            return
+        end
+    end
+
     if action == "Exit" then
         valid = true;
 

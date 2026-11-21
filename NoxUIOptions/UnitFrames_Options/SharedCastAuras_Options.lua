@@ -1970,6 +1970,33 @@ function ns.UFO_BuildBuffsDebuffsSection(parent, y, ctx)
                 ApplyFilterDisabled(cbDD, rgn._label, BuffDisabled)
             end
 
+            if optState.selectedUnit == "target" or optState.selectedUnit == "focus" then
+                local function BuffList(field)
+                    local db = SDB()
+                    db[field] = db[field] or {}
+                    return db[field]
+                end
+                NoxUI.BuildInlineCog(rgn, {
+                    title = "Améliorations suivies",
+                    disabled = BuffDisabled,
+                    disabledTooltip = "Buffs",
+                    rows = {
+                        { type="toggle", label="Afficher uniquement les améliorations suivies",
+                          get=function() return SDB().buffTrackedOnly == true end,
+                          set=function(v) SDB().buffTrackedOnly = v or nil; ReloadAndUpdate() end },
+                        { type="button", label="Modifier les améliorations suivies",
+                          action=function()
+                              NoxUI.ShowTrackedAurasPopup({
+                                  title = "Améliorations suivies",
+                                  includeGet = function() return BuffList("buffTrackedInclude") end,
+                                  excludeGet = function() return BuffList("buffTrackedExclude") end,
+                                  onChanged = ReloadAndUpdate,
+                              })
+                          end },
+                    },
+                })
+            end
+
             -- Purgeable Buff Glow (target/focus): inline cog beside the Buff
             -- Filter. The glow styles whichever purgeable buffs the filter
             -- shows; the engine gates it on the character's offensive dispel.

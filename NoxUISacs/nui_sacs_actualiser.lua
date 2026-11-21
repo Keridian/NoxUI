@@ -623,6 +623,7 @@ function EUI_Bags:RefreshInventory()
                 local itemLink = C_Container.GetContainerItemLink(bag, slot)
                 local d = AcquireSlotTable()
                 d.bag = bag; d.slot = slot; d.info = info; d.itemLink = itemLink
+                d._isReagentBagItem = bag == 5 and not restricted
                 EUI_Bags.ApplyBindKeyword(info, bag, slot)
                 -- Pre-cache per-item data for RenderButton (zero API calls at render time)
                 if itemLink then
@@ -1096,6 +1097,11 @@ function EUI_BagsReagent:RefreshInventory()
     if InCombatLockdown() then EUI_Bags._refreshPendingCombat = true end
     local tempItems = {}
     local numSlots = C_Container.GetContainerNumSlots(5)
+    local isReagentBag = true
+    if NoxUI.IS_FOREVER then
+        local _, family = C_Container.GetContainerNumFreeSlots(5)
+        isReagentBag = not family or family == 0
+    end
     if numSlots > 0 then
         for slot = 1, numSlots do
             local info = C_Container.GetContainerItemInfo(5, slot)
@@ -1165,6 +1171,7 @@ function EUI_BagsReagent:RefreshInventory()
             end
         end
         ns.PaintInventoryQuestBadge(btn, data.info and ns.GetSlotQuestFlags(data.bag, data.slot))
+        ns.PaintReagentBadge(btn, data.info and isReagentBag)
         UpdatePawnArrow(btn, itemLink)
         if next(EUI_Bags.itemOverlayIcons) ~= nil then
             data.itemLink = itemLink

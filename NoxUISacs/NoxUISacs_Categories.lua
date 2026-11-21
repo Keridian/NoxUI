@@ -573,13 +573,13 @@ local _asking = false
 -- Classify a single item. Returns category index (1-based) or nil for empty slots.
 -- bag/slot are needed for C_Container.GetContainerItemQuestInfo; quality is
 -- optional (resolved from the link when nil)
-function CategoryManager:ClassifyItem(itemLink, itemID, bag, slot, quality)
+function CategoryManager:ClassifyItem(itemLink, itemID, bag, slot, quality, categorizeReagents)
     if not itemLink then return nil end
 
     local cats = self:GetCategories()
 
-    -- Reagent bag items always go to the Reagent Bag category
-    if bag == 5 then
+    -- Physical bag views keep slot order. Only category views opt into type matching.
+    if bag == 5 and not categorizeReagents then
         for i, cat in ipairs(cats) do
             if cat.isReagentBag then return i end
         end
@@ -776,10 +776,13 @@ function CategoryManager:ClassifyAll(items)
 
     -- On-item label stamping gated on its toggle (recycled tables are wiped on
     -- acquire, so no stale _setName survives while it's off)
-    local stampNames = BP().bagShowSetGearName == true
+    local profile = BP()
+    local stampNames = profile.bagShowSetGearName == true
+    local categorizeReagents = profile.bagCategorizeReagents == true
     for _, data in ipairs(items) do
         if data.info and data.itemLink then
-            local idx = self:ClassifyItem(data.itemLink, data.info.itemID, data.bag, data.slot, data.info.quality)
+            local idx = self:ClassifyItem(data.itemLink, data.info.itemID, data.bag, data.slot,
+                data.info.quality, categorizeReagents and data._isReagentBagItem)
             if stampNames then
                 local sid = _setGearLookup[data.bag * 1000 + data.slot]
                 data._setName = sid and _setNames[sid] or nil

@@ -707,7 +707,7 @@ initFrame:SetScript("OnEvent", function(self)
                     assignedSet[sp.spellID] = true
                     local newEntry = {
                         spellID = sp.spellID,
-                        glowStyle = 1,
+                        glowStyle = bg.defaultGlowStyle or 1,
                         mode = sp.usable and "USABLE" or "ACTIVE",
                         onlyInCombat = false,
                     }
@@ -772,6 +772,13 @@ initFrame:SetScript("OnEvent", function(self)
         local bg = ns.GetBarGlows()
         local curBar = NormalizeSelectedBar(bg.selectedBar or "cooldowns")
         local curBtn = _glowSelectedButton  -- nil = no selection
+        local styles, styleOrder = GetGlowStyleValues()
+        _, h = W:DualRow(parent, y,
+            { type="dropdown", text="Default Style for New Glows",
+              values=styles, order=styleOrder,
+              getValue=function() return bg.defaultGlowStyle or 1 end,
+              setValue=function(v) bg.defaultGlowStyle = tonumber(v) or 1 end },
+            NoxUI.BlankRowCfg()); y = y - h
 
         local ACCENT = NoxUI.NOX_GREEN or { r = 0.05, g = 0.82, b = 0.62 }
 
@@ -1495,6 +1502,31 @@ initFrame:SetScript("OnEvent", function(self)
                                 },
                             })
                         end
+
+                        local function ThresholdOptions(kind, label)
+                            local modeKey, valueKey = kind .. "ThresholdMode", kind .. "Threshold"
+                            return {
+                                type = "dropdown", text = label,
+                                values = { none = "Aucun", below = "Au plus", above = "Au moins" },
+                                order = { "none", "below", "above" },
+                                getValue = function() return entry[modeKey] or "none" end,
+                                setValue = function(v)
+                                    entry[modeKey] = v ~= "none" and v or nil
+                                    Refresh()
+                                    NoxUI:RefreshPage()
+                                end,
+                            }, {
+                                type = "slider", text = "Seuil (%)", min = 0, max = 100, step = 1,
+                                disabled = function() return entry[modeKey] == nil end,
+                                disabledTooltip = label,
+                                getValue = function() return tonumber(entry[valueKey]) or 50 end,
+                                setValue = function(v) entry[valueKey] = v; Refresh() end,
+                            }
+                        end
+                        local healthMode, healthValue = ThresholdOptions("health", "Vie du personnage")
+                        _, h = W:DualRow(parent, y, healthMode, healthValue); y = y - h
+                        local powerMode, powerValue = ThresholdOptions("power", "Ressource principale")
+                        _, h = W:DualRow(parent, y, powerMode, powerValue); y = y - h
 
                         -- Eyeball preview toggle (on right region of the At Stacks / Glow Type row)
                         do

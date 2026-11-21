@@ -570,6 +570,39 @@ do
         end
     end)
 
+    local swingTimer = NoxUI.NextSwingTimer
+    if swingTimer then
+        local swipes = setmetatable({}, { __mode = "k" })
+        local function RefreshSwingSwipes()
+            for _, swipe in pairs(swipes) do swipe:Hide() end
+            local startTime, duration = swingTimer.Get()
+            if not startTime then return end
+            for key, icons in pairs(cdmBarIcons or {}) do
+                local bar = barDataByKey and barDataByKey[key]
+                if bar and not ns.IsBarBuffFamily(bar) then
+                    for _, icon in ipairs(icons) do
+                        if icon:IsVisible() and swingTimer.Matches(IconSpellID(icon)) then
+                            local swipe = swipes[icon]
+                            if not swipe and not icon:IsProtected() then
+                                swipe = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate")
+                                swipe:SetAllPoints(icon)
+                                swipe:SetHideCountdownNumbers(true)
+                                swipe:SetDrawEdge(false)
+                                swipes[icon] = swipe
+                                icon:HookScript("OnHide", function() swipe:Hide() end)
+                            end
+                            if swipe then
+                                swipe:SetCooldown(startTime, duration)
+                                swipe:Show()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        swingTimer.Subscribe(RefreshSwingSwipes)
+    end
+
     local qev = ns.TakeShell()
     qev:RegisterEvent("PLAYER_LOGIN")
     qev:SetScript("OnEvent", function(self, event)

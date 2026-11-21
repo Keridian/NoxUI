@@ -777,6 +777,18 @@ function ECHAT.ApplyClassColorNames(on)
     end
 end
 
+-- Sender colors use the game's formatter; body colors use our display engine.
+function ECHAT.ApplySenderClassColor()
+    local name, owner = "chatClassColorOverride", "NoxUIDiscussion"
+    local current = GetCVar and GetCVar(name)
+    if current == nil then return end
+    if ECHAT.DB().classColorSender == false then
+        if current ~= "1" then NoxUI.HoldCVar(name, "1", owner) end
+    else
+        NoxUI.ReleaseStaleHold(name, owner)
+    end
+end
+
 -- Sidebar visibility: always, mouseover, never
 local _sidebarFadeTarget = 1
 local _sidebarFadeAlpha = 1

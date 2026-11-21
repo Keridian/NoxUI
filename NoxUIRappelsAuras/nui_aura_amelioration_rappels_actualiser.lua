@@ -895,13 +895,56 @@ end
 -- table, the cached families, the kept minimap answer and the dismiss-key memo
 -- keep the pass allocation-free; the weapon pass reads the game's enchant
 -- lists, a table per weapon.
+local hunterTrackingSpells = { 1494, 19879, 19878, 19880, 19882, 19884, 19883 }
+local function MissingTargetTracking()
+    if not (UnitCreatureType and C_Minimap and C_Minimap.GetNumTrackingTypes and C_Minimap.GetTrackingInfo) then return end
+    local exists, attackable, dead = UnitExists("target"), UnitCanAttack("player", "target"), UnitIsDeadOrGhost("target")
+    if isSecret(exists) or isSecret(attackable) or isSecret(dead) or not exists or not attackable or dead then return end
+    local _, creatureType = UnitCreatureType("target")
+    if isSecret(creatureType) or type(creatureType) ~= "number" then return end
+    local wanted = hunterTrackingSpells[creatureType]
+    if not wanted or not Known(wanted) then return end
+
+    local available
+    for index = 1, C_Minimap.GetNumTrackingTypes() do
+        local info = C_Minimap.GetTrackingInfo(index)
+        if isSecret(info) then return end
+        if info and not isSecret(info.type) and info.type == "spell" then
+            if isSecret(info.spellID) and (isSecret(info.active) or info.active) then return end
+            if not isSecret(info.spellID) and info.spellID == wanted then
+                if isSecret(info.active) or info.active then return end
+                available = true
+            end
+        end
+    end
+    if available then return wanted end
+end
+
+local awarenessAura = { 1297774 }
+local function MissingAwarenessItem(auraLock)
+    if auraLock and not EABR.FvRanksReadable(awarenessAura) then return end
+    if PlayerHasAuraByID(awarenessAura) then return end
+    if CachedGetItemCount(275730) > 0 then return 275730 end
+    if CachedGetItemCount(281371) > 0 then return 281371 end
+end
+
 function EABR.CollectForever(missing, inInstance, inPvP)
     local fo = db.profile.forever
     local shows = fo and not InCombat() and EABR.SectionShows(fo.whereToShow, inInstance)
     -- Class trackers and Find Treasure are read from the minimap, whose event
     -- is listened to only while a reminder that reads it can show.
-    EABR.FvSyncTrackingEvent(shows and not inPvP
-        and ((fo.gather == true and fo.gatherClassTrack ~= false) or fo.treasure == true) or false)
+    local hunterTracking = fo and fo.hunterTargetTracking == true and GetPlayerClass() == "HUNTER"
+        and InCombat() and not inPvP and EABR.SectionShows(fo.whereToShow, inInstance) or false
+    EABR.FvSyncTrackingEvent(hunterTracking or (shows and not inPvP
+        and ((fo.gather == true and fo.gatherClassTrack ~= false) or fo.treasure == true)) or false)
+    local spell = hunterTracking and MissingTargetTracking()
+    if spell then
+        local entry = AcquireEntry()
+        entry.mode, entry.spellID, entry.texture = "texture", spell, Tex(spell)
+        entry.label = SpellName(spell) or NoxUI.L("Hunter Target Tracking")
+        entry.cat, entry.dismissKey = "forever", "forever:hunterTracking"
+        missing[#missing + 1] = entry
+    end
     EABR.FvSyncWeaponEvents(shows and fo.weapon == true or false)
     local wantBag = shows and fo.sleepingBag == true and not inPvP
     local sleepBag = wantBag and EABR.FvSleepingBagOwned()
@@ -909,7 +952,12 @@ function EABR.CollectForever(missing, inInstance, inPvP)
     -- Weapon Buffs' bag listener (below) already hears every bag change.
     EABR.FvSyncSleepBagWatch(wantBag and not sleepBag and not EABR._fvMaxLevel
         and fo.weapon ~= true or false)
-    EABR.FvSyncBagEvent(shows and (fo.weapon == true or sleepBag) or false)
+    local wantCenser = false
+    if shows and inInstance and not inPvP and fo.arcaneCenser == true then
+        local _, instanceType = IsInInstance()
+        wantCenser = instanceType == "party"
+    end
+    EABR.FvSyncBagEvent(shows and (fo.weapon == true or sleepBag or wantCenser) or false)
     local watchPickerSpells = shows and PickerEnabled() or false
     if watchPickerSpells ~= (EABR._fvPickerSpellEvents or false) then
         EABR.FvSyncPickerSpellEvents(watchPickerSpells)
@@ -923,6 +971,17 @@ function EABR.CollectForever(missing, inInstance, inPvP)
     -- Under the aura lock a secret aura reads absent, so an aura reminder
     -- shows only while none of its spells is secret.
     local auraLock = NoxUI.AuraKit.AurasRestricted()
+    local awarenessItem = wantCenser and MissingAwarenessItem(auraLock)
+    if awarenessItem then
+        local entry = AcquireEntry()
+        entry.mode = "item"
+        entry.itemID = awarenessItem
+        entry.texture = C_Item.GetItemIconByID(awarenessItem) or Tex(awarenessAura[1])
+        entry.label = SpellName(awarenessAura[1]) or NoxUI.L("Arcane Censer")
+        entry.cat = "forever"
+        entry.dismissKey = "forever:magicalAwareness"
+        missing[#missing + 1] = entry
+    end
     local ids = EABR._foreverIDs
     if not ids then ids = {}; EABR._foreverIDs = ids end
     if fo.camp ~= false and open then
@@ -1060,7 +1119,7 @@ function EABR.CollectForever(missing, inInstance, inPvP)
     for i = 1, #custom do
         local id = custom[i]
         local off = classOff and classOff[id]
-        if not (off and off[class] == false) then
+        if not (off and off[class] == false) and not (awarenessItem and id == awarenessAura[1]) then
             local name = SpellName(id)
             if not (coveredIDs and (coveredIDs[id] or (name and coveredNames[name]))) then
                 local fam = EABR.ForeverFamily(id)

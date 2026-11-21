@@ -75,6 +75,20 @@ if NoxUI.IS_FOREVER == true then
         tooltip = "Active while WoW's gamepad interface is on." }
 end
 
+local function SecondarySpecActive()
+    local spec = C_SpecializationInfo
+    return NoxUI.IS_FOREVER and spec and spec.GetActiveSpecGroup and spec.GetActiveSpecGroup() == 2
+end
+
+if NoxUI.IS_FOREVER then
+    NoxUI.CONDITIONS[#NoxUI.CONDITIONS + 1] = {
+        id = "secondaryspec", label = "Secondary Spec",
+        requires = function() return GetNumSpecGroups and GetNumSpecGroups() == 2 end,
+        requiresHint = "Unlock a second specialization to use this condition.",
+        tooltip = "Active while your secondary spec is active.",
+    }
+end
+
 local INSTANCE_COND = {
     party = "dungeon",
     raid  = "raid",
@@ -170,6 +184,12 @@ function NoxUI.Conditions_ActiveGroup()
     if DarkModeMasterOn() then
         for _, g in ipairs(groups) do
             if g.conds and g.conds.darkmode then return g end
+        end
+    end
+    -- A specialization selection outranks ambient instance and group conditions.
+    if SecondarySpecActive() then
+        for _, g in ipairs(groups) do
+            if g.conds and g.conds.secondaryspec then return g end
         end
     end
     -- Tier 4: instance type (client reports exactly one).
@@ -393,7 +413,15 @@ if NoxUI.IS_FOREVER == true
             and not C_EventUtils.IsEventValid("INPUT_DEVICE_INTERFACE_TRANSITION")) then
     evFrame:RegisterEvent("INPUT_DEVICE_INTERFACE_TRANSITION")
 end
+if NoxUI.IS_FOREVER then
+    pcall(evFrame.RegisterEvent, evFrame, "ACTIVE_TALENT_GROUP_CHANGED")
+    pcall(evFrame.RegisterEvent, evFrame, "PLAYER_TALENT_UPDATE")
+end
 evFrame:SetScript("OnEvent", function(_, event)
+    if event == "ACTIVE_TALENT_GROUP_CHANGED" or event == "PLAYER_TALENT_UPDATE" then
+        C_Timer.After(0, NoxUI.Conditions_Recheck)
+        return
+    end
     if event == "PLAYER_REGEN_ENABLED" then
         if _flipPending then
             _flipPending = false

@@ -88,9 +88,8 @@ initFrame:SetScript("OnEvent", function(self)
     if ECHAT.EngineSetChannelAbbrevLetters then
         ECHAT.EngineSetChannelAbbrevLetters(p.abbreviateChannelLetters == true)
     end
-    if p.classColorNames == true then
-        ECHAT.ApplyClassColorNames(true)
-    end
+    ECHAT.ApplyClassColorNames(p.classColorNames == true)
+    ECHAT.ApplySenderClassColor()
     if ECHAT.EngineIntegrateAll then ECHAT.EngineIntegrateAll() end
     -- Owned tab strip: hides Blizzard's strip, builds ours from the same
     -- window storage, and starts mirroring selection/flash from the engine.
@@ -893,6 +892,8 @@ initFrame:SetScript("OnEvent", function(self)
     -- init too); icon visibility uses the same minimal SetShown block as init, and
     -- position/scale/free-move are covered by the Apply* calls below.
     _G._ECHAT_RefreshAll = function()
+        ECHAT.ApplyClassColorNames(ECHAT.DB().classColorNames == true)
+        ECHAT.ApplySenderClassColor()
         ECHAT.ApplySidebarVisibility()
         ECHAT.ApplyBorders()
         do

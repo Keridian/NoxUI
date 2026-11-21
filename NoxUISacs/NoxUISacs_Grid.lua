@@ -181,6 +181,7 @@ local function RenderButton(btn, data, _, col, row, startX, currentY, _, interac
     btn._cdS, btn._cdD = data._cdStart, data._cdDuration
 
     ns.PaintInventoryQuestBadge(btn, data.info and data._isQuest)
+    ns.PaintReagentBadge(btn, data.info and data._isReagentBagItem)
 
     -- Always clear overlays upfront (pooled buttons carry stale state from prior items)
     if btn.ProfessionQualityOverlay then
@@ -437,6 +438,10 @@ local function RenderButton(btn, data, _, col, row, startX, currentY, _, interac
             end
         end
 
+    end
+    if data._recentPickupText and btn.Count then
+        btn.Count:SetText(data._recentPickupText)
+        btn.Count:Show()
     end
     UpdatePawnArrow(btn, data.itemLink)
     EUI_Bags.RunItemOverlays(btn, data)
@@ -877,7 +882,7 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
                 end
             end
             if #recentItems > 0 then
-                recentItems = MergeDuplicates(recentItems)
+                recentItems = ns.RecentPickupRows(MergeDuplicates(recentItems))
                 table.sort(recentItems, RecentCompare)
             end
             if compactOn then
@@ -1312,7 +1317,7 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
                         end
                     end
                     if #recentItems > 0 then
-                        recentItems = MergeDuplicates(recentItems)
+                        recentItems = ns.RecentPickupRows(MergeDuplicates(recentItems))
                         table.sort(recentItems, RecentCompare)
                     end
                     RenderSection(NoxUI.L("Recent Items"), recentItems, false, false, true)
@@ -1400,7 +1405,7 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
         local function RenderViewSection(label, sItems, kind, hint)
             if #sItems > 0 then
                 if kind == "recent" then
-                    sItems = MergeDuplicates(sItems)
+                    sItems = ns.RecentPickupRows(MergeDuplicates(sItems))
                     table.sort(sItems, RecentCompare)
                 else
                     PreCacheSortFields(sItems)
@@ -1620,7 +1625,10 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
                     table.sort(displayItems, VisualSortCompare)
                 end
                 displayItems = MergeDuplicates(displayItems)
-                if selCat and selCat.isRecent then table.sort(displayItems, RecentCompare) end
+                if selCat and selCat.isRecent then
+                    displayItems = ns.RecentPickupRows(displayItems)
+                    table.sort(displayItems, RecentCompare)
+                end
             end
             local headerName = selCat and selCat.name
             if headerName then

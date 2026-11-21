@@ -199,10 +199,20 @@ local function InitializeFrames()
                     local db = NoxUIDB
                     return (db and db.restedIndicatorXOffset) or 0, (db and db.restedIndicatorYOffset) or 0
                 end
+                local function RestPortrait()
+                    if not (NoxUIDB and NoxUIDB.restedIndicatorOnPortrait) then return end
+                    local portrait = pf.Portrait and pf.Portrait.backdrop
+                    if portrait and portrait:IsShown() then return portrait end
+                end
                 local function PlaceRest(region)
                     local rx, ry = RestOffsets()
+                    local portrait = RestPortrait()
                     region:ClearAllPoints()
-                    region:SetPoint("TOPLEFT", pf.Health, "TOPLEFT", 3 + rx, -2 + ry)
+                    if portrait then
+                        region:SetPoint("BOTTOM", portrait, "TOP", rx, ry)
+                    else
+                        region:SetPoint("TOPLEFT", pf.Health, "TOPLEFT", 3 + rx, -2 + ry)
+                    end
                 end
                 -- Places the text, and the animated icon once built, at the cog's X/Y
                 -- offsets (and the icon at its Size). The icon's spot depends on the
@@ -214,7 +224,7 @@ local function InitializeFrames()
                     if a then
                         local size = (NoxUIDB and NoxUIDB.restedIndicatorAnimatedSize) or 24
                         local tex = pf._restAnimTex
-                        if ns.UF_Forever() and pf._blizzGeom == ns.UF_BLIZZ.player then
+                        if not RestPortrait() and ns.UF_Forever() and pf._blizzGeom == ns.UF_BLIZZ.player then
                             -- WoW Forever's own PlayerRestLoop: a 20x20 frame at (64, -6) of
                             -- the stock box, the 30x30 flipbook centred on it. The Size
                             -- setting scales both, 24 being the stock look.

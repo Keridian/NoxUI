@@ -57,8 +57,6 @@ Les exports qui incluent le placement enregistrent la résolution et l’échell
 Rappels d’auras
 Le rappel d’encensoir en donjon reconnaît l’attracteur élémentaire de la Horde. Le chasseur peut activer un rappel visuel du pistage adapté à sa cible hostile si le pistage est accessible et inactif.
 
-Historique
-
 NoxUI 0.2.3.9
 21 novembre 2026
 
@@ -71,6 +69,7 @@ Les boutons enregistrés par LibDBIcon restent disponibles si leur nom se termin
 Cadres du joueur et de la cible | Ajout de texte
 Le bouton indique si toutes les positions sont occupées ou si tous les textes disponibles sont déjà affichés.
 
+Historique
 
 NoxUI 0.2.3.8
 21 novembre 2026

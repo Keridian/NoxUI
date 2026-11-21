@@ -709,6 +709,19 @@ initFrame:SetScript("OnEvent", function(self)
               end }
         );  y = y - h
 
+        _, h = W:DualRow(parent, y,
+            { type="toggle", text="Show Addon Button Names",
+              tooltip="Shows the names of grouped minimap buttons beside their icons.",
+              disabled=TooFewButtons,
+              disabledTooltip="This option requires 2 or more minimap buttons.", rawTooltip=true,
+              getValue=function() local m = MinimapDB(); return m and m.flyoutShowNames == true end,
+              setValue=function(v)
+                  local m = MinimapDB(); if not m then return end
+                  m.flyoutShowNames = v
+                  RefreshMinimap()
+              end },
+            NoxUI.BlankRowCfg()); y = y - h
+
         -- Replace placeholder dropdown with checkbox dropdown
         if not NoxUI._prebuilding then
             local leftRgn = ungroupRow._leftRegion

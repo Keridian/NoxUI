@@ -57,6 +57,7 @@ NoxUI_Fonts.lua
 NoxUI_ProfileSync.lua
 NoxUI_RetailAtlas.lua
 NoxUI_BuffPresets.lua
+ChronometreProchaineAttaque.lua
 NoxUI_UICore.lua
 NoxUI_Ticker.lua
 NoxUI_Mouse.lua

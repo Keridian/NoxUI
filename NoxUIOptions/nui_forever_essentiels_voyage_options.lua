@@ -94,6 +94,14 @@ _G._EUI_BuildFlightTimerPage = function(pageName, parent, yOffset)
           setValue = function(v) FT.Cfg().fade = v end }
     );  y = y - h
 
+    _, h = W:DualRow(parent, y,
+        { type = "toggle", text = "Estimated Flight Time on Map",
+          tooltip = "Shows the estimated duration when hovering over a reachable flight point with known route data.",
+          disabled = off, disabledTooltip = "Flight Timer",
+          getValue = function() return FT.Get("mapEstimate") ~= false end,
+          setValue = function(v) FT.Cfg().mapEstimate = v end },
+        NoxUI.BlankRowCfg()); y = y - h
+
     _, h = W:Spacer(parent, y, 20);  y = y - h
 
     ---------------------------------------------------------------------------

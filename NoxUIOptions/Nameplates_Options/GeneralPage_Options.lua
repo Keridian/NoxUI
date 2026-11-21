@@ -63,7 +63,48 @@ local function BuildGeneralPage(pageName, parent, yOffset)
             "Colore les noms des membres de votre groupe ou raid. Cette couleur est prioritaire sur la couleur de guilde."),
         nameColorOption("colorGuildNames", "Noms dorés pour la guilde",
             "Colore les noms des membres de votre guilde.")); y = y - h
+    _, h = W:DualRow(parent, y,
+        nameColorOption("colorFriendNames", "Noms verts pour les amis",
+            "Colore les amis du personnage et les amis Battle.net connectés sur leur personnage. Les couleurs du groupe, du raid et de la guilde restent prioritaires."),
+        { type = "toggle", text = "États AFK et DND des alliés",
+          tooltip = "Affiche une mention à côté du nom quand un joueur allié est absent ou ne souhaite pas être dérangé.",
+          getValue = function() return DBVal("showFriendlyStatus") == true end,
+          setValue = function(value)
+              DB().showFriendlyStatus = value
+              if ns.NP_SyncFriendlyNameFormat then ns.NP_SyncFriendlyNameFormat() end
+          end }); y = y - h
+    _, h = W:DualRow(parent, y,
+        nameColorOption("colorFormerGroupNames", "Noms violets pour les anciens coéquipiers",
+            "Colore les joueurs rencontrés en groupe ou en raid depuis le dernier chargement de l’interface, une fois qu’ils ont quitté le groupe."),
+        NoxUI.BlankRowCfg()); y = y - h
     _, h = W:SectionHeader(parent, SECTION_FRIENDLY, y); y = y - h
+
+    _, h = W:DualRow(parent, y,
+        { type="toggle", text="Noms seuls en instance",
+          tooltip="En donjon, raid ou champ de bataille, affiche les noms alliés même si les barres de vie sont choisies en extérieur.",
+          disabled=function() return DBVal("showFriendlyPlayers") == false end,
+          getValue=function() return DBVal("friendlyNameOnlyInInstances") == true end,
+          setValue=function(v)
+              DB().friendlyNameOnlyInInstances = v or nil
+              ns.UpdateFriendlyNameplateSystem()
+          end },
+        { type="toggle", text="Couleur des PNJ par rang",
+          tooltip="Colore les noms des PNJ alliés rares en violet, et ceux des élites en doré.",
+          getValue=function() return DBVal("friendlyNPCColorByRank") == true end,
+          setValue=function(v)
+              DB().friendlyNPCColorByRank = v or nil
+              ns.UpdateFriendlyNameplateSystem()
+              ns.RefreshFriendlyColors()
+          end }); y = y - h
+
+    _, h = W:DualRow(parent, y,
+        { type="toggle", text="Nom du maître des familiers",
+          tooltip="Ajoute le nom du maître aux familiers du personnage, du groupe et du raid.",
+          getValue=function() return DBVal("friendlyShowPetOwner") == true end,
+          setValue=function(v)
+              DB().friendlyShowPetOwner = v or nil
+              ns.RefreshFriendlyBelowName()
+          end }, NoxUI.BlankRowCfg()); y = y - h
 
     local function friendlyPlayersOff() return DBVal("showFriendlyPlayers") == false end
     local function friendlyPlateOff() return friendlyPlayersOff() or DBVal("friendlyNameOnly") ~= false end

@@ -2151,11 +2151,11 @@ function DUIDialogBaseMixin:IsChoosingReward()
     return self.chooseItems == true
 end
 
-function DUIDialogBaseMixin:SelectRewardChoice(choiceID, showTooltip)
+function DUIDialogBaseMixin:SelectRewardChoice(choiceID, showTooltip, selectionOnly)
     if not self.chooseItems then return end;    --Handled in Formatter when building reward choices
 
     local claimQuestReward;
-    if INPUT_DEVICE_GAME_PAD then
+    if INPUT_DEVICE_GAME_PAD and not selectionOnly then
         self.GamePadFocusIndicator:Hide();
         --Briefly paused in case the button becomes too sensitive and claim the reward by accident
         if not API.CheckActionThrottled("GamePadChooseQuestReward") then
@@ -2225,6 +2225,17 @@ function DUIDialogBaseMixin:FlashRewardChoices()
             button:PlaySheen();
         end
     end
+end
+
+function DUIDialogBaseMixin:SelectRewardFromKeyboard(index)
+    if not self:IsChoosingReward() then return false end
+    local buttons = self.itemButtonPool:GetObjectsByPredicate(Predicate_ActiveChoiceButton);
+    for _, button in ipairs(buttons or {}) do
+        if button.index == index then
+            return self:SelectRewardChoice(index, true, true);
+        end
+    end
+    return false
 end
 
 function DUIDialogBaseMixin:CycleRewardChoice(delta)

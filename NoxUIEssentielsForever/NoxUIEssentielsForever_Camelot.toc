@@ -12,6 +12,8 @@
 # Main Lua
 NoxUIEssentielsForever.lua
 NoxUIEssentielsForever_PhaseGroupe.lua
+EquipementForever.lua
+RappelsTalentsForever.lua
 
 # General (spell uprank, classic spellbook and talents, junk items, simplified stats, gathering skill, map fade, active stance icon, map reveal, map markers, quest rewards)
 ..\NoxUILangues\deDE_GameNames.lua [AllowLoadTextLocale deDE]

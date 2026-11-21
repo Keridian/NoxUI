@@ -216,8 +216,10 @@ function EBS._AnyDropdownOpen()
     return false
 end
 
+local flyoutLabels = {}
 local function LayoutFlyoutButtons()
     if not flyoutPanel then return end
+    for _, label in ipairs(flyoutLabels) do label:Hide() end
     local buttons = CollectFlyoutButtons()
     -- Same lockdown rule as HideMinimapChild: every per-button call in the loop below
     -- (SetParent/SetFrameStrata/SetPoint/SetSize/Show/SetFrameLevel) is protected and
@@ -255,9 +257,20 @@ local function LayoutFlyoutButtons()
     -- Boxes: the outer margin matches the gaps. Ring: margin=8, since the ring overlay
     -- overhangs each button by 3px, leaving 5px of visible clearance.
     local margin = boxes and FLYOUT_PADDING or 8
+    local asList = mp and mp.flyoutShowNames == true
     local cols = math.min(count, FLYOUT_COLS)
     local rows = math.ceil(count / cols)
-    local pw = margin * 2 + cols * btnSize + (cols - 1) * FLYOUT_PADDING
+    local cellWidth = btnSize
+    if asList then
+        local parent = flyoutPanel:GetParent()
+        local maxRows = math.max(1, math.floor((parent:GetHeight() - 2 * margin + FLYOUT_PADDING)
+            / (btnSize + FLYOUT_PADDING)))
+        cols = math.ceil(count / maxRows)
+        rows = math.ceil(count / cols)
+        local available = (parent:GetWidth() - 2 * margin - (cols - 1) * FLYOUT_PADDING) / cols
+        cellWidth = math.max(btnSize + 12, math.min(btnSize + 152, available))
+    end
+    local pw = margin * 2 + cols * cellWidth + (cols - 1) * FLYOUT_PADDING
     local ph = margin * 2 + rows * btnSize + (rows - 1) * FLYOUT_PADDING
     flyoutPanel:SetSize(pw, ph)
 
@@ -271,9 +284,9 @@ local function LayoutFlyoutButtons()
             }
         end
 
-        local col = (i - 1) % cols
-        local row = math.floor((i - 1) / cols)
-        local xOff = margin + col * (btnSize + FLYOUT_PADDING)
+        local col = asList and math.floor((i - 1) / rows) or (i - 1) % cols
+        local row = asList and (i - 1) % rows or math.floor((i - 1) / cols)
+        local xOff = margin + col * (cellWidth + FLYOUT_PADDING)
         local yOff = -(margin + row * (btnSize + FLYOUT_PADDING))
 
         btn:SetParent(flyoutPanel)
@@ -285,6 +298,20 @@ local function LayoutFlyoutButtons()
         btn:ClearAllPoints()
         btn:SetPoint("TOPLEFT", flyoutPanel, "TOPLEFT", xOff, yOff)
         btn:SetSize(btnSize, btnSize)
+        if asList then
+            local label = flyoutLabels[i]
+            if not label then
+                label = flyoutPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+                label:SetJustifyH("LEFT")
+                label:SetWordWrap(false)
+                flyoutLabels[i] = label
+            end
+            label:ClearAllPoints()
+            label:SetPoint("LEFT", btn, "RIGHT", 8, 0)
+            label:SetWidth(cellWidth - btnSize - 8)
+            label:SetText(GetMinimapButtonLabel(btn))
+            label:Show()
+        end
         EBS._suppressVisTrack = true
         btn:SetAlpha(1)
         btn:Show()

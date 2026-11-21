@@ -133,6 +133,36 @@ function ns.GetSlotQuestFlags(bag, slot)
     end
 end
 
+local reagentBadgeIcons = {
+    components = "nui_composants.png",
+    materials = "nui_materiaux.png",
+    crafting = "nui_artisanat.png",
+}
+
+function ns.PaintReagentBadge(btn, isReagent, anchor)
+    local badge = btn._noxReagentBadge
+    local profile = BP()
+    if not isReagent or profile.bagShowReagentBadge ~= true then
+        if badge then badge:Hide() end
+        return
+    end
+    if not badge then
+        badge = (btn._textOverlay or btn):CreateTexture(nil, "OVERLAY", nil, 6)
+        btn._noxReagentBadge = badge
+    end
+    local texture = reagentBadgeIcons[profile.bagReagentBadgeIcon] or reagentBadgeIcons.components
+    if btn._noxReagentBadgeIcon ~= texture then
+        badge:SetTexture([[Interface\AddOns\NoxUISacs\Media\]] .. texture)
+        btn._noxReagentBadgeIcon = texture
+    end
+    local icon = anchor or btn
+    local size = math.min(14, icon:GetHeight() * 0.48)
+    badge:SetSize(size, size)
+    badge:ClearAllPoints()
+    badge:SetPoint("BOTTOMLEFT", icon, "BOTTOMLEFT", 1, 1)
+    badge:Show()
+end
+
 function ns.PaintInventoryQuestBadge(btn, isQuest, anchor)
     local badge = btn._nuiQuestBadge
     if not isQuest then

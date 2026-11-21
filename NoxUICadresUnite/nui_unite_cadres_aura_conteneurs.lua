@@ -1166,6 +1166,40 @@ end
 -- (they render nothing) and Tracked Auras include links (explicit always-show
 -- spells) keep their payload. A narrowed link's key gains "|dur", so the
 -- variant declares fresh and the plain one parks at 0.
+local function AddTrackedBuffs(chain, s)
+    local includes, excludes = {}, {}
+    for id, enabled in pairs(s.buffTrackedExclude or {}) do
+        if enabled then excludes[id] = true end
+    end
+    for id, enabled in pairs(s.buffTrackedInclude or {}) do
+        if enabled and not excludes[id] then includes[id] = true end
+    end
+    if s.buffTrackedOnly then
+        chain = {}
+    elseif not next(includes) and not next(excludes) then
+        return chain
+    else
+        if #chain == 0 then chain[1] = { key = "all", tokens = { "HELPFUL" } } end
+        for _, link in ipairs(chain) do
+            local cand = {}
+            for key, value in pairs(link.cand or {}) do cand[key] = value end
+            local filtered = {}
+            for id, value in pairs(cand.excludeSpellIDs or {}) do filtered[id] = value end
+            for id in pairs(excludes) do filtered[id] = true end
+            for id in pairs(includes) do filtered[id] = true end
+            cand.excludeSpellIDs = filtered
+            link.cand = cand
+        end
+    end
+    if next(includes) then
+        table.insert(chain, 1, { key = "trackedBuffs", tokens = { "HELPFUL" },
+            cand = { includeSpellIDs = includes }, inc = true })
+    elseif s.buffTrackedOnly then
+        chain[1] = { key = "trackedBuffsEmpty", tokens = { "HELPFUL" }, hidden = true }
+    end
+    return chain
+end
+
 local function ChainFor(unit, base, s)
     local isBuff = base == "HELPFUL"
     local chain
@@ -1175,6 +1209,7 @@ local function ChainFor(unit, base, s)
         chain = PlayerDebuffChain(s)
     else
         chain = BuildChain(base, isBuff, s, unit)
+        if isBuff and (unit == "target" or unit == "focus") then chain = AddTrackedBuffs(chain, s) end
     end
     local dur
     if isBuff then dur = s.buffDurOnly == true else dur = s.debuffHasDuration == true end
@@ -2738,7 +2773,8 @@ local function CfgFP(unit, base, s, frame)
         -- maps (boss any-caster opt-out, target/focus MINE opt-in) move an
         -- include between the two scope links.
         TriListFP(s.debuffExclude), TriListFP(s.debuffInclude),
-        TriListFP(s.debuffIncludeAnyCaster), TriListFP(s.debuffIncludeMine))
+        TriListFP(s.debuffIncludeAnyCaster), TriListFP(s.debuffIncludeMine),
+        isBuff and TriListFP(s.buffTrackedInclude), isBuff and TriListFP(s.buffTrackedExclude), s.buffTrackedOnly)
     -- Hide Exhaustion (debuffs; nil = on) feeds ApplyGroupConfig's excludes.
     -- Marked only while off, so a default fingerprint stays as it was.
     if not isBuff and s.debuffHideExhaustion == false then fp = fp .. "|lx0" end

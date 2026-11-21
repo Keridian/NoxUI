@@ -59,7 +59,7 @@ local DEFAULTS = {
     -- side from the retired bar style) shows.
     destText = "show", destSize = 14, destX = 0, destY = 0,
     timeText = "show", timeSize = 14, timeX = 0, timeY = 0,
-    showTotal = false, earlyExit = true, fade = false,
+    showTotal = false, earlyExit = true, fade = false, mapEstimate = true,
 }
 
 local BAR_TEXTURES, BAR_TEXTURE_NAMES, BAR_TEXTURE_ORDER = NoxUI.BuildBarTextureTables()
@@ -94,6 +94,7 @@ end
 -- lookups may return nothing (a character with no config for the tree), so a
 -- missing answer reads as no perk rather than erroring at takeoff.
 local function SpeedMultiplier()
+    if not (C_Traits and C_Traits.GetConfigIDByTreeID and C_Traits.GetNodeInfo) then return 1 end
     local configID = C_Traits.GetConfigIDByTreeID(1188)
     local node = configID and C_Traits.GetNodeInfo(configID, 110300)
     return (node and node.activeRank or 0) > 0 and 1.2 or 1
@@ -604,6 +605,51 @@ local function OnEvent(_, event)
     elseif event == "PLAYER_CONTROL_GAINED" then
         if flight and not UnitOnTaxi("player") then Land() end
     end
+end
+
+local function AddMapEstimate(owner, slot)
+    if not Enabled() or Get("mapEstimate") == false or not slot or not GameTooltip:IsOwned(owner) then return end
+    local yards = RouteInfo(slot)
+    if not yards then return end
+    local estimate = FormatTime(yards / (Speed() * SpeedMultiplier()))
+    GameTooltip:AddLine(NoxUI.Lf("Estimated flight time: %s", estimate), 0.72, 0.78, 0.84)
+    GameTooltip:Show()
+end
+
+if type(TaxiNodeOnButtonEnter) == "function" then
+    hooksecurefunc("TaxiNodeOnButtonEnter", function(button)
+        local slot = button:GetID()
+        if TaxiNodeGetType(slot) == "REACHABLE" then AddMapEstimate(button, slot) end
+    end)
+end
+
+local function HookFlightMapPins()
+    local map = FlightMapFrame
+    if not (map and map.RegisterPin and map.EnumeratePinsByTemplate) then return false end
+    local template = "FlightMap_FlightPointPinTemplate"
+    local hookedPins = setmetatable({}, { __mode = "k" })
+    local function OnEnter(pin)
+        local data = pin.taxiNodeData
+        if data and not pin.isMapLayerTransition and data.state == Enum.FlightPathState.Reachable then
+            AddMapEstimate(pin, data.slotIndex)
+        end
+    end
+    local function HookPin(_, pin)
+        if pin.pinTemplate ~= template or hookedPins[pin] then return end
+        pin:HookScript("OnEnter", OnEnter)
+        hookedPins[pin] = true
+    end
+    hooksecurefunc(map, "RegisterPin", HookPin)
+    for pin in map:EnumeratePinsByTemplate(template) do HookPin(map, pin) end
+    return true
+end
+
+if not HookFlightMapPins() then
+    local loader = CreateFrame("Frame")
+    loader:RegisterEvent("ADDON_LOADED")
+    loader:SetScript("OnEvent", function(self, _, addon)
+        if addon == "Blizzard_FlightMap" and HookFlightMapPins() then self:UnregisterEvent("ADDON_LOADED") end
+    end)
 end
 
 local function OnTakeTaxiNode(slot)

@@ -315,6 +315,9 @@ if NoxUI.IS_FOREVER then
     local FOREVER_OFF = { greatvault = true, crests = true, spec = true, mplussummary = true }
     table.insert(ns.BLOCK_TYPES, #ns.BLOCK_TYPES, { key = "supplies", label = "Class Resources" })
     ns.BLOCK_DEFAULTS.supplies = { showIcon = true }
+    table.insert(ns.BLOCK_TYPES, #ns.BLOCK_TYPES, { key = "dualspec", label = "Dual Specialization",
+        available = function() return C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup ~= nil end })
+    ns.BLOCK_DEFAULTS.dualspec = {}
     for i = #ns.BLOCK_TYPES, 1, -1 do
         if FOREVER_OFF[ns.BLOCK_TYPES[i].key] then table.remove(ns.BLOCK_TYPES, i) end
     end

@@ -29,12 +29,13 @@ end
 -- Red warning string from a decoded payload's meta vs the current client; nil when nothing mismatches. skipScale = user already accepted
 -- the scale-match popup, so omit the UI-scale line (resolution line still shows).
 local function BuildScaleWarning(payload, skipScale)
-    if not payload or not payload.meta then return nil end
+    if not payload or type(payload.meta) ~= "table" then return nil end
     local m = payload.meta
     local warnings = {}
     local myScale  = NoxUIDB and NoxUIDB.ppUIScale or (UIParent and UIParent:GetScale()) or 1
     local expScale = m.euiScale or m.uiScale
-    if not skipScale and expScale and math.abs(myScale - expScale) > 0.02 then
+    if not skipScale and type(expScale) == "number" and expScale > 0 and expScale < math.huge
+        and math.abs(myScale - expScale) > 0.02 then
         local expPct = math.floor(expScale * 100 + 0.5)
         local myPct  = math.floor(myScale  * 100 + 0.5)
         warnings[#warnings + 1] = NoxUI.Lf("UI Scale Issue: Profile was made at %1$d%%, yours is %2$d%%", expPct, myPct)
@@ -44,7 +45,9 @@ local function BuildScaleWarning(payload, skipScale)
     local mySH  = sh and math.floor(sh) or 0
     local expSW = m.screenW or 0
     local expSH = m.screenH or 0
-    if expSW > 0 and expSH > 0 and (mySW ~= expSW or mySH ~= expSH) then
+    if type(expSW) == "number" and type(expSH) == "number"
+        and expSW > 0 and expSW < math.huge and expSH > 0 and expSH < math.huge
+        and mySW > 0 and mySH > 0 and (mySW ~= expSW or mySH ~= expSH) then
         warnings[#warnings + 1] = NoxUI.Lf("Resolution Issue: Profile was made at %1$dx%2$d, yours is %3$dx%4$d", expSW, expSH, mySW, mySH)
     end
     if #warnings == 0 then return nil end

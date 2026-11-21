@@ -1933,6 +1933,25 @@ initFrame:SetScript("OnEvent", function(self)
                   end }
             );  y = y - h
 
+            _, h = W:DualRow(parent, y,
+                { type="toggle", text="Arcane Censer",
+                  tooltip="In dungeons, reminds you to use an Arcane Censer or Elemental Attractor from your bags when Magical Awareness is missing.",
+                  getValue=function() local f = FDB(); return f and f.arcaneCenser == true end,
+                  setValue=function(v)
+                      local f = FDB(); if not f then return end
+                      f.arcaneCenser = v
+                      RefreshAll()
+                  end },
+                select(2, UnitClass("player")) == "HUNTER" and
+                { type="toggle", text="Hunter Target Tracking",
+                  tooltip="In combat, shows which tracking spell matches your hostile target when its creature type is available.",
+                  getValue=function() local f = FDB(); return f and f.hunterTargetTracking == true end,
+                  setValue=function(v)
+                      local f = FDB(); if not f then return end
+                      f.hunterTargetTracking = v
+                      RefreshAll()
+                  end } or NoxUI.BlankRowCfg()); y = y - h
+
             -- Well Fed | Gathering Tracking (+ class tracking cog)
             local gatherRow
             gatherRow, h = W:DualRow(parent, y,

@@ -71,11 +71,16 @@ local function IsInFollowerDungeon()
     return false
 end
 
+local function PreferFriendlyNames(profile)
+    return profile.friendlyNameOnly ~= false
+        or (profile.friendlyNameOnlyInInstances == true and IsInInstance())
+end
+
 local function IsFriendlyEnabled()
     if IsInFollowerDungeon() then return false end
     local fp = FP()
     if not fp or fp.showFriendlyPlayers == false then return false end
-    return (fp.friendlyNameOnly == false)
+    return not PreferFriendlyNames(fp)
 end
 
 local function IsNameOnlyMode()
@@ -83,7 +88,7 @@ local function IsNameOnlyMode()
     local fp = FP()
     if not fp then return false end
     if fp.showFriendlyPlayers == false then return false end
-    return (fp.friendlyNameOnly ~= false)
+    return PreferFriendlyNames(fp)
 end
 
 local function IsFriendlyNPCEnabled()
@@ -438,11 +443,17 @@ local npcOverlayPool = {}     -- recycled overlay frames
 local function GetNPCNameColor(unit)
     -- UnitReaction: 1-3 = hostile, 4 = neutral, 5+ = friendly
     local reaction = UnitReaction(unit, "player")
-    if reaction and reaction == 4 then
-        -- Neutral: yellow
+    local fp = FP()
+    if not (issecretvalue and issecretvalue(reaction)) and reaction == 4 then
         return 0.9, 0.7, 0.0
     end
-    local fp = FP()
+    if fp and fp.friendlyNPCColorByRank and UnitClassification then
+        local rank = UnitClassification(unit)
+        if not (issecretvalue and issecretvalue(rank)) then
+            if rank == "rare" or rank == "rareelite" then return 0.78, 0.66, 1 end
+            if rank == "elite" or rank == "worldboss" then return 1, 0.81, 0.46 end
+        end
+    end
     local c = (fp and fp.friendlyNPCNameColor) or ns.defaults.friendlyNPCNameColor
     return c.r, c.g, c.b
 end
@@ -709,18 +720,97 @@ local function IsOwnGuildMember(unit)
     return ownGuild ~= nil and unitGuild ~= nil and ownGuild == unitGuild
 end
 
+local function IsListedFriend(unit)
+    local guid = UnitGUID and UnitGUID(unit)
+    if (issecretvalue and issecretvalue(guid)) or not guid or guid == "" then return false end
+    local friend = C_FriendList and C_FriendList.IsFriend and C_FriendList.IsFriend(guid)
+    if not (issecretvalue and issecretvalue(friend)) and friend == true then return true end
+    local account = C_BattleNet and C_BattleNet.GetGameAccountInfoByGUID
+        and C_BattleNet.GetGameAccountInfoByGUID(guid)
+    return not (issecretvalue and issecretvalue(account)) and type(account) == "table"
+end
+
+-- Bounded session history, keyed by GUID because nameplate tokens are reused.
+local groupHistory, groupOrder, groupCursor = {}, {}, 1
+local function RememberGroup()
+    if not UnitGUID or not IsInGroup() then return end
+    local raid = IsInRaid()
+    local prefix = raid and "raid" or "party"
+    for i = 1, GetNumGroupMembers() - (raid and 0 or 1) do
+        local unit = prefix .. i
+        local guid, own = UnitGUID(unit), UnitIsUnit(unit, "player")
+        if not (issecretvalue and (issecretvalue(guid) or issecretvalue(own)))
+            and guid and guid ~= "" and not own and not groupHistory[guid] then
+            local old = groupOrder[groupCursor]
+            if old then groupHistory[old] = nil end
+            groupHistory[guid] = true
+            groupOrder[groupCursor] = guid
+            groupCursor = groupCursor % 512 + 1
+        end
+    end
+end
+
 local socialNameColors = {
+    former = { r = 0.77, g = 0.63, b = 1 },
+    friend = { r = 0.48, g = 0.88, b = 0.68 },
     group = { r = 0.50, g = 0.76, b = 1 },
     guild = { r = 1, g = 0.82, b = 0.36 },
 }
 
 local function GetSocialNameColor(unit, profile)
-    if not profile or not (profile.colorGroupNames or profile.colorGuildNames) then return end
+    if not profile or not (profile.colorGroupNames or profile.colorGuildNames or profile.colorFriendNames or profile.colorFormerGroupNames) then return end
     local isPlayer, hostile, self = UnitIsPlayer(unit), UnitCanAttack("player", unit), UnitIsUnit(unit, "player")
     if issecretvalue and (issecretvalue(isPlayer) or issecretvalue(hostile) or issecretvalue(self)) then return end
     if not isPlayer or hostile or self then return end
     if profile.colorGroupNames and IsGroupMember(unit) then return socialNameColors.group end
     if profile.colorGuildNames and IsOwnGuildMember(unit) then return socialNameColors.guild end
+    if profile.colorFriendNames and IsListedFriend(unit) then return socialNameColors.friend end
+    if profile.colorFormerGroupNames and UnitGUID then
+        local guid = UnitGUID(unit)
+        if not (issecretvalue and issecretvalue(guid)) and guid and groupHistory[guid] and not IsGroupMember(unit) then
+            return socialNameColors.former
+        end
+    end
+end
+
+local function ShowPetOwner()
+    local profile = FP()
+    return profile and profile.friendlyShowPetOwner == true
+end
+
+local function FriendlyPetOwner(unit)
+    if not ShowPetOwner() then return end
+    local controlled, player = UnitPlayerControlled(unit), UnitIsPlayer(unit)
+    if issecretvalue and (issecretvalue(controlled) or issecretvalue(player)) then return end
+    if not controlled or player then return end
+
+    local same = UnitIsUnit(unit, "pet")
+    if not (issecretvalue and issecretvalue(same)) and same then
+        return NoxUI.WithSurname(UnitName("player"))
+    end
+
+    local raid = IsInRaid()
+    local count = raid and GetNumGroupMembers() or GetNumSubgroupMembers()
+    local petPrefix = raid and "raidpet" or "partypet"
+    local ownerPrefix = raid and "raid" or "party"
+    for i = 1, count do
+        same = UnitIsUnit(unit, petPrefix .. i)
+        if not (issecretvalue and issecretvalue(same)) and same then
+            return NoxUI.WithSurname(UnitName(ownerPrefix .. i))
+        end
+    end
+end
+
+local function FriendlyStatusSuffix(unit)
+    local profile = FP()
+    if not profile or not profile.showFriendlyStatus then return "" end
+    local player = UnitIsPlayer(unit)
+    if (issecretvalue and issecretvalue(player)) or not player then return "" end
+    local afk = UnitIsAFK and UnitIsAFK(unit)
+    local dnd = UnitIsDND and UnitIsDND(unit)
+    if not (issecretvalue and issecretvalue(dnd)) and dnd then return " [DND]" end
+    if not (issecretvalue and issecretvalue(afk)) and afk then return " [AFK]" end
+    return ""
 end
 
 local function UpdateGroupMarker(name, unit)
@@ -802,6 +892,8 @@ local function PaintFriendlyColors(plate, unit, fp)
     local social = GetSocialNameColor(unit, fp)
     if social then
         plate.name:SetTextColor(social.r, social.g, social.b)
+    elseif fp and fp.friendlyNPCColorByRank and not UnitIsPlayer(unit) then
+        plate.name:SetTextColor(GetNPCNameColor(unit))
     else
         plate.name:SetTextColor(nr, ng, nb)
     end
@@ -994,7 +1086,8 @@ do
         titledCount[mode] = titledCount[mode] + 1
         return s
     end
-    local aFormat, aMode, aBrackets, aLevel, aDiff, aGroupBrackets, aNameEsc, aGroupColor, aGuildColor, stamped
+    local aFormat, aMode, aBrackets, aLevel, aDiff, aGroupBrackets, aNameEsc, aGroupColor, aGuildColor, aStatus, stamped
+    local aFriendColor, aFormerColor
     StampFriendlyNames = function()
         local fp = FP()
         if not fp then return end
@@ -1004,6 +1097,8 @@ do
         aGroupBrackets = fp.friendlyGroupBrackets == true
         aNameEsc = NameEsc.Get()
         aGroupColor, aGuildColor = fp.colorGroupNames, fp.colorGuildNames
+        aStatus = fp.showFriendlyStatus
+        aFriendColor, aFormerColor = fp.colorFriendNames, fp.colorFormerGroupNames
     end
     -- The Name Format options rows and every settings re-read (ns.RefreshAllSettings:
     -- profile switches, Spec Overrides). Before the first record it only records.
@@ -1017,6 +1112,8 @@ do
             and (fp.friendlyLevelDiffColor == true) == aDiff
             and (fp.friendlyGroupBrackets == true) == aGroupBrackets
             and fp.colorGroupNames == aGroupColor and fp.colorGuildNames == aGuildColor
+            and fp.showFriendlyStatus == aStatus and fp.colorFriendNames == aFriendColor
+            and fp.colorFormerGroupNames == aFormerColor
             and NameEsc.Get() == aNameEsc then
             return
         end
@@ -1046,33 +1143,44 @@ local function ApplySubText(fs, unit)
 end
 
 -------------------------------------------------------------------------------
---  Name-only mode: EVERYTHING rides Blizzard's own name FontString
---
---  Blizzard renders the name here, so the title is folded in inline (via
---  UnitPVPName) and the guild is appended as a SECOND LINE of that same
---  string. One region means the guild can never drift from the name: there
---  is no second widget to position, so there is nothing to fall out of sync
---  on a moving (mounted) plate. A separate overlay frame was tried first and
---  jittered ~1px per frame against the name no matter how it was anchored or
---  pixel-snapped; this removes the failure mode instead of compensating.
---
---  Cost of the approach: one FontString means ONE font size, so the guild
---  line renders at the name's size here (its colour still applies, via an
---  inline colour escape). The Guild Text Size setting governs full-plate
---  mode, which draws its own separate FontString.
---
---  The unit token and last-written text for a Blizzard name FontString ride
---  external weak-keyed tables -- never custom keys on the Blizzard widget.
+--  Name-only mode: keep the title in Blizzard's name and attach the guild
+--  to its bottom edge on the same nameplate frame.
 -------------------------------------------------------------------------------
 local nameFSUnits = setmetatable({}, { __mode = "k" })   -- nameFS -> unit token
 local nameFSText  = setmetatable({}, { __mode = "k" })   -- nameFS -> { name=, guild= }
 local unitNameFS = setmetatable({}, { __mode = "v" })
 local hookedNameText = {}   -- nameFS -> true (permanent hooks, applied once)
 local _titledNameGuard = false
+local nameOnlyGuildLines = setmetatable({}, { __mode = "k" })
+
+local function HideNameOnlyGuild(nameFS)
+    local line = nameOnlyGuildLines[nameFS]
+    if line then line:Hide() end
+end
+
+local function DrawNameOnlyGuild(nameFS, unit, guild)
+    if not guild then
+        HideNameOnlyGuild(nameFS)
+        return
+    end
+    local line = nameOnlyGuildLines[nameFS]
+    if not line then
+        line = nameFS:GetParent():CreateFontString(nil, "OVERLAY")
+        line:SetPoint("TOP", nameFS, "BOTTOM", 0, -1)
+        nameOnlyGuildLines[nameFS] = line
+    end
+    NoxUI.SetFontFamily(line, GetFont(), GetSubTextSize(),
+        NoxUI.SlugFlag("OUTLINE, SLUG") or "OUTLINE, SLUG", false)
+    local profile = FP()
+    line:SetFormattedText((not profile or profile.friendlyBelowNameGuildBrackets ~= false) and "<%s>" or "%s", guild)
+    line:SetTextColor(GetSubTextColor(unit))
+    line:Show()
+end
 
 local function DetachNameOnlyText(nameFS)
     local unit = nameFSUnits[nameFS]
     if unit and unitNameFS[unit] == nameFS then unitNameFS[unit] = nil end
+    HideNameOnlyGuild(nameFS)
     nameFSUnits[nameFS], nameFSText[nameFS] = nil, nil
     UpdateGroupMarker(nameFS, false)
 end
@@ -1089,9 +1197,7 @@ local function IsCurrentNameOwner(nameFS, unit)
     return activeUnit == unit
 end
 
--- Compose and write the full name-only string: name (+ inline title) plus an
--- optional second line for the guild. Also the restore path -- with the
--- Subtitle Text setting off this resolves to the plain single-line name.
+-- Update the name and the optional guild line on the currently bound plate.
 local function UpdateNameOnlyText(nameFS)
     local unit = nameFSUnits[nameFS]
     if not unit then return end
@@ -1100,6 +1206,8 @@ local function UpdateNameOnlyText(nameFS)
         return
     end
     if not IsNameOnlyMode() or not UnitExists(unit) then
+        HideNameOnlyGuild(nameFS)
+        nameFSText[nameFS] = nil
         UpdateGroupMarker(nameFS, false)
         return
     end
@@ -1107,6 +1215,8 @@ local function UpdateNameOnlyText(nameFS)
     -- hook and a stale friendly token, so never write on a hostile unit
     -- (Blizzard's own name write is already correct there).
     if UnitCanAttack("player", unit) then
+        HideNameOnlyGuild(nameFS)
+        nameFSText[nameFS] = nil
         UpdateGroupMarker(nameFS, false)
         return
     end
@@ -1145,6 +1255,12 @@ local function UpdateNameOnlyText(nameFS)
         end
     end
 
+    local petOwner = FriendlyPetOwner(unit)
+    if petOwner and not (issecretvalue and issecretvalue(petOwner)) then
+        want = want .. " (" .. petOwner .. ")"
+    end
+    want = want .. FriendlyStatusSuffix(unit)
+
     local guild
     if ModeHasGuild(mode) and isPlayer then
         guild = GetGuildInfo and GetGuildInfo(unit)
@@ -1161,27 +1277,10 @@ local function UpdateNameOnlyText(nameFS)
     if not st then st = {}; nameFSText[nameFS] = st end
     st.name, st.guild, st.grp = want, guildKey, gKind
 
+    DrawNameOnlyGuild(nameFS, unit, guild)
     _titledNameGuard = true
-    if guild then
-        -- Second line via an explicit newline. The guild is only ever a
-        -- SetFormattedText argument (display sinks accept secrets); the
-        -- colour escape and brackets are literals built from our own values.
-        local r, g, b = GetSubTextColor(unit)
-        local fp = FP()
-        local body = (not fp or fp.friendlyBelowNameGuildBrackets ~= false) and "<%s>" or "%s"
-        -- Word wrap MUST be on for the explicit newline to break a line --
-        -- Blizzard leaves this FontString non-wrapping, which silently drops
-        -- everything after the "\n". Nothing wraps by accident: the width is
-        -- 0 (auto-size), so there is no boundary to wrap against.
-        nameFS:SetWordWrap(true)
-        nameFS:SetMaxLines(2)
-        nameFS:SetFormattedText("%s\n" .. string.format("|cff%02x%02x%02x",
-            math.floor(r * 255 + 0.5), math.floor(g * 255 + 0.5), math.floor(b * 255 + 0.5))
-            .. body .. "|r", want, guild)
-    else
-        nameFS:SetMaxLines(1)
-        nameFS:SetText(want)
-    end
+    nameFS:SetMaxLines(1)
+    nameFS:SetText(want)
     _titledNameGuard = false
 end
 
@@ -1202,7 +1301,7 @@ local function AttachNameOnlyText(nameFS, unit)
         hooksecurefunc(nameFS, "SetText", function(self)
             if _titledNameGuard or not nameFSUnits[self] then return end
             if GetBelowNameMode() == "none" and not FriendlyNameFormat()
-                and not ShowFriendlyLevel() and not (groupMarkers[self] and groupMarkers[self].active)
+                and not ShowFriendlyLevel() and not ShowPetOwner() and not (groupMarkers[self] and groupMarkers[self].active)
                 and not IsGroupMember(nameFSUnits[self] or "player") then
                 return
             end
@@ -1227,14 +1326,17 @@ local function SweepPlayerSubText()
     local pending = ns.pendingUnits
     if not pending then return end
     for unit, nameplate in pairs(pending) do
-        if UnitIsPlayer(unit) and not UnitIsUnit(unit, "player") and not UnitCanAttack("player", unit) then
-            local uf = nameplate.UnitFrame
+        local uf = nameplate.UnitFrame
+        local wasAttached = uf and uf.name and nameFSUnits[uf.name] == unit
+        if (UnitIsPlayer(unit) or wasAttached or FriendlyPetOwner(unit))
+            and not UnitIsUnit(unit, "player") and not UnitCanAttack("player", unit) then
             if uf and uf.name then
                 -- Settings changed under us, so drop the dedupe first.
                 nameFSText[uf.name] = nil
                 if nameOnly then
                     AttachNameOnlyText(uf.name, unit)
                 else
+                    HideNameOnlyGuild(uf.name)
                     UpdateGroupMarker(uf.name, false)
                 end
             end
@@ -1461,7 +1563,7 @@ hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", function(_, unit)
             EnsureNameUnconstrained(nameplate.UnitFrame.name)
             -- Subtitle Text (inline title + guild line) and the Name Format, all
             -- composed onto this same FontString.
-            if GetBelowNameMode() ~= "none" or FriendlyNameFormat() or ShowFriendlyLevel() or IsGroupMember(unit) or IsOwnGuildMember(unit) then
+            if ShowPetOwner() or GetBelowNameMode() ~= "none" or FriendlyNameFormat() or ShowFriendlyLevel() or IsGroupMember(unit) or IsOwnGuildMember(unit) then
                 AttachNameOnlyText(nameplate.UnitFrame.name, unit)
             end
         end
@@ -1813,13 +1915,20 @@ function FriendlyFrame:UpdateName()
     end
     local gKind = (showGroup and isPlayer) and GetUnitGroupBracketKind(unit) or nil
     self._grpKind = gKind
+    local status = FriendlyStatusSuffix(unit)
+    local petOwner = FriendlyPetOwner(unit)
+    if petOwner and not (issecretvalue and issecretvalue(petOwner)) then
+        status = " (" .. petOwner:gsub("%%", "%%%%") .. ")" .. status
+    end
     local bOpen  = (gKind == "party" and PARTY_BRACKET_OPEN)  or (gKind == "raid" and RAID_BRACKET_OPEN)  or ""
     local bClose = (gKind == "party" and PARTY_BRACKET_CLOSE) or (gKind == "raid" and RAID_BRACKET_CLOSE) or ""
     if showLevel and isPlayer and unitName then
         -- The name may be secret: only ever a display argument.
-        self.name:SetFormattedText("%s | " .. bOpen .. "%s" .. bClose, FriendlyLevelText(unit), unitName)
+        self.name:SetFormattedText("%s | " .. bOpen .. "%s" .. bClose .. status, FriendlyLevelText(unit), unitName)
     elseif gKind and unitName then
-        self.name:SetFormattedText(bOpen .. "%s" .. bClose, unitName)
+        self.name:SetFormattedText(bOpen .. "%s" .. bClose .. status, unitName)
+    elseif status ~= "" and unitName then
+        self.name:SetFormattedText("%s" .. status, unitName)
     else
         self.name:SetText(unitName or "")
     end
@@ -2466,7 +2575,7 @@ function ns.UpdateFriendlyNameplateSystem()
                 -- return on zone-in and stay for the whole instance, since nothing else
                 -- rewrites this CVar until the player is back outside.
                 pcall(NoxUI.SetCVar, "nameplateShowOnlyNameForFriendlyPlayerUnits",
-                    (fp and fp.friendlyNameOnly ~= false) and 1 or 0, "NoxUIBarresNoms")
+                    nameOnly and 1 or 0, "NoxUIBarresNoms")
             end
             pcall(NoxUI.SetCVar, "nameplateShowFriendlyNPCs", 0, "NoxUIBarresNoms")
             pcall(NoxUI.SetCVar, "nameplateShowFriendlyNpcs", 0, "NoxUIBarresNoms")
@@ -2475,7 +2584,7 @@ function ns.UpdateFriendlyNameplateSystem()
             if fp then
                 local showNPCs = (fp.showFriendlyNPCs == true)
                 if euiManagesPlayers then
-                    local nameOnlyVal = (fp.friendlyNameOnly ~= false) and 1 or 0
+                    local nameOnlyVal = nameOnly and 1 or 0
                     -- Hand back only what a follower dungeon took. Outside that
                     -- case visibility is the user's to own, so nothing is written.
                     RestoreFriendlyVis()
@@ -2626,14 +2735,50 @@ initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 initFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 initFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+initFrame:RegisterEvent("UNIT_PET")
 initFrame:RegisterEvent("PLAYER_GUILD_UPDATE")
 initFrame:RegisterEvent("UNIT_GUILD")
-initFrame:SetScript("OnEvent", function(self, event)
-    if event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" or event == "UNIT_GUILD" then
+initFrame:RegisterEvent("FRIENDLIST_UPDATE")
+initFrame:RegisterEvent("BN_FRIEND_LIST_SIZE_CHANGED")
+initFrame:RegisterEvent("BN_FRIEND_INFO_CHANGED")
+initFrame:RegisterEvent("PLAYER_FLAGS_CHANGED")
+initFrame:SetScript("OnEvent", function(self, event, unit)
+    if event == "PLAYER_FLAGS_CHANGED" then
+        local profile = FP()
+        if not unit or not profile or not profile.showFriendlyStatus then return end
+        local plate = friendlyPlates[unit]
+        local name = unitNameFS[unit]
+        if plate then plate:UpdateName() end
+        if name then UpdateNameOnlyText(name) end
+        if not plate and not name then
+            -- The event may provide a party or target token for a nameplate unit.
+            for token, active in pairs(friendlyPlates) do
+                local same = UnitIsUnit(token, unit)
+                if not (issecretvalue and issecretvalue(same)) and same then active:UpdateName() end
+            end
+            for token, active in pairs(unitNameFS) do
+                local same = UnitIsUnit(token, unit)
+                if not (issecretvalue and issecretvalue(same)) and same then UpdateNameOnlyText(active) end
+            end
+        end
+    elseif event == "FRIENDLIST_UPDATE" or event == "BN_FRIEND_LIST_SIZE_CHANGED"
+        or event == "BN_FRIEND_INFO_CHANGED" then
+        local profile = FP()
+        if profile and profile.colorFriendNames then ns.RefreshSocialMarkers() end
+    elseif event == "UNIT_PET" then
+        if ShowPetOwner() then ns.RefreshFriendlyBelowName() end
+    elseif event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" or event == "UNIT_GUILD" then
+        if event == "GROUP_ROSTER_UPDATE" then
+            RememberGroup()
+            if ShowPetOwner() then
+                for _, plate in pairs(friendlyPlates) do plate:UpdateName() end
+            end
+        end
         ns.RefreshFriendlyColors()
         SweepPlayerSubText()
     elseif event == "PLAYER_LOGIN" then
         self:UnregisterEvent("PLAYER_LOGIN")
+        RememberGroup()
         -- The plates paint from these settings (the Name Format sync's first
         -- record, so an unchanged first refresh repaints nothing).
         StampFriendlyNames()

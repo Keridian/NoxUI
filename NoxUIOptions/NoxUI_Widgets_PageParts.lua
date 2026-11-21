@@ -1053,6 +1053,13 @@ function NoxUI.BuildRestedIndicatorCog(region)
     return NoxUI.BuildInlineCog(region, {
         title = "Rested Indicator",
         rows = {
+            { type="toggle", label="Rested Indicator on Portrait",
+              tooltip="Places the rest indicator above the portrait when the portrait is visible.",
+              get=function() return NoxUIDB and NoxUIDB.restedIndicatorOnPortrait == true or false end,
+              set=function(v)
+                  RestSet("restedIndicatorOnPortrait", v)
+                  RestPlace()
+              end },
             { type="toggle", label="Animated",
               tooltip="Shows the animated rest icon from Blizzard's player frame instead of the ZZZ text.",
               get=function() return NoxUIDB and NoxUIDB.restedIndicatorAnimated == true or false end,
