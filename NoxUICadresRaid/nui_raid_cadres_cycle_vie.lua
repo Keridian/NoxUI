@@ -325,7 +325,7 @@ function ERF:OnEnable()
     end
 
 
-    -- Expose EUI party frames to external trackers that support a provider
+    -- Expose NoxUI party frames to external trackers that support a provider
     -- API (e.g. MiniAuras). No-op when none is installed.
     ns._RegisterTrackerProviders()
 

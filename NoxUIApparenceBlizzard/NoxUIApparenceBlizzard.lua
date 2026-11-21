@@ -106,10 +106,10 @@ end
 
 -------------------------------------------------------------------------------
 --  One-time style seed for window keys added after the fact: each adopts
---  whichever style (EUI/Modern/off) the user already runs MOST windows with,
---  instead of defaulting ON in EUI. Counts RAW stored state (not GetBlizzWindowStyle)
+--  whichever style (NoxUI/Modern/off) the user already runs MOST windows with,
+--  instead of defaulting ON in NoxUI. Counts RAW stored state (not GetBlizzWindowStyle)
 --  so the kill switch cannot skew the vote; touched keys are left alone; ties fall to
---  EUI. Marker-gated to once per account, at ADDON_LOADED (parent SVs are in by then, before PLAYER_LOGIN apply).
+--  NoxUI. Marker-gated to once per account, at ADDON_LOADED (parent SVs are in by then, before PLAYER_LOGIN apply).
 --
 --  One BATCH per shipment, each with its OWN marker: a spent marker is never
 --  revisited, so a later batch riding the older one would silently skip every
@@ -174,7 +174,7 @@ do
                     end
                     styles[winKey] = "modern"
                 end
-                -- EUI majority (or tie): nil already means EUI-on.
+                -- NoxUI majority (or tie): nil already means NoxUI-on.
             end
         end
     end
@@ -280,7 +280,7 @@ function NoxUI.GetBlizzWindowStyle(winKey)
 end
 
 --- Style for third-party addon skins: majority vote across the user's own window
---- styles. Modern majority -> "modern"; else (EUI majority, tie, or nothing skinned,
+--- styles. Modern majority -> "modern"; else (NoxUI majority, tie, or nothing skinned,
 --- incl. under the kill switch where every window reports "off") -> "eui". Never
 --- returns "off": whether third-party skinning runs is decided by its own toggles in
 --- the SkinAPI dispatcher (reload-bound there), so live refreshes only ever swap between the two themes.

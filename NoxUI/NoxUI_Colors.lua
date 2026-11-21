@@ -618,7 +618,7 @@ for k, v in pairs(NoxUI.POWER_KEY_TO_ENUM) do
     NoxUI.POWER_ENUM_TO_KEY[v] = k
 end
 
--- EUI power color (r,g,b or nil) for a unit's CURRENT power. Mirrors oUF's bar ladder so
+-- NoxUI power color (r,g,b or nil) for a unit's CURRENT power. Mirrors oUF's bar ladder so
 -- unit-frame TEXT matches the bar on EVERY unit, including non-player:
 --   1) Named token -> custom/default color (all standard types; the player lands here).
 --   2) NON-STANDARD types (creatures/NPCs) report an unmapped token but an integer type

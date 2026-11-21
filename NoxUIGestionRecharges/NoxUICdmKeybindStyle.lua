@@ -2,7 +2,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 local _, ns = ...
 
 -- Shared by live icons and the options preview. No events, hooks or polling.
--- Decorations belong to EUI's text overlay, never to a Blizzard frame.
+-- Decorations belong to NoxUI's text overlay, never to a Blizzard frame.
 local PP = NoxUI.PP
 -- The options page pool's table (NoxUI_PixelPerfect.lua makes it; the
 -- options addon fills it in place): read through this file local, never the

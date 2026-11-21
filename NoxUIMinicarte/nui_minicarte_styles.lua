@@ -307,14 +307,14 @@ end
 
 -------------------------------------------------------------------------------
 --  Stock styles (Global Settings > Style): Blizzard Style and Classic WoW UI.
---  Both force the round map, drop the EUI border and put the zoom buttons,
+--  Both force the round map, drop the NoxUI border and put the zoom buttons,
 --  indicators and button row where a stock layout puts them; only the art
 --  differs. Blizzard Style wears the 12.1 kit: Blizzard's compass ring (its
 --  own texture, so Rotate Minimap keeps turning it) sized onto the map and a
 --  header of ours in the stock NineSlice kit. Classic WoW UI wears the
 --  vanilla texture files: the UI-Minimap-Border ring and zone banner on
 --  frames of ours, the vanilla zoom buttons, the ring-border indicators.
---  Every EUI feature keeps working. Reload-gated per-profile flags, read only
+--  Every NoxUI feature keeps working. Reload-gated per-profile flags, read only
 --  on apply passes; all of this is skipped while both are off.
 -------------------------------------------------------------------------------
 -- The style this module RENDERS this session: "eui" | "blizzard" | "classic".
@@ -438,7 +438,7 @@ NoxUI._ModuleNS[ADDON_NAME].MinimapFvBorderChanged = function(m)
 end
 
 -- Zoom button anchor, shared by the apply pass and the SetPoint re-assert
--- hooks: EUI stacks them at the bottom-right corner; the stock styles place
+-- hooks: NoxUI stacks them at the bottom-right corner; the stock styles place
 -- them where their stock map does (offsets scale with the map size).
 EBS._ZoomAnchor = function(btn, isIn, minimap)
     local p = EBS.db and EBS.db.profile.minimap

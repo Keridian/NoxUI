@@ -816,7 +816,7 @@ end
 
 -- Unlock-mode registration, patterned on Damage Meters' ns.RegisterDMUnlock
 -- (nui_degats_compteurs_etat.lua) and MakeSATimerUnlockElement (nui_degats_compteurs_chronometre.lua)
--- (observed EUI.MakeUnlockElement field
+-- (observed NoxUI.MakeUnlockElement field
 -- usage, not a verified schema). Both bars use noResize (AuraKit sizes the container
 -- from the active aura count, nothing to drag-resize) and noAnchorTarget (a
 -- dynamically-resizing frame is a bad anchor target for other elements).
@@ -1005,7 +1005,7 @@ function SyncCancelCVar()
     if not AnyRightClickCancelActive(s) then return end
     if InCombatLockdown() then return end
     if tonumber(GetCVar(CANCEL_CVAR)) == CANCEL_CVAR_BROKEN then
-        -- A repair to Blizzard's default, which Uninstall EUI must not undo:
+        -- A repair to Blizzard's default, which Uninstall NoxUI must not undo:
         -- plain SetCVar, not NoxUI.SetCVar.
         SetCVar(CANCEL_CVAR, CANCEL_CVAR_DEFAULT)
     end

@@ -49,7 +49,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
         return friendlyPlayersOff() or (m ~= "guild" and m ~= "both")
     end
     -- Why a row is greyed under a Friendly Nameplate Style, shown as written: the
-    -- rows of both EUI styles, of the health bar plate and of Name Only.
+    -- rows of both NoxUI styles, of the health bar plate and of Name Only.
     local STYLE_REQ = "Requires Friendly Nameplate Style set to Name Only or Nameplate"
     local PLATE_TIP = "Requires Friendly Nameplate Style set to Nameplate"
     local NAMEONLY_REQ = "Requires Friendly Nameplate Style set to Name Only"
@@ -69,7 +69,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
           get=function() return DBVal("nameplateSize") or defaults.nameplateSize end,
           set=function(v)
             DB().nameplateSize = v
-            -- Written now: Blizzard reads it at load, before EUI's own CVar pass.
+            -- Written now: Blizzard reads it at load, before NoxUI's own CVar pass.
             NoxUI.SetCVar("nameplateSize", v, "NoxUIBarresNoms")
             if v ~= npSizeOriginal then
                 if npSizePendingPopup then npSizePendingPopup:Cancel() end
@@ -91,7 +91,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
     -- Friendly Nameplate Style: one dropdown over showFriendlyPlayers and
     -- friendlyNameOnly. Blizzard Default hands the friendly player plates back
     -- to Blizzard (and keeps the saved Name Only choice), Name Only and Nameplate
-    -- are EUI's two forms.
+    -- are NoxUI's two forms.
     local function StyleOf()
         if DBVal("showFriendlyPlayers") == false then return "blizzard" end
         return DBVal("friendlyNameOnly") ~= false and "nameonly" or "plate"
@@ -102,7 +102,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
         local db = DB()
         if v == "blizzard" then
             db.showFriendlyPlayers = false
-            -- Reset the three CVars EUI uniquely manages (name-only override + class color) to Blizzard defaults for a clean slate; visibility CVars stay untouched so Blizzard's panel keeps the user's values.
+            -- Reset the three CVars NoxUI uniquely manages (name-only override + class color) to Blizzard defaults for a clean slate; visibility CVars stay untouched so Blizzard's panel keeps the user's values.
             if GetCVarDefault then
                 for _, cvar in ipairs({
                     "nameplateShowOnlyNameForFriendlyPlayerUnits",
@@ -119,7 +119,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
             if was == "blizzard" then
                 db.showFriendlyPlayers = true
                 -- Back from Blizzard Default: re-assert every friendly-player CVar that SetupAuraCVars sets on load (it skips these under Blizzard Default) -- runtime is the only restore path short of /reload.
-                -- One of only two places EUI is allowed to force friendly plates visible; also clears any follower-dungeon capture.
+                -- One of only two places NoxUI is allowed to force friendly plates visible; also clears any follower-dungeon capture.
                 if ns.ForceFriendlyPlayerCVarsOn then ns.ForceFriendlyPlayerCVarsOn() end
                 pcall(NoxUI.SetCVar, "UnitNameFriendlyPlayerName", 1, "NoxUIBarresNoms")
                 pcall(NoxUI.SetCVar, "nameplateShowOnlyNameForFriendlyPlayerUnits", nameOnly and 1 or 0, "NoxUIBarresNoms")
@@ -133,7 +133,7 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
             pcall(NoxUI.SetCVar, "nameplateUseClassColorForFriendlyPlayerUnitNames", ns.FriendlyNameClassCVar(db), "NoxUIBarresNoms")
         end
         if ns.UpdateFriendlyNameplateSystem then ns.UpdateFriendlyNameplateSystem() end
-        -- Re-assert stacking after EUI takes or hands back the friendly plates (Blizzard can reset the stacking bitfield as a side effect).
+        -- Re-assert stacking after NoxUI takes or hands back the friendly plates (Blizzard can reset the stacking bitfield as a side effect).
         if v == "blizzard" or was == "blizzard" then ns.RefreshStackingMotion() end
         -- The health bar plate's rows and the name size slider follow the style.
         NoxUI:RefreshPage(true)
@@ -223,10 +223,10 @@ local function BuildFriendlyPage(pageName, parent, yOffset)
         "Class Colored Health Bar", "Show Health Percent" }
 
     -- The dropdown's cog has no label on the page: Global Search finds the row
-    -- by the cog's rows and their tooltips too, and by the names Show EUI Friendly
+    -- by the cog's rows and their tooltips too, and by the names Show NoxUI Friendly
     -- Player Nameplates and Make Friendly Nameplates Name Only; Name Color by
     -- Class Colored Names and its swatches' names.
-    SearchWords("Friendly Nameplate Style", "FRIENDLY PLAYERS", "Show EUI Friendly Player Nameplates",
+    SearchWords("Friendly Nameplate Style", "FRIENDLY PLAYERS", "Show NoxUI Friendly Player Nameplates",
         "Make Friendly Nameplates Name Only", npSizeRow.label, npSizeRow.tooltip, bracketsRow.label, bracketsRow.tooltip,
         unpack(OFF_PAGE))
     SearchWords("Name Color", "FRIENDLY PLAYERS", "Class Colored Names", "Class Color", "Custom Color")

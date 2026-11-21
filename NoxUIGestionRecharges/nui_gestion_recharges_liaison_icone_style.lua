@@ -77,7 +77,7 @@ local function HideBlizzardDecorations(frame)
     -- Blizzard Style keeps the viewer's rounded icon mask; only the ring
     -- overlay is replaced (ns.CdmApplyBlizzIconArt redraws it at the icon's
     -- live size, since the viewer's fixed inset only fits its stock sizes).
-    -- Classic WoW UI icons are square, so they take the swap like the EUI look.
+    -- Classic WoW UI icons are square, so they take the swap like the NoxUI look.
     local keepMask = ns.CdmIconStyle() == "blizzard"
     for ri = 1, #regions do
         local rgn = regions[ri]
@@ -97,7 +97,7 @@ local function HideBlizzardDecorations(frame)
 
     -- The ring overlay, matched by atlas or by its sheet file. The rounded
     -- MASK lives in the same sheet, so the file match must skip masks: a
-    -- hidden mask masks nothing (Blizzard Style needs it; the EUI look has
+    -- hidden mask masks nothing (Blizzard Style needs it; the NoxUI look has
     -- already squared it above).
     local OVERLAY_ATLAS = "UI-HUD-CoolDownManager-IconOverlay"
     local OVERLAY_FILE  = 6707800
@@ -123,7 +123,7 @@ end
 --  (HideBlizzardDecorations leaves it under this style); frames we create
 --  (trinkets, placeholders, custom buffs, item presets) get an equivalent one.
 --  Classic WoW UI: the vanilla action button ring round a square icon (no
---  mask, EUI's own square swipe).
+--  mask, NoxUI's own square swipe).
 --  The ring is our own texture on a child frame, so it survives pool reuse and
 --  follows the icon's live size instead of the viewer's fixed stock inset.
 --  Idempotent and cheap: structural work once per frame, then a size memo

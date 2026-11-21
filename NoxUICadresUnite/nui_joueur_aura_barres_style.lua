@@ -238,7 +238,7 @@ local function PAB_ApplyExtraText(button, d, style)
 
     -- Centered runs can have an odd content width/height, whose CENTER anchor is a
     -- half pixel. Let textures use Blizzard's normal pixel snapping so
-    -- icon art cannot bleed over PP's one-pixel border. Edge-growing bars keep EUI's
+    -- icon art cannot bleed over PP's one-pixel border. Edge-growing bars keep NoxUI's
     -- usual unsnapped rendering.
     d.pabCenteredSnap = style.centeredGrowth == true
     -- Lazy install on the first centered apply: bars that never use centered
@@ -329,7 +329,7 @@ local function BuildStyle(isBuff, cfg)
             border.edgePx = solidPx
         end
     end
-    -- Blizzard Style: no EUI ring on any bar -- buffs go borderless like the
+    -- Blizzard Style: no NoxUI ring on any bar -- buffs go borderless like the
     -- stock buff frame, debuffs take the engine-stamped stock border below.
     if ns.PAB_Blizz() then border = nil end
 

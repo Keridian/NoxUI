@@ -17,8 +17,9 @@
 ## AddonCompartmentFunc: OpenMap_OnAddonCompartmentClick
 ## AddonCompartmentFuncOnEnter: OpenMap_OnAddonCompartmentEnter
 ## AddonCompartmentFuncOnLeave: OpenMap_OnAddonCompartmentLeave
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## X-Upstream-Version: v0.8.9
+## X-Upstream-Fixes: v0.8.10 Forever
 ## SavedVariables: OpenMapDB
 ## SavedVariablesPerCharacter: OpenMapCharDB
 ## OptionalDeps: Questie, Leatrix_Maps, BetterMaps, HighFidelityWorldMap, HiddenMaps, Mapster, Magnify, ForeverMaps

@@ -26,7 +26,7 @@ end
 
 -- Classic WoW UI: each bar's Border Size slot sizes the vanilla frame round
 -- the bar (stockBorderScale, a percentage of the frame's full size; nil =
--- the shared default) in place of the gated EUI border size. The border
+-- the shared default) in place of the gated NoxUI border size. The border
 -- row's colour swatch, offset cog and style sync stand down under it; this
 -- sync copies the size. The cast bar row does the same on its own style key.
 function ns.ERB_ClassicBorderRow()
@@ -2503,7 +2503,7 @@ initFrame:SetScript("OnEvent", function(self)
     })
     local BUFF_HELP_TIP =
         "Recolor the bar while you have a buff. The first active buff in the list wins, so order = priority. Overrides threshold coloring while active.\n"
-        .. "You must be tracking the buff in Blizzard CDM, added to EUI CDM, and this only works with CDM trackable buffs."
+        .. "You must be tracking the buff in Blizzard CDM, added to NoxUI CDM, and this only works with CDM trackable buffs."
 
     local ShowSpenderEditor = MakeColorListEditor({
         field = "spenderColors", title = NoxUI.L("Spender Colors"), addLabel = NoxUI.L("+ Add Spender"),
@@ -4094,9 +4094,9 @@ initFrame:SetScript("OnEvent", function(self)
 
         if not pf.bar then return end
         -- Blizzard Style (latched per session, like the live bar): the stock
-        -- art on the same mock -- the icon spanning the text box, no EUI
+        -- art on the same mock -- the icon spanning the text box, no NoxUI
         -- border, stock background, fill and pip, frame art and the spell
-        -- name inside the text box. Everything else stays the EUI mock.
+        -- name inside the text box. Everything else stays the NoxUI mock.
         local blizz = (ns.ERB_CastBlizz and ns.ERB_CastBlizz()) or false
         -- classic = Classic WoW UI (the vanilla frame and spark round the
         -- user's fill); blizzKit = the 12.1 kit (stock background, fill, pip
@@ -4245,7 +4245,7 @@ initFrame:SetScript("OnEvent", function(self)
         end
 
         -- Spark: under the style the stock pip replaces the spark art (once,
-        -- drawn plain; the EUI spark art is additive).
+        -- drawn plain; the NoxUI spark art is additive).
         if blizzKit and not pf.blizzSpark then
             local pip = ns.ERB_BlizzAtlas("spark")
             if pip then
@@ -4254,7 +4254,7 @@ initFrame:SetScript("OnEvent", function(self)
                 pf.spark:SetBlendMode("BLEND")
             end
         end
-        -- Classic WoW UI: the vanilla spark file (additive, like the EUI art) once.
+        -- Classic WoW UI: the vanilla spark file (additive, like the NoxUI art) once.
         -- It stands taller than the bar and draws over the frame art
         -- (container +6) as live does, so it moves to its own host above it.
         if classic and not pf.classicSpark then

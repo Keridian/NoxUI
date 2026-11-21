@@ -1413,7 +1413,7 @@ function ns.ERB_BuildBarDisplayPage(pageName, parent, yOffset)
         do
             local asFontValues, asFontOrder = NoxUI.BuildFontDropdownData()
             local asOutlineValues = {
-                ["__global"] = { text = "EUI Global Default" },
+                ["__global"] = { text = "NoxUI Global Default" },
                 ["none"]     = { text = "Drop Shadow" },
                 ["outline"]  = { text = "Outline" },
                 ["thick"]    = { text = "Thick Outline" },

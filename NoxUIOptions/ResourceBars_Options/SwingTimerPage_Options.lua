@@ -265,7 +265,7 @@ function ns.ERB_BuildSwingTimerPage(pageName, parent, yOffset)
     _sec, h = W:SectionHeader(parent, "DISPLAY", y);  y = y - h
 
     -- Global Settings > Style: the rows wear the Resource Bars row's stock
-    -- frame (ns.ST_Style), which gates the EUI border rows as on the other
+    -- frame (ns.ST_Style), which gates the NoxUI border rows as on the other
     -- bars.
     local stStock = ns.ST_Style() ~= "eui"
     local stClassic = stStock and ns.ERB_BarsClassic()

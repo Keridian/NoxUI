@@ -319,7 +319,7 @@ initFrame:SetScript("OnEvent", function(self)
             -- binding left alone: Blizzard's own panel allows two keys per
             -- action, and clearing both silently destroyed the second one with
             -- no message (and no way to see it, since the label shows key1).
-            -- Uninstall EUI hands the key back to what it did before.
+            -- Uninstall NoxUI hands the key back to what it did before.
             NoxUI.NoteBinding(chord, GetBindingAction(chord))
             if not SetBinding(chord, action) then
                 Complain("Quickdraw: " .. (GetBindingText(chord) or chord)

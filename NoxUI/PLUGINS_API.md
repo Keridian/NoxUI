@@ -1,7 +1,7 @@
 # NoxUI Plugin API (for addon developers)
 
 Give your addon its own settings pages inside the NoxUI options panel.
-A plugin registers once and gets a new section of its own in the EUI sidebar,
+A plugin registers once and gets a new section of its own in the NoxUI sidebar,
 with one or more modules (sidebar rows) under it, each with its own page tabs.
 
 ## Quick start
@@ -13,7 +13,7 @@ with one or more modules (sidebar rows) under it, each with its own page tabs.
 ```
 
 (Use `## OptionalDeps: NoxUI` instead if your addon also runs without
-EUI, and keep the `if` guard below.)
+NoxUI, and keep the `if` guard below.)
 
 2. Register anywhere in your main file:
 
@@ -55,37 +55,37 @@ is shown, even if you register after the panel was already opened.
 
 ## Rules
 
-These are enforced by EUI and cannot be worked around through the API:
+These are enforced by NoxUI and cannot be worked around through the API:
 
 - **A plugin only ever creates a new section.** It cannot add a row to one of
-  EUI's own sections, add a tab to an EUI module, or replace an EUI page.
+  NoxUI's own sections, add a tab to an NoxUI module, or replace an NoxUI page.
 - **One section per plugin.** All of your modules live in it, in the order you
   list them. A plugin id can be registered once per session.
-- **Your section sits outside EUI's own block.** By default it goes to the
-  bottom of the sidebar, below every EUI section; `position = "top"` puts it
+- **Your section sits outside NoxUI's own block.** By default it goes to the
+  bottom of the sidebar, below every NoxUI section; `position = "top"` puts it
   above them instead. Sections that choose the same position keep their
   registration order.
 - **Labels are plain text.** Color codes, textures, links and line breaks are
-  stripped from `label` and `title`. Labels that imitate EUI's own entries are
-  refused: EUI's section names (in any client language), "Global Settings",
-  "Profiles", "Patch Notes", and anything starting with "NoxUI" or "EUI".
-- **Registration is a snapshot.** EUI copies what it needs when you register;
+  stripped from `label` and `title`. Labels that imitate NoxUI's own entries are
+  refused: NoxUI's section names (in any client language), "Global Settings",
+  "Profiles", "Patch Notes", and anything starting with "NoxUI".
+- **Registration is a snapshot.** NoxUI copies what it needs when you register;
   editing your spec table afterwards has no effect.
-- **EUI's own functions and internals are off limits.** Replacing or hooking
-  EUI's functions (`NoxUI.RegisterModule` in particular) never reaches
-  EUI's own pages: EUI puts its own function back before it registers them.
+- **NoxUI's own functions and internals are off limits.** Replacing or hooking
+  NoxUI's functions (`NoxUI.RegisterModule` in particular) never reaches
+  NoxUI's own pages: NoxUI puts its own function back before it registers them.
   Fields whose names start with `_` are internal and can change or disappear in
   any update.
-- **EUI loads its own settings.** Its options load only when the player first
+- **NoxUI loads its own settings.** Its options load only when the player first
   opens the panel, so don't load `NoxUIOptions` yourself; your
   `buildPage` always runs after it has loaded.
 
-When an addon breaks these rules, EUI keeps its own pages working and leaves
+When an addon breaks these rules, NoxUI keeps its own pages working and leaves
 the change out, and once per session the player sees a popup that names the
 addon, says it needs an update, and links this page.
 
-Plugin pages take part in the EUI global search (see [Search](#search)). They
-do not take part in EUI profiles, profile sync or spec/conditional overrides:
+Plugin pages take part in the NoxUI global search (see [Search](#search)). They
+do not take part in NoxUI profiles, profile sync or spec/conditional overrides:
 while the user is editing an override session, plugin rows are locked like
 every other module that can't be overridden.
 
@@ -138,7 +138,7 @@ unknown. Like the panel itself, it does not open in combat.
 
 ### `NoxUI.GetPluginModuleKey(id, moduleKey)` -> `string` or `nil`
 
-The full key EUI uses for your module (`"plugin:<id>:<moduleKey>"`). Pass it to
+The full key NoxUI uses for your module (`"plugin:<id>:<moduleKey>"`). Pass it to
 the panel calls that take a module key, e.g.:
 
 ```lua
@@ -180,8 +180,8 @@ if NoxUI.GetCDMIconsForSpell then
 end
 ```
 
-Some of these icons are EUI's own frames and some are Blizzard's Cooldown
-Manager frames that EUI shows on its bars, so treat every icon as read-only:
+Some of these icons are NoxUI's own frames and some are Blizzard's Cooldown
+Manager frames that NoxUI shows on its bars, so treat every icon as read-only:
 
 - Draw on a frame of your own, created as a child of the icon
   (`CreateFrame("Frame", nil, icon)`) so it moves, fades and hides with it.
@@ -199,19 +199,19 @@ Manager frames that EUI shows on its bars, so treat every icon as read-only:
 
 ### `NoxUI.RequestCDMRepopulate([specIDs])` -> `boolean`
 
-For profile installers that set up Blizzard's Cooldown Manager layouts. EUI's
+For profile installers that set up Blizzard's Cooldown Manager layouts. NoxUI's
 Cooldown Manager keeps its own arrangement of Blizzard's spells, so a Blizzard
-layout imported or switched to later is not mirrored onto EUI's bars by
+layout imported or switched to later is not mirrored onto NoxUI's bars by
 itself. This queues the work of the **Repopulate from Blizzard CDM** button:
-EUI's bars drop every spell that came from Blizzard's Cooldown Manager (the
-spells a player added in EUI, trinkets and presets stay) and are filled again
+NoxUI's bars drop every spell that came from Blizzard's Cooldown Manager (the
+spells a player added in NoxUI, trinkets and presets stay) and are filled again
 from the active Blizzard layout.
 
 The character's racial is placed as well. Blood Fury and Berserking go to the
 end of the Cooldowns bar; Will of the Forsaken, War Stomp, Will to Survive,
 Stoneform, Shadowmeld, Escape Artist, Read Ley Line and Skysight go to the end
 of the Utility bar. Any other racial goes where your Blizzard layout puts it,
-and if the layout doesn't track it, it stays where the EUI profile had it.
+and if the layout doesn't track it, it stays where the NoxUI profile had it.
 
 `specIDs` is optional: one spec ID or a list of them, as the game reports them
 (`C_SpecializationInfo.GetSpecializationInfo`); leave it out for every spec of
@@ -246,7 +246,7 @@ or leave it out for the character's current spec. It returns:
   yet, or combat is holding it.
 - `"done", time, layoutID` once the queued repopulate has finished. `time` is
   when it ran (`time()`), and `layoutID` is the Blizzard Cooldown Manager
-  layout that was active then, the one EUI's bars were filled from (`nil` when
+  layout that was active then, the one NoxUI's bars were filled from (`nil` when
   no saved layout was active). The record stays until your next request for
   that spec.
 - `nil` when nothing was requested for that spec, or the run did not finish.
@@ -259,14 +259,14 @@ loaded its layouts and built its icons, so check later than `PLAYER_LOGIN`
 if NoxUI.GetCDMRepopulateStatus then
     local status, ranAt, layoutID = NoxUI.GetCDMRepopulateStatus()
     if status == "done" and layoutID == myLayoutID then
-        -- EUI's bars were filled from your layout
+        -- NoxUI's bars were filled from your layout
     end
 end
 ```
 
 ### `NoxUI.RegisterQuestTrackerRow(id, fn [, width])` -> `boolean`
 
-WoW Forever only. Adds your own icons or buttons to the quest rows of EUI's
+WoW Forever only. Adds your own icons or buttons to the quest rows of NoxUI's
 Custom Quest Tracker, the way addons decorate Blizzard's tracker. The custom
 tracker draws its own rows, so hooks on Blizzard's tracker never reach it;
 register here as well.
@@ -322,8 +322,8 @@ end
 
 ## Building pages
 
-`buildPage` runs when the user first opens a page, after the EUI options addon
-is loaded, so `NoxUI.Widgets` (the same widget factory EUI's own pages
+`buildPage` runs when the user first opens a page, after the NoxUI options addon
+is loaded, so `NoxUI.Widgets` (the same widget factory NoxUI's own pages
 use) is always available there. Widgets such as `W:SectionHeader` and
 `W:Toggle` take the parent and the current y offset and return the created
 frame plus its height; subtract the height from your running offset as in the
@@ -331,8 +331,8 @@ quick-start example.
 
 ## Search
 
-The EUI global search (the search box in the sidebar) covers plugin pages the
-same way it covers EUI's own. There is nothing to register:
+The NoxUI global search (the search box in the sidebar) covers plugin pages the
+same way it covers NoxUI's own. There is nothing to register:
 
 - Every page is a search result on its own ("Page: Display" under
   "My Addon > General").
@@ -364,13 +364,13 @@ page itself still is.
 
 ## Errors
 
-Every callback you give EUI runs protected. If `buildPage` or any other
+Every callback you give NoxUI runs protected. If `buildPage` or any other
 callback throws, the error is reported through the error handler and the panel
 keeps working; a failed page simply shows empty.
 
 ## FAQ
 
-**Can I add a page to an EUI module, e.g. an extra Unit Frames tab?** No. Put
+**Can I add a page to an NoxUI module, e.g. an extra Unit Frames tab?** No. Put
 it in your own section; that is the only place plugins can add pages.
 
 **Do I need to wait for PLAYER_LOGIN?** No. Register from your main chunk or any
@@ -380,11 +380,11 @@ later point; the panel picks the section up whenever it is shown.
 `NoxUI._modules` or edited `NoxUI.ADDON_GROUPS`.** It keeps working.
 A page your addon registers under a key of its own keeps that key, from any of
 your code (a `loadstring` chunk included), and a group of your own that you
-inserted into `NoxUI.ADDON_GROUPS` shows above or below EUI's groups,
+inserted into `NoxUI.ADDON_GROUPS` shows above or below NoxUI's groups,
 wherever you inserted it, labelled from your entry in
-`NoxUI._addonInfoByFolder`. A row you placed inside one of EUI's groups
+`NoxUI._addonInfoByFolder`. A row you placed inside one of NoxUI's groups
 appears in a section of your own instead, as does a page with no row (named
-after your addon). Changes aimed at EUI's own pages are ignored (see
+after your addon). Changes aimed at NoxUI's own pages are ignored (see
 [Rules](#rules)). New code should use `RegisterPlugin`: it checks your spec,
 guards your callbacks and lets you pick your section's label and position.
 
@@ -392,15 +392,15 @@ guards your callbacks and lets you pick your section's label and position.
 
 | If your addon... | Do this instead |
 |---|---|
-| Adds a page or tab to an EUI module, for example by wrapping `NoxUI.RegisterModule` | Move that page into your own section with `RegisterPlugin` |
-| Builds its own rows into EUI's sidebar, or draws its pages over EUI's content area | Register a plugin: EUI builds your rows and hands each page a frame to draw into |
-| Inserts rows into one of EUI's sidebar sections | Register your own section; for now those rows are moved into one for you |
+| Adds a page or tab to an NoxUI module, for example by wrapping `NoxUI.RegisterModule` | Move that page into your own section with `RegisterPlugin` |
+| Builds its own rows into NoxUI's sidebar, or draws its pages over NoxUI's content area | Register a plugin: NoxUI builds your rows and hands each page a frame to draw into |
+| Inserts rows into one of NoxUI's sidebar sections | Register your own section; for now those rows are moved into one for you |
 
 ## Before you release
 
 - [ ] Your section is registered with `RegisterPlugin`, using your folder name
       as the id.
-- [ ] Nothing in your addon replaces or hooks EUI's own functions, pages or
+- [ ] Nothing in your addon replaces or hooks NoxUI's own functions, pages or
       sidebar, or reads fields starting with `_`.
 - [ ] `buildPage` skips side effects while `NoxUI.IsSearchPrebuild()` is
       true.

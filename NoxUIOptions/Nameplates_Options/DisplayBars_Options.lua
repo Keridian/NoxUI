@@ -761,7 +761,7 @@ local function BuildDisplayBars(parent, y, ctx)
             UpdatePreview()
           end });  y = y - h
 
-    -- Target Effect: multi-select checkbox dropdown (EUI Glow/Border Color/Highlight), independent toggles; data model live-converts from the legacy targetGlowStyle string (see ns.GetTargetGlow* in the core file).
+    -- Target Effect: multi-select checkbox dropdown (NoxUI Glow/Border Color/Highlight), independent toggles; data model live-converts from the legacy targetGlowStyle string (see ns.GetTargetGlow* in the core file).
     local refreshTargetBorderSwatch  -- fwd decl; assigned when the swatch builds
     local refreshTargetGlowSwatch    -- fwd decl; assigned when the glow swatch builds
     local refreshTargetHighlightCog  -- fwd decl; assigned when the cog builds
@@ -773,7 +773,7 @@ local function BuildDisplayBars(parent, y, ctx)
         local function fvLocked() return NoxUI.BlizzStyle.Forever("nameplates") end
         local function fvTip() return NoxUI.L("Not available in the WoW Forever style.") end
         local glowItems = {
-            { key = "noxui", label = "EUI Glow", lockedFn = fvLocked, lockedTooltip = fvTip },
+            { key = "noxui", label = "NoxUI Glow", lockedFn = fvLocked, lockedTooltip = fvTip },
             { key = "borderColor", label = "Border Color", lockedFn = fvLocked, lockedTooltip = fvTip },
             { key = "highlight",   label = "Highlight" },
             { key = "borderSize",  label = "Border Size",
@@ -816,7 +816,7 @@ local function BuildDisplayBars(parent, y, ctx)
         leftRgn._lastInline = nil
         NoxUI.RegisterWidgetRefresh(cbDDRefresh)
 
-        -- Inline cog "More Effects": Highlight color/opacity + Glow opacity; enabled when Highlight OR EUI Glow is on (Glow Opacity reachable whenever the glow is active).
+        -- Inline cog "More Effects": Highlight color/opacity + Glow opacity; enabled when Highlight OR NoxUI Glow is on (Glow Opacity reachable whenever the glow is active).
         do
             local function highlightCogOff()
                 return not (ns.GetTargetGlowHighlight() or ns.GetTargetGlowNoxUI()
@@ -899,7 +899,7 @@ local function BuildDisplayBars(parent, y, ctx)
         NoxUI.RegisterWidgetRefresh(refreshTargetBorderSwatch)
         refreshTargetBorderSwatch()
 
-        -- Inline Glow Color swatch: edits targetGlowColor (default the signature blue), tints the EUI background glow; dimmed+non-interactive unless EUI Glow is checked.
+        -- Inline Glow Color swatch: edits targetGlowColor (default the signature blue), tints the NoxUI background glow; dimmed+non-interactive unless NoxUI Glow is checked.
         local glowSwatch, updateGlowSwatch = NoxUI.BuildColorSwatch(leftRgn, leftRgn:GetFrameLevel() + 5,
             function() local c = ns.GetTargetGlowColor(); return c.r, c.g, c.b end,
             function(r, g, b)
@@ -1156,7 +1156,7 @@ local function BuildDisplayBars(parent, y, ctx)
     end
 
     -- Target Texture ---- Focus Texture
-    -- Both dropdowns list the special stripe overlays first, then the full bar texture set (EUI + SharedMedia) shared with the main Bar Texture dropdown; stripe keys resolve to nameplate Media, bar keys resolve through the health-bar lookup at render time (ns.ResolveOverlayTexPath).
+    -- Both dropdowns list the special stripe overlays first, then the full bar texture set (NoxUI + SharedMedia) shared with the main Bar Texture dropdown; stripe keys resolve to nameplate Media, bar keys resolve through the health-bar lookup at render time (ns.ResolveOverlayTexPath).
     local ovtValues, ovtOrder = {}, {}
     do
         local STRIPE_ORDER = { "striped-v2", "striped-wide-v2", "stripes-medium", "stripes-small-close", "stripes-small-spread", "striped-tiny" }
@@ -1456,7 +1456,7 @@ local function BuildDisplayBars(parent, y, ctx)
         local refreshHoverGlowSwatch
         local refreshHoverCog
         local hoverItems = {
-            { key = "noxui", label = "EUI Glow" },
+            { key = "noxui", label = "NoxUI Glow" },
             { key = "borderColor", label = "Border Color" },
             { key = "highlight",   label = "Highlight" },
             { key = "borderSize",  label = "Border Size",
@@ -1576,7 +1576,7 @@ local function BuildDisplayBars(parent, y, ctx)
         NoxUI.RegisterWidgetRefresh(refreshHoverBorderSwatch)
         refreshHoverBorderSwatch()
 
-        -- Inline Glow Color swatch: dimmed unless EUI Glow is checked.
+        -- Inline Glow Color swatch: dimmed unless NoxUI Glow is checked.
         local hvGSwatch, hvUpdateGSwatch = NoxUI.BuildColorSwatch(rightRgn, rightRgn:GetFrameLevel() + 5,
             function() local c = ns.GetHoverGlowColor(); return c.r, c.g, c.b end,
             function(r, g, b)

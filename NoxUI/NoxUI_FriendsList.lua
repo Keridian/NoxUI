@@ -64,7 +64,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --
 --  Groups are account data in NoxUIDB.global (outside the profiles and
 --  outside exports): the group list, order, colours and collapsed state, and
---  each friend's group by BattleTag. A "||EUI:Group||" tag an old Friends
+--  each friend's group by BattleTag. A "||NoxUI:Group||" tag an old Friends
 --  build left in a friend note is read once and never written.
 --
 --  Favorites is Battle.net's own favorite list shown as a section among the

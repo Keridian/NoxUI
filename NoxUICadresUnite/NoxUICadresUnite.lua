@@ -1353,7 +1353,7 @@ local defaults = {
         frameSource = {},
         -- Stock styles (Global Settings > Style): Blizzard's current unit
         -- frame art or the classic frames, portrait masks and bar placement on
-        -- our own frames with every EUI feature intact. Default OFF;
+        -- our own frames with every NoxUI feature intact. Default OFF;
         -- reload-gated; the Classic flag wins when both are set.
         useBlizzardStyle = false,
         useClassicStyle = false,
@@ -2161,7 +2161,7 @@ local SECRET_CLASS_COLOR = CreateColor(1, 1, 1, 1)
 -- with ONLY the class tier guarded (unreadable class degrades to reaction/health tiers).
 -- Installed via ApplyDarkTheme, the one chokepoint every health element passes at
 -- creation. colorSelection is not carried over (needs oUF-private unitSelectionType;
--- no EUI health element enables it).
+-- no NoxUI health element enables it).
 local function UF_SecretSafeHealthColor(self, event, unit)
     if not unit or self._euiUnit ~= unit then return end
     local element = self.Health

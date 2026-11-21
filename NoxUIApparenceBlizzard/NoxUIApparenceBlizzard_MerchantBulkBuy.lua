@@ -30,7 +30,7 @@ if REAGENT_BAG then BAGS[#BAGS + 1] = REAGENT_BAG end
 
 local events = CreateFrame("Frame")
 local dialog, job, hooked
-local confirm          -- the open purchase confirm's handle (EUI:ShowConfirmPopup)
+local confirm          -- the open purchase confirm's handle (NoxUI:ShowConfirmPopup)
 local costParts = {}   -- CostText's pieces, reused
 local limits = {}      -- MaxBundles' breakdown, read by the button tooltips
 local TIP_OPTS = { justify = "LEFT" }

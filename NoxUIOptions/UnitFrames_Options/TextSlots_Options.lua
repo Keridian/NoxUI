@@ -247,7 +247,10 @@ function ns.UFO_BuildTextSlots(W, parent, y, opts)
     local addCfg = { type="button", text="+ Add Text Slot", width=220,
         onClick=function() if addOpen then addOpen() end end,
         disabled=function() return Full() or Candidate() == nil end,
-        disabledTooltip="Every text position is full." }
+        rawTooltip=true, disabledTooltip=function()
+            if Full() then return "Every text position is full." end
+            return "Every text is already shown."
+        end }
     cells[#cells + 1] = addCfg
     local function Config(c)
         if not c then return NoxUI.BlankRowCfg() end

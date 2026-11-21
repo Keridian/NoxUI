@@ -1,3 +1,100 @@
+NoxUI 0.2.5.0
+
+Noms et barres de vie
+Les amis, les amis Battle.net dont le personnage est identifiable et les anciens coéquipiers de la session peuvent avoir leur propre couleur. Groupe, raid et guilde restent prioritaires. Les états AFK et Ne pas déranger se mettent à jour sur les plaques alliées déjà visibles lorsque le client signale un changement.
+
+Plaques alliées en instance
+L’option Noms seuls en instance applique ce mode en donjon, raid et champ de bataille. Le mode habituel revient à la sortie. La taille de la ligne de guilde se règle indépendamment du nom dans les deux modes d’affichage.
+
+Familiers et personnages non joueurs
+Une option affiche le nom complet du maître à côté du nom d’un familier du personnage, du groupe ou du raid lorsque le client identifie le lien. Les couleurs des personnages non joueurs peuvent distinguer les rares et les élites.
+
+Cadres de la cible et du focus
+Le filtre des améliorations permet d’inclure ou d’exclure des effets précis, ou de limiter l’affichage à la liste d’inclusion. Une exclusion prime si un effet figure dans les deux listes. Le filtrage des affaiblissements reste indépendant.
+
+Cadres de groupe et de raid
+La plage du réglage de hauteur supplémentaire descend jusqu’à moins 200 pour les familiers, les boss alliés et les cadres supplémentaires. L’interface applique la hauteur minimale prévue par chaque cadre.
+
+Lueurs de recharge
+Une lueur peut dépendre de la vie et de la ressource principale du personnage. Les conditions Au plus et Au moins incluent la valeur du seuil. Si les deux seuils sont configurés, ils doivent être satisfaits ensemble. Le style par défaut s’applique aux nouvelles lueurs. Les lueurs déjà réglées conservent leur style.
+
+Balayage de la prochaine attaque
+Les sorts concernés affichent le même cycle de main principale dans les barres d’action et le gestionnaire de recharges. Le balayage suit le changement de page, disparaît à l’arrêt de l’attaque et possède son propre affichage de progression. Les données d’action protégées sont ignorées.
+
+Double spécialisation
+Le nouveau bloc de la barre de plugins affiche l’arbre dominant et détaille les points au survol. Maj avec un clic gauche choisit la spécialisation principale, Maj avec un clic droit la secondaire, si elle est disponible et hors combat. La spécialisation secondaire peut aussi servir de condition dans les réglages d’interface.
+
+Tenues par activité
+Dans Services de Forever, l’onglet Tenues associe par personnage un ensemble d’équipement à chaque spécialisation. Une tenue spécifique à l’activité prime sur la tenue par défaut. Une spécialisation peut être choisie à l’arrivée. NoxUI attend sa confirmation avant d’équiper la tenue et reporte l’opération en combat ou pendant la mort du personnage. Les pièces manquantes donnent lieu à un message. Le bouton Appliquer à mon activité actuelle rejoue la règle en cours.
+
+Rappels de talents
+L’onglet Talents permet de choisir des talents par nom et par branche, pour le donjon, le raid, le champ de bataille ou l’arène. À l’arrivée, le rappel attend l’issue du changement automatique de spécialisation et liste les talents dont l’absence est confirmée. Les rappels existants figurent dans leur propre section.
+
+Partage des rappels de talents
+Une liste peut être exportée et importée sur un personnage de la même classe. L’import ajoute les rappels à l’activité concernée sans les doubler. Un code invalide laisse les réglages existants intacts. La recherche des réglages retrouve les tenues, les spécialisations et les rappels.
+
+Inventaire et réactifs
+Les objets du sac de réactifs peuvent porter un repère au choix en grille, en liste et dans le sac détaché. Une option permet de classer ce contenu avec les autres objets de l’inventaire du personnage connecté. Les sacs de métier de Forever conservent leur traitement.
+
+Objets récents
+Le mode Quantité ramassée regroupe les objets identiques et affiche la quantité cumulée pendant la session. La valeur est disponible en grille, en vue compacte et dans la colonne Quantité de la liste. Les piles réelles restent accessibles à leur emplacement habituel.
+
+Minicarte et trajets
+Le menu des boutons de minicarte peut afficher le nom des extensions à côté de leurs icônes. Si l’espace vertical manque, la liste passe sur plusieurs colonnes. La grille reste le mode par défaut. Sur la carte des vols, le survol d’une destination accessible affiche une estimation lorsque la distance est connue.
+
+Campement et repos
+Pendant le sommeil dans le sac de couchage, une option affiche les charges de repos et le temps estimé pour atteindre la troisième charge. L’estimation se recale quand une charge est gagnée et s’arrête à trois charges. L’indicateur de repos du cadre joueur peut aussi être ancré au portrait et reprend son emplacement habituel si le portrait est masqué.
+
+Canaux et messages
+La police native du chat du jeu peut être choisie dans NoxUI. La couleur de classe des expéditeurs et celle des noms cités dans les messages se règlent séparément.
+
+Dialogues de quête
+Quand les raccourcis de dialogue sont actifs, les touches numériques peuvent choisir une récompense visible hors combat. La validation de la quête reste une action séparée.
+
+Profils et placements
+Les exports qui incluent le placement enregistrent la résolution et l’échelle. À l’import, NoxUI peut signaler qu’un placement provient d’un affichage différent. Les anciens exports restent lisibles.
+
+Rappels d’auras
+Le rappel d’encensoir en donjon reconnaît l’attracteur élémentaire de la Horde. Le chasseur peut activer un rappel visuel du pistage adapté à sa cible hostile si le pistage est accessible et inactif.
+
+Historique
+
+NoxUI 0.2.3.9
+21 novembre 2026
+
+Noms et barres de vie | Couleurs des alliés
+Deux réglages permettent de colorer le nom des membres de votre groupe ou raid et de votre guilde. Les repères restent réglables séparément.
+
+Minicarte | Boutons des extensions
+Les boutons enregistrés par LibDBIcon restent disponibles si leur nom se termine par un chiffre.
+
+Cadres du joueur et de la cible | Ajout de texte
+Le bouton indique si toutes les positions sont occupées ou si tous les textes disponibles sont déjà affichés.
+
+
+NoxUI 0.2.3.8
+21 novembre 2026
+
+Carte du monde | OpenMap par défaut
+La touche M ouvre OpenMap même si Forever Maps avait enregistré cette touche pour sa carte. Les raccourcis enregistrés restent disponibles pour la restauration.
+
+Carte du monde | Accès à Forever Maps
+Ouvrez Forever Maps depuis OpenMap et retrouvez la carte principale en fermant la carte des itinéraires.
+
+
+NoxUI 0.2.3.7
+20 novembre 2026
+
+Carte du monde | Réouverture de la carte
+La dernière vue valide reste disponible si la carte se ferme pendant une transition. En instance, elle sert de repli lorsque la position du personnage est indisponible.
+
+Carte du monde | Raccourci de carte
+Le raccourci de la carte est resynchronisé lors du chargement des modules cartographiques.
+
+Interface | Identité NoxUI
+Les libellés des menus, les traductions et la documentation des extensions utilisent le nom NoxUI.
+
+
 NoxUI 0.2.3.6
 18 novembre 2026
 
@@ -13,7 +110,6 @@ Une position en attente ne sera plus envoyée après la désactivation du partag
 Noms des personnages | Plaques réutilisées
 Les noms flottants vérifient leur association au personnage avant de réutiliser une plaque.
 
-Historique
 
 NoxUI 0.2.3.5
 16 novembre 2026

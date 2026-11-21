@@ -125,7 +125,7 @@ local function StampItem(d)
     d._lvReq = (reqLevel and reqLevel > 1) and reqLevel or 0
     d._lvType = subType or ""
     d._lvCount = count
-    -- Track sort: tier (EUI._TRACK_RANK) then rank within it
+    -- Track sort: tier (NoxUI._TRACK_RANK) then rank within it
     local rank, tc = d._giTrackRank or "", d._giTrackColor
     d._lvTrack = rank
     d._lvTrackSort = tc and ((EUI._TRACK_RANK and EUI._TRACK_RANK[tc] or 0) * 100 + (tonumber(rank:match("^(%d+)")) or 0)) or 0

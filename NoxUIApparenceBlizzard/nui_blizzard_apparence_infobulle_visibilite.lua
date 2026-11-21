@@ -230,7 +230,7 @@ do
         if _comparisonClearPending then return end
         _comparisonClearPending = true
         -- This hook can run from Blizzard's protected tooltip/owner path.
-        -- Defer all Hide/Clear calls out of that stack, matching the existing EUI
+        -- Defer all Hide/Clear calls out of that stack, matching the existing NoxUI
         -- tooltip-skin deferral rules.
         C_Timer.After(0, RunSuppressedComparisonClear)
     end
@@ -353,7 +353,7 @@ do
         UnparkTooltip(tt)
         -- Explicitly-owned paths must follow the same global visibility mode as
         -- default-anchored paths. This includes action buttons, container items,
-        -- character equipment slots, and custom EUI tooltip owners.
+        -- character equipment slots, and custom NoxUI tooltip owners.
         if ComparisonSuppressionModeEnabled() then
             ApplySuppression(tt)
         end

@@ -135,7 +135,7 @@ local function LastColor()
 end
 
 -------------------------------------------------------------------------------
---  Fonts -- the Battle Res text pattern: "__global" follows the EUI Fonts &
+--  Fonts -- the Battle Res text pattern: "__global" follows the NoxUI Fonts &
 --  Colors defaults, a named key resolves through the shared font registry, and
 --  outline overrides stay slug-gated. Key is "resourceBars" (this module's own
 --  entry in _addonKeyToFolder), so a per-module font override applies here too.

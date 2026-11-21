@@ -45,7 +45,7 @@ local function BuildPreviewRoles()
     local _, pct = UnitClass("player")
     previewClassTokens[1] = pct or "WARRIOR"
 
-    -- EUI LEGENDS: slots 2-20 come from the permanent named roster (event
+    -- NoxUI LEGENDS: slots 2-20 come from the permanent named roster (event
     -- winners + team) -- fixed name/class/role triples instead of the old
     -- round-robin class pools. ns._pvNames rides along through the sort.
     --

@@ -16,7 +16,7 @@ local FFD, GetFFD = I.FFD, I.GetFFD
 
 -------------------------------------------------------------------------------
 --  Tooltip / Context Menu / Static Popup Skinning
---  Restyles GameTooltip et al in EUI dark style; visual-only (alpha, backdrop color,
+--  Restyles GameTooltip et al in NoxUI dark style; visual-only (alpha, backdrop color,
 --  font). NEVER Hide/Show/SetParent Blizzard frames; hooks are hooksecurefunc post-hooks only.
 -------------------------------------------------------------------------------
 ;(function()
@@ -213,7 +213,7 @@ local FFD, GetFFD = I.FFD, I.GetFFD
             GetFFD(tt).bg = tt:CreateTexture(nil, "BACKGROUND", nil, -8)
             GetFFD(tt).bg:SetAllPoints()
         end
-        -- Unified user-customizable background (shared with EUI custom tooltips via GetTooltipBg); re-applied each call so a settings change shows immediately.
+        -- Unified user-customizable background (shared with NoxUI custom tooltips via GetTooltipBg); re-applied each call so a settings change shows immediately.
         GetFFD(tt).bg:SetColorTexture(NoxUI.GetTooltipBg())
         GetFFD(tt).bg:Show()
         -- Border size/color (Blizz UI Enhanced > Blizzard Tooltip > Border), same reapply-every-call pattern; size 0 hides the border.
@@ -1110,7 +1110,7 @@ local FFD, GetFFD = I.FFD, I.GetFFD
         _ttFonts(tt, nLinesBefore)
     end
 
-    -- Visual reskin: dark bg/border (via _ttHook -> _ttSkin), EUI fonts, and restyled status bar. Gated on "Reskin Tooltip" (customTooltips).
+    -- Visual reskin: dark bg/border (via _ttHook -> _ttSkin), NoxUI fonts, and restyled status bar. Gated on "Reskin Tooltip" (customTooltips).
     local function _ttInitVisual()
         -- Shared font objects in step from login, not from the first tooltip shown.
         _ttFontSpec()
@@ -1556,7 +1556,7 @@ local FFD, GetFFD = I.FFD, I.GetFFD
         f:RegisterEvent("PLAYER_LOGIN")
         f:SetScript("OnEvent", function(self)
             self:UnregisterAllEvents()
-            -- customTooltips is the master for ALL EUI tooltip handling (visual reskin
+            -- customTooltips is the master for ALL NoxUI tooltip handling (visual reskin
             -- AND data additions); off leaves tooltips alone, matching the grayed-out
             -- options. Context menu/static popup reskins (reskinPopupsMenus) and
             -- per-window reskins use their own keys, seeded from the old master once by the
@@ -2068,7 +2068,7 @@ local FFD, GetFFD = I.FFD, I.GetFFD
                 timerBg:SetAllPoints()
                 timerBg:SetColorTexture(0, 0, 0, 0.7)
 
-                -- Blizzard-style casting bar border (hidden in EUI style).
+                -- Blizzard-style casting bar border (hidden in NoxUI style).
                 timerBorder = timerBar:CreateTexture(nil, "OVERLAY")
                 timerBorder:SetTexture(130874)
                 timerBorder:SetSize(256, 64)

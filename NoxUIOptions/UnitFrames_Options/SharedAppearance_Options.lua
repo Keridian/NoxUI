@@ -127,7 +127,7 @@ function ns.UFO_BuildDisplaySection(parent, y, ctx)
               SyncUnitVisBooleans(s)
               if ns.UpdateFrameVisibility then ns.UpdateFrameVisibility() end
               ReloadAndUpdate()
-              -- Un-hiding a frame whose EUI frame isn't spawned this session
+              -- Un-hiding a frame whose NoxUI frame isn't spawned this session
               -- (source was Blizzard/Hidden at login) needs a /reload. The EFFECTIVE
               -- value decides: an override replaces the shared scalar, so an override
               -- of Always on a unit whose shared value is "never" un-hides it too.
@@ -188,7 +188,7 @@ function ns.UFO_BuildDisplaySection(parent, y, ctx)
         },
     })
 
-    -- Non-EUI source: no EUI frame spawned, so nothing below applies. Keep the
+    -- Non-NoxUI source: no NoxUI frame spawned, so nothing below applies. Keep the
     -- Visibility row (hosts the Frame Source cog + "Never Show" way back), grey
     -- it for Blizzard source, and show a one-line notice in place of settings.
     if not NoxUI._prebuilding then
@@ -198,7 +198,7 @@ function ns.UFO_BuildDisplaySection(parent, y, ctx)
             -- here because it is meaningless for a Blizzard frame. It now holds the
             -- profile-wide Show Nicknames toggle, which stays live for every source.
             if srcNow == "blizzard" then
-                -- Visibility modes only drive the EUI frame: block the dropdown
+                -- Visibility modes only drive the NoxUI frame: block the dropdown
                 -- (the cog stays live to switch back).
                 local ctl = visRow._leftRegion._control
                 if visRow._leftRegion._label then visRow._leftRegion._label:SetAlpha(0.3) end

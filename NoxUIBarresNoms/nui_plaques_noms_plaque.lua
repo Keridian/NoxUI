@@ -64,7 +64,7 @@ local function HideBlizzardFrame(nameplate, unit)
     if not nameplate then return end
     local uf = nameplate.UnitFrame
     if not uf then return end
-    -- Suppress unconditionally: if we are called, an EUI plate is taking over this nameplate.
+    -- Suppress unconditionally: if we are called, an NoxUI plate is taking over this nameplate.
     -- NEVER gate on UnitCanAttack -- it can return false on the first frame (unit not fully
     -- registered), skipping the whole block and leaving Blizzard's UnitFrame visible as a
     -- giant black box.
@@ -161,7 +161,7 @@ local function HideBlizzardFrame(nameplate, unit)
         local locked = false
         hooksecurefunc(uf, "SetAlpha", function(self)
             if locked then return end
-            -- Force alpha 0 only while an EUI plate owns this nameplate. On recycle to a
+            -- Force alpha 0 only while an NoxUI plate owns this nameplate. On recycle to a
             -- friendly unit the plate is released and ns.plates[unit] is nil, so the hook no-ops.
             local ufUnit = self.unit or (self.GetUnit and self:GetUnit())
             if not ufUnit or not ns.plates[ufUnit] then return end

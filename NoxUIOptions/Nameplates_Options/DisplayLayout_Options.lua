@@ -145,7 +145,7 @@ local function BuildDisplayLayout(parent, y, ctx)
     y = NoxUI.BlizzStyle.Note(parent, y, "nameplates")
 
     -- Row 1: Border (None/Basic/Custom) | Border Size. Pure VIEW over showBorder + customBorderEnabled: None=off, Basic=standard border, Custom=custom border engine (reveals the Custom Border row below via page rebuild; None/Basic collapse it).
-    -- Both stock styles gate both slots: they draw their own art (the stock background, the vanilla border sheets) and stand every EUI border down.
+    -- Both stock styles gate both slots: they draw their own art (the stock background, the vanilla border sheets) and stand every NoxUI border down.
     local borderStyleRow
     borderStyleRow, h = W:DualRow(parent, y,
         NoxUI.BlizzStyle.Gate("nameplates", { type="dropdown", text="Border",
@@ -226,9 +226,9 @@ local function BuildDisplayLayout(parent, y, ctx)
         local leftRgn = borderStyleRow._leftRegion
         local function wrapCogOff()
             -- Only "None" disables it; Basic and Custom both support the wrap.
-            -- Neither stock style has an EUI border to wrap: Blizzard Style
+            -- Neither stock style has an NoxUI border to wrap: Blizzard Style
             -- draws the stock background art, Classic WoW UI the vanilla
-            -- border sheets, and both stand the EUI borders down.
+            -- border sheets, and both stand the NoxUI borders down.
             if ns.NP_Blizz() then return true end
             if DBVal("customBorderEnabled") then return false end
             local v = DBVal("showBorder")
@@ -753,7 +753,7 @@ local function BuildDisplayLayout(parent, y, ctx)
         eyeBtn:SetScript("OnLeave", function(self) NoxUI.SetGlyphAlpha(self, 0.4) end)
     end
 
-    -- Row 3: Bar Texture | Cast Bar Texture -- share the same texture set (EUI built-ins + SharedMedia) and resolve identically; Bar Texture drives the health bar, Cast Bar Texture drives the cast bar.
+    -- Row 3: Bar Texture | Cast Bar Texture -- share the same texture set (NoxUI built-ins + SharedMedia) and resolve identically; Bar Texture drives the health bar, Cast Bar Texture drives the cast bar.
     local texRow
     texRow, h = W:DualRow(parent, y,
         -- Bar Texture stays live under Blizzard Style: the health fill is the

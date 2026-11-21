@@ -264,7 +264,7 @@ end
 --  Then we rescale UIParent to the 1440 space and the frame keeps that
 --  numeric 188 offset, which now points somewhere lower. Each session
 --  repeats it, so the window creeps toward the bottom-left by
---  (cvarScale height / our height) per login. Only setups whose EUI scale
+--  (cvarScale height / our height) per login. Only setups whose NoxUI scale
 --  differs from the CVar scale drift, which is why not everyone sees it.
 --
 --  Fixing the scale TIMING does not work: applying our scale at ADDON_LOADED

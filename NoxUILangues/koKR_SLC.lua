@@ -11,7 +11,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --     LocaleModuleLoads("NoxUIConseilButin") 조건문은 메모리 최적화를 위한
 --     필수 구문이므로 절대 삭제하거나 변경하지 마세요.
 --   - 본 파일은 SLC 모듈이 활성화된 경우에만 로드되며, koKR.lua보다 나중에 읽힙니다.
---   - 다른 EUI 모듈에서도 공통으로 사용하는 일반 문자열은 koKR.lua에 유지하고,
+--   - 다른 NoxUI 모듈에서도 공통으로 사용하는 일반 문자열은 koKR.lua에 유지하고,
 --     SLC 전용 문자열(NoxUIConseilButin/LocaleKeys.txt)만 본 파일에서 관리합니다.
 --   - 만약 동일한 키가 koKR.lua와 본 파일에 모두 존재하면 SLC 활성화 시 본 파일의 번역이
 --     우선 적용(덮어쓰기)되므로 용어 통일에 주의해야 합니다.
@@ -1188,7 +1188,7 @@ L["Autoroll"] = "자동 굴림"
 L["Developed in partnership with "] = "공동 개발: "
 L["Example: 2 %s my note [equipped item link] [equipped item link]"] = "예: 2 %s 내 메모 [착용 아이템 링크] [착용 아이템 링크]"
 L["Format: <item number or link> <keyword> <optional note> <optional equipped item links>"] = "형식: <아이템 번호 또는 링크> <키워드> <선택 메모> <선택 착용 아이템 링크>"
-L["Friends not running EUI? Download the standalone version here!"] = "EUI를 쓰지 않는 친구가 있나요? 여기서 독립 실행형 버전을 다운로드하세요!"
+L["Friends not running NoxUI? Download the standalone version here!"] = "EUI를 쓰지 않는 친구가 있나요? 여기서 독립 실행형 버전을 다운로드하세요!"
 L["Response buttons locked while loot session is active"] = "전리품 세션이 진행 중일 때는 응답 버튼이 잠깁니다"
 L["Response guide"] = "응답 안내"
 L["Send"] = "보내기"

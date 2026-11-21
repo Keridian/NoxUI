@@ -56,7 +56,7 @@ BuildCastBar = function()
 
     -- ResourceBars only claims Blizzard's player cast bar while its own
     -- replacement bar is active. The shared helper arbitrates ownership
-    -- across EUI modules and releases control cleanly for other addons.
+    -- across NoxUI modules and releases control cleanly for other addons.
     ns.RB_SyncBlizzCastSuppress()
     ns.ERB_SyncUninterruptWatch(cb.enabled and cb.uninterruptibleOverride and not blizzKit)
     ns.ERB_LatencySendWatch(cb.enabled and cb.latencyEnabled)
@@ -233,7 +233,7 @@ BuildCastBar = function()
 
     -- Border: update the dedicated child border frame (PP or textured)
     if castBarFrame._border then
-        -- Blizzard Style: no EUI border; the stock frame art draws on this child instead.
+        -- Blizzard Style: no NoxUI border; the stock frame art draws on this child instead.
         local bs = blizz and 0 or (cb.borderSize or 0)
         local texKey = cb.borderTexture or "solid"
         -- "Show Behind": +5 in front of the bar, level-1 behind it.
@@ -465,11 +465,11 @@ end
         if pip then
             castBarFrame._blizzSpark = true
             spark:SetAtlas(pip)
-            -- The stock pip is drawn plain (the EUI spark art is additive).
+            -- The stock pip is drawn plain (the NoxUI spark art is additive).
             spark:SetBlendMode("BLEND")
         end
     end
-    -- Classic WoW UI: the vanilla spark file (additive, like the EUI art) once.
+    -- Classic WoW UI: the vanilla spark file (additive, like the NoxUI art) once.
     -- It stands taller than the bar and draws over the frame art, so its
     -- host leaves the clip frame for the bar frame itself (anchors kept).
     if classic and not castBarFrame._classicSpark then

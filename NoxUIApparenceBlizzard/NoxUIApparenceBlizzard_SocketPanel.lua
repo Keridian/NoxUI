@@ -3,7 +3,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --  Character Sheet Socket Panel
 --
 --  A bounded row of socket icons in the blank strip along the bottom
---  edge of the EUI-skinned character sheet, right-aligned. Under the stock
+--  edge of the NoxUI-skinned character sheet, right-aligned. Under the stock
 --  styles (Blizzard / Classic) it hangs below Blizzard's sheet instead, a
 --  plate in the bottom tabs' own art at the bottom-right corner, with
 --  Blizzard's item-button, menu and page-arrow art. Each icon is one
@@ -553,7 +553,7 @@ local function AcquireIcon(i)
             GameTooltip:SetHyperlink(rec.gemLink)
             GameTooltip:Show()
         else
-            -- Empty socket: plain-text hint uses the EUI widget tooltip.
+            -- Empty socket: plain-text hint uses the NoxUI widget tooltip.
             NoxUI.ShowWidgetTooltip(self,
                 NoxUI.L(rec.emptyName or "Empty Socket")
                     .. NoxUI.L("\nPick a gem from the list to socket it."),

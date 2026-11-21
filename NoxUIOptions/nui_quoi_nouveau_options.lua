@@ -1,5 +1,5 @@
 if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGate.lua)
--- Patch Notes and EUI Legends page builders; their content tables stay in nui_general_options.lua.
+-- Patch Notes and NoxUI Legends page builders; their content tables stay in nui_general_options.lua.
 
 -- Options page pool (NoxUI_FramePool.lua): frames made here on a pool
 -- host are reset and dressed again by the next build instead of made anew;

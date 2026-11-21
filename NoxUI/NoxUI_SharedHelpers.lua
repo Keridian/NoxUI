@@ -57,7 +57,7 @@ end
 -------------------------------------------------------------------------------
 --  Third-Party Skin Registration (public API) -- other addons call
 --  NoxUI.RegisterSkin("TheirAddon", function(S) ... end) to have their frames painted in
---  the EUI house style. This stub only queues: the Blizz UI Enhanced child addon drains the
+--  the NoxUI house style. This stub only queues: the Blizz UI Enhanced child addon drains the
 --  queue at PLAYER_LOGIN (or immediately for late/LoD registrations) and passes the skinning
 --  facade S. Queuing keeps registration order-independent -- third-party addons may load before
 --  or after the child -- and the API stays callable (a silent no-op) when the child addon is
@@ -468,9 +468,9 @@ end
 --  Blizzard Cast Bar Event Ownership -- standalone cast bar addons claim Blizzard's
 --  player/pet cast bars by unregistering their events. oUF's Castbar element writes the same
 --  state -- it silences those frames when it enables on the player frame and re-arms them when
---  it disables -- so EUI can hand a user's cast bar back to Blizzard on top of the addon they
---  replaced it with. EUI hides Blizzard's bar by re-parenting it (see SetPlayerCastBarSuppressed),
---  so it never needs the event state changed: wrap anything that flips it in Capture/Restore and only ever undo EUI's own writes.
+--  it disables -- so NoxUI can hand a user's cast bar back to Blizzard on top of the addon they
+--  replaced it with. NoxUI hides Blizzard's bar by re-parenting it (see SetPlayerCastBarSuppressed),
+--  so it never needs the event state changed: wrap anything that flips it in Capture/Restore and only ever undo NoxUI's own writes.
 -------------------------------------------------------------------------------
 function NoxUI._BlizzCastBars()
     local bars = NoxUI._blizzCastBarList
@@ -484,7 +484,7 @@ function NoxUI._BlizzCastBars()
     for i = 1, #bars do
         local bar = bars[i]
         -- An UnregisterAllEvents outside one of our own Capture/Restore windows is another
-        -- addon claiming the frame: EUI drops its claim and records the claim as foreign.
+        -- addon claiming the frame: NoxUI drops its claim and records the claim as foreign.
         -- "Foreign" is tracked separately from "not ours" because those are very different states -- see RestoreBlizzCastBarEvents.
         hooksecurefunc(bar.frame, "UnregisterAllEvents", function()
             if not NoxUI._blizzCastBarSnapshot then
@@ -527,7 +527,7 @@ function NoxUI.RestoreBlizzCastBarEvents()
                 bar.frame:Hide()
             else
                 -- Registered inside our own window with nobody claiming it.
-                -- That is EUI's own bookkeeping having lost track (a silence
+                -- That is NoxUI's own bookkeeping having lost track (a silence
                 -- that produced no transition to observe), NOT another addon,
                 -- so re-silencing here would kill Blizzard's cast bar for the
                 -- session with no way back short of a reload. Leave it armed:
@@ -579,15 +579,15 @@ end
 -- only be set once the UnregisterAllEvents hooks exist -- a lazy first capture at PLAYER_LOGIN
 -- leaves every earlier silence unattributed. File scope runs during the ADDON_LOADED sequence,
 -- before any addon's PLAYER_LOGIN handler, so this closes the window to everything except
--- file-scope silences in addons that load before EUI. Guarded on BOTH frames: the list is cached on first build, so building it while either frame is missing would drop that bar for the whole session.
+-- file-scope silences in addons that load before NoxUI. Guarded on BOTH frames: the list is cached on first build, so building it while either frame is missing would drop that bar for the whole session.
 if PlayerCastingBarFrame and PetCastingBarFrame then
     NoxUI._BlizzCastBars()
 end
 
 -------------------------------------------------------------------------------
---  Shared Player Cast Bar Suppression -- multiple EUI modules can temporarily suppress
+--  Shared Player Cast Bar Suppression -- multiple NoxUI modules can temporarily suppress
 --  Blizzard's player cast bar while they render their own. Centralized here so modules cooperate
---  with each other and leave third-party visibility control alone once no EUI module is actively using a replacement bar.
+--  with each other and leave third-party visibility control alone once no NoxUI module is actively using a replacement bar.
 -------------------------------------------------------------------------------
 function NoxUI.SetPlayerCastBarSuppressed(owner, suppressed)
     if not owner or owner == "" then return end
@@ -630,7 +630,7 @@ function NoxUI.SetPlayerCastBarSuppressed(owner, suppressed)
         end
 
         -- Edit Mode re-anchors the cast bar on every layout apply (spec changes, and every
-        -- level-up on WoW Forever); keep re-applying our hidden parent while any EUI owner
+        -- level-up on WoW Forever); keep re-applying our hidden parent while any NoxUI owner
         -- suppresses it. The re-park runs in the SAME frame from a one-shot OnUpdate on a
         -- frame of ours (after this frame's handlers, before it renders; a timer showed
         -- Blizzard's bar for a frame), so no addon code runs inside Blizzard's call. In
@@ -699,9 +699,9 @@ function NoxUI.SetPlayerCastBarSuppressed(owner, suppressed)
 
     NoxUI._GetFFD(blizzBar).castBarSuppressed = false
 
-    -- Hand the bar back to the parent EUI took it from -- but never to one that is itself hidden.
+    -- Hand the bar back to the parent NoxUI took it from -- but never to one that is itself hidden.
     -- Blizzard parents this bar under PlayerFrame, and Edit Mode re-parents it into a layout frame
-    -- that gets hidden on exit, while EUI hides PlayerFrame whenever it renders its own player
+    -- that gets hidden on exit, while NoxUI hides PlayerFrame whenever it renders its own player
     -- frame. Restoring there leaves Blizzard's cast bar fully armed but permanently invisible,
     -- which reads exactly like the suppression never lifted. UIParent is where Edit Mode positions the bar from anyway, and SetParent keeps the existing anchors, so the bar still lands where the user had it.
     local origParent = NoxUI._GetFFD(blizzBar).origParent
@@ -711,7 +711,7 @@ function NoxUI.SetPlayerCastBarSuppressed(owner, suppressed)
         restoreParent = UIParent
     end
 
-    -- Only ever un-park a bar EUI itself parked: either it is still sitting in our hidden parent,
+    -- Only ever un-park a bar NoxUI itself parked: either it is still sitting in our hidden parent,
     -- or an earlier release handed it back to the captured parent and that parent is itself
     -- hidden. Matching the captured parent exactly is what separates "Blizzard's own parent
     -- happens to be hidden" from "another addon parked this bar under its own hidden frame" -- the latter is left alone, since resurrecting it is the bug this whole ownership dance exists to prevent.
@@ -735,8 +735,8 @@ function NoxUI.SetPlayerCastBarSuppressed(owner, suppressed)
 
     -- Let Blizzard rebuild its normal event wiring without forcing visibility back on, so profile
     -- switches and UnitFrames/oUF teardown stay compatible with Blizzard's own cast bar logic.
-    -- Only when EUI silenced the frame in the first place: a standalone cast bar addon silences
-    -- the same frame, and re-registering its events is what pops Blizzard's cast bar back on screen next to theirs once EUI's own cast bar is switched off.
+    -- Only when NoxUI silenced the frame in the first place: a standalone cast bar addon silences
+    -- the same frame, and re-registering its events is what pops Blizzard's cast bar back on screen next to theirs once NoxUI's own cast bar is switched off.
     NoxUI.RearmBlizzCastBars()
 end
 
@@ -1021,7 +1021,7 @@ end
 --  through to the world. While a module's Clickable Portrait is on, a second
 --  secure unit button for the same unit covers the portrait, set up like the
 --  owner's own: target on left-click, the secure menu on right-click, and
---  handed to click-casting, so Blizzard's native click casting, EUI's engine
+--  handed to click-casting, so Blizzard's native click casting, NoxUI's engine
 --  and click-cast addons bind it as they bind the owner. Hover replays the
 --  owner's own hover work through the module's callbacks.
 --  The overlay is parented to the owner and anchored to it by measured

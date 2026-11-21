@@ -1031,7 +1031,7 @@ function ns.SetupViewerHooks()
         end)
     end
 
-    -- EUI options panel: reanchor on show/hide
+    -- NoxUI options panel: reanchor on show/hide
     NoxUI:RegisterOnShow(function()
         C_Timer.After(0.1, function()
             QueueReanchor()
@@ -1098,7 +1098,7 @@ end
 
 -- Skip locking the BuffBarCooldownViewer when the user has enabled "Use Blizzard CDM
 -- Bars" -- they want to drag/configure that frame in Edit Mode themselves. All other
--- CDM viewers stay locked because EUI manages their position via icon-level anchoring.
+-- CDM viewers stay locked because NoxUI manages their position via icon-level anchoring.
 local function ShouldLockViewer(frame)
     if frame == _G["BuffBarCooldownViewer"] then
         local p = ECME and ECME.db and ECME.db.profile

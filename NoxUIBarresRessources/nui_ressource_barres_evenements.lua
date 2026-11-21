@@ -646,7 +646,7 @@ function ERB:OnInitialize()
     _G._ERB_AceDB = self.db
     _G._ERB_Apply = function() ERB:ApplyAll() end
     _G._ERB_ApplySmoothing = function() ERB:ApplySmoothing() end
-    -- Unlock mode / EUI options panel: temporarily render the power bar at its true
+    -- Unlock mode / NoxUI options panel: temporarily render the power bar at its true
     -- stored height (no expand) so movers and getSize see the real size. RUNTIME-ONLY
     -- suppression via NoxUI._erbExpandSuppressed -- NEVER writes the saved
     -- primary.expandIfNoResource setting. Mutating the saved bool directly is unsafe:
@@ -934,7 +934,7 @@ function ERB:OnEnable()
         end,
     })
 
-    -- Collapse/restore expandIfNoResource when EUI options panel opens/closes
+    -- Collapse/restore expandIfNoResource when NoxUI options panel opens/closes
     NoxUI:RegisterOnShow(function()
         if _G._ERB_SuppressExpand then _G._ERB_SuppressExpand() end
     end)

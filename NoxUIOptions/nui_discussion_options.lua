@@ -69,7 +69,7 @@ initFrame:SetScript("OnEvent", function(self)
 
         if isChat then
 
-        -- Chat position is an EUI unlock element now; the old Edit Mode
+        -- Chat position is an NoxUI unlock element now; the old Edit Mode
         -- reposition banner and its Force Chat on Screen link are gone.
 
         -- -- DISPLAY -----------------------------------------------------------
@@ -200,7 +200,7 @@ initFrame:SetScript("OnEvent", function(self)
             do
                 local rrgn = fontRow._leftRegion
                 local outlineValues = {
-                    ["__global"] = { text = "EUI Global Default" },
+                    ["__global"] = { text = "NoxUI Global Default" },
                     ["none"]     = { text = "Drop Shadow" },
                     ["outline"]  = { text = "Outline" },
                     ["thick"]    = { text = "Thick Outline" },

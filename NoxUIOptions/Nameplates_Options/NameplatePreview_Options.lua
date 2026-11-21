@@ -734,7 +734,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
     -- Blizzard Style (Global Settings > Style): the stock plate look over the
     -- mock at the end of every Update, as the live plates get it -- the
     -- shadowed background art around the bar (the user's own fill texture
-    -- stays), the bar's inner shadow, no EUI borders, the selection ring or
+    -- stays), the bar's inner shadow, no NoxUI borders, the selection ring or
     -- deselected overlay, and the stock cast bar art. Stashed on previewGlow
     -- (an Update upvalue already) so Update stays under Lua's 60-upvalue cap.
     previewGlow.applyBlizz = function()
@@ -814,7 +814,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
             end
         end
         -- Cast bar: stock background (the retail art under WoW
-        -- Forever too, as live), fill art and pip; no EUI border.
+        -- Forever too, as live), fill art and pip; no NoxUI border.
         if ok(B.castBg) then
             NoxUI.StockAtlas(castParts.bg, B.castBg)
             castParts.bg:SetVertexColor(1, 1, 1, 1)
@@ -868,7 +868,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
     -- Classic WoW UI: the vanilla borders over the mock, as the live plates
     -- get them (ns.NP_ApplyClassicHealthArt / CastArt): the health border
     -- with a level in its plate, the cast border with the icon in its
-    -- plate, the vanilla spark; no EUI border. Same stash as applyBlizz.
+    -- plate, the vanilla spark; no NoxUI border. Same stash as applyBlizz.
     previewGlow.applyClassic = function(barH, castH)
         local C = ns.NP_CLASSIC
         if not (C and C.health and ns.NP_ClassicBorderPieces and ns.NP_SeatClassicBorder and ns.NP_ClassicLevelOffset) then return end
@@ -1326,7 +1326,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
         -- laid out: the texts are placed and the bar wears its colour.
         previewGlow.state = function(m, fontPath, npOutline)
             local P = (m == "target" and "Target") or (m == "hover" and "Hover") or nil
-            -- EUI Glow (ApplyTarget, ns.ApplyHoverExtras): the background glow, tinted
+            -- NoxUI Glow (ApplyTarget, ns.ApplyHoverExtras): the background glow, tinted
             -- and faded with the effect's Glow Color and Opacity.
             local pgf = previewGlow.frame
             if P and ns["Get" .. P .. "GlowNoxUI"]() then
@@ -1516,7 +1516,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
         do
             local cbSz = DBVal("castBorderSize") or defaults.castBorderSize or 0
             local cbC = (DB() and DB().castBorderColor) or defaults.castBorderColor
-            -- Classic WoW UI: no EUI edge; the vanilla cast border is drawn at the end of Update.
+            -- Classic WoW UI: no NoxUI edge; the vanilla cast border is drawn at the end of Update.
             if previewGlow.classic then cbSz = 0; cbC = previewGlow.black end
             if PP and PP.CreateBorder then
                 if cbSz and cbSz > 0 then
@@ -1577,7 +1577,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
             end
             local bOn = DBVal("showBorder")
             if bOn == nil then bOn = defaults.showBorder end
-            -- Classic WoW UI: no EUI edge; the vanilla health border is drawn at the end of Update.
+            -- Classic WoW UI: no NoxUI edge; the vanilla health border is drawn at the end of Update.
             if previewGlow.classic then bOn = false end
             if bOn then
                 borderFrame:Hide(); simpleBorderFrame:Show()
@@ -3283,7 +3283,7 @@ local function BuildNameplatePreview(parent, parentW, mode)
         -- Stock styles: the stock look over everything laid out above.
         if previewGlow.classic then
             -- Classic WoW UI: the vanilla borders round both bars (the
-            -- border block hid the EUI edges); the cast icon shows its
+            -- border block hid the NoxUI edges); the cast icon shows its
             -- whole art in the cast border's plate and the harmful aura
             -- mocks wear the stock dispel-type border like the live
             -- cells. No ring, overlay or mask.

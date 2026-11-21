@@ -5,7 +5,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --  NoxUIConfortJeu module by nui_confort_jeu_options.lua). Builds four sections:
 --    MOVEMENT COOLDOWN ALERT, TRACKED SPELLS, TIME SPIRAL, GATEWAY SHARD.
 --  Position/size for all three on-screen trackers is controlled entirely
---  through EUI's Unlock Mode (registered in NoxUIConfortJeu_MovementAlert.lua)
+--  through NoxUI's Unlock Mode (registered in NoxUIConfortJeu_MovementAlert.lua)
 --  rather than in-page sliders, matching how Combat Alert/BattleRes work.
 -------------------------------------------------------------------------------
 

@@ -3377,7 +3377,7 @@ function EMT:OnInitialize()
             end
         end
         -- showPreview is a transient options-panel state. /reload doesn't fire
-        -- the EUI window's OnHide auto-off, so the saved value can persist
+        -- the NoxUI window's OnHide auto-off, so the saved value can persist
         -- as true across reloads. Force it off at every login.
         pp.showPreview = false
     end

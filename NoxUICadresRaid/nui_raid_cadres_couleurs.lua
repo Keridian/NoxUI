@@ -555,10 +555,10 @@ ns.RF_NAME_WIDTH_FRACTION = 1.0
 -- Display name for a unit. Nickname sources in order: Northern Sky Raid Tools (NSAPI), MethodInternal
 -- (EasyNicknameAPI), TimelineReminders, the Liquid addon (LiquidAPI), RakGaming Aliases
 -- (RG_UnitName), then CustomNames; falls back to the short character name. NSAPI
--- gets our addon key "EUI" (it has a dedicated per-addon setting + EUI_NICKNAME_TOGGLE callback):
+-- gets our addon key "NoxUI" (it has a dedicated per-addon setting + EUI_NICKNAME_TOGGLE callback):
 -- NSAPI:GetName self-gates on its global nicknames toggle AND that checkbox and returns the short
 -- name when unset, falling through to the next source. Every source gates itself entirely (no
--- EUI-side toggle); pcall keeps a misbehaving external API from breaking name rendering.
+-- NoxUI-side toggle); pcall keeps a misbehaving external API from breaking name rendering.
 -- fmt: a tag's Name Format modifier in place of the setting (ns.RF_FormatName).
 local function ResolveDisplayName(unit, applyCap, s, fmt)
     local name, surname = UnitName(unit)

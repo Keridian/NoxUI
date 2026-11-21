@@ -603,7 +603,7 @@ function EAB:ApplyHighlightTextures()
 
     -- Blizzard-owned special buttons do not flow through the standard bar
     -- button setup, but QuickKeybind still resets their overlay atlas.
-    -- Keep their QuickKeybind highlight aligned with the EUI button art too.
+    -- Keep their QuickKeybind highlight aligned with the NoxUI button art too.
     _quickKeybindState.art.ForEachSpecialButton(_quickKeybindState.art.InitializeButton)
 end
 

@@ -477,7 +477,7 @@ BuildCDMBar = function(barIndex)
             end
         end
         local function CursorWatch()
-            -- Hide while the EUI options panel or unlock mode is open
+            -- Hide while the NoxUI options panel or unlock mode is open
             local panelOpen = (NoxUI._mainFrame and NoxUI._mainFrame:IsShown())
                 or NoxUI._unlockActive
             if panelOpen then
@@ -862,7 +862,7 @@ end })
 -- flush with the bar's edges, so their reach is the bar's. The renderer
 -- normalizes the icon's scale away (UIParent / icon), so in bar units the ratio
 -- is UIParent / bar. nil for buff-family bars (never in a match), the stock
--- looks (no EUI border), custom shapes (the ring sits inside the icon) and a
+-- looks (no NoxUI border), custom shapes (the ring sits inside the icon) and a
 -- border that draws nothing outside. Reads settings and scales only.
 function ns.CdmBarMatchPad(barKey)
     local bd = barDataByKey[barKey]

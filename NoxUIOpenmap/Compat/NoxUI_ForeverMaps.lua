@@ -171,6 +171,8 @@ local function AerialCommand()
 end
 
 local aerialView
+local routesOpenedFromWorld
+local routeHooks = setmetatable({}, { __mode = "k" })
 local function ReturnToOpenMap()
     local command, settings = AerialCommand(), _G.ForeverMaps3DDB
     if command and (aerialView or (settings and settings.view == "aerial")) then command("view map") end
@@ -190,7 +192,22 @@ local function SelectMapView(mode)
         local routeMap = _G.ForeverMapsRouteMap
         if not routeMap or not routeMap:IsShown() then toggle() end
         routeMap = _G.ForeverMapsRouteMap
-        if routeMap and routeMap:IsShown() then HideUIPanel(map) end
+        if routeMap and routeMap:IsShown() then
+            if not routeHooks[routeMap] then
+                routeHooks[routeMap] = true
+                routeMap:HookScript("OnHide", function()
+                    if routesOpenedFromWorld ~= routeMap then return end
+                    routesOpenedFromWorld = nil
+                    C_Timer.After(0, function()
+                        if not InCombatLockdown() and not routeMap:IsShown() and not map:IsShown() then
+                            OpenWorldMap()
+                        end
+                    end)
+                end)
+            end
+            routesOpenedFromWorld = routeMap
+            HideUIPanel(map)
+        end
     elseif mode == "map" then
         ReturnToOpenMap()
     else
@@ -206,7 +223,7 @@ end
 local strip
 local controls = {
     { "map", "OpenMap", 78, "Carte du monde OpenMap" },
-    { "routes", "Routes", 64, "Carte et itinéraires Forever Maps" },
+    { "routes", "Forever Maps", 100, "Carte et itinéraires Forever Maps" },
     { "aerial", "2D", 40, "Vue aérienne Forever Maps" },
     { "3d", "3D", 40, "Vue en relief Forever Maps" },
 }
@@ -313,6 +330,7 @@ local function InstallMapControls()
     local function OnMapShown()
         if not InCombatLockdown() then
             local routeMap = _G.ForeverMapsRouteMap
+            routesOpenedFromWorld = nil
             if routeMap and routeMap:IsShown() then routeMap:Hide() end
             ReturnToOpenMap()
         end
@@ -338,6 +356,11 @@ local function SyncMapBindings()
     local world = WorldModule()
     local enabled = world and (world.enabled or (world.PadViewOn and world.PadViewOn()))
     local keys = enabled and { GetBindingKey("TOGGLEWORLDMAP") } or {}
+    -- Version 2.1.10 and later can assign M to the route map in the saved bindings.
+    -- Claim that default key for OpenMap for this session without editing the binding set.
+    if enabled and GetBindingAction("M") == "FOREVERMAPS_TOGGLEMAP" then
+        keys[#keys + 1] = "M"
+    end
     local signature = table.concat(keys, " ")
     if signature == bindingSignature then return end
     bindingSignature, updatingBindings = signature, true
@@ -360,6 +383,7 @@ keyOwner:SetScript("OnEvent", function(_, event, addon)
     elseif event == "ADDON_LOADED" then
         if addon == "Blizzard_WorldMap" or addon == "ForeverMaps" or addon == "ForeverMaps3D" then
             C_Timer.After(0, function()
+                SyncMapBindings()
                 InstallMapControls()
                 LayoutMapControls()
             end)

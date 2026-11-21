@@ -1030,7 +1030,7 @@ local function ShowBuffBarPicker(anchorFrame, targetBarKey, onChanged)
     end
 
     -- "Missing Spells?" footer: centered, accent-colored prompt that opens
-    -- Blizzard's CDM and closes EUI options, matching the CD/utility picker.
+    -- Blizzard's CDM and closes NoxUI options, matching the CD/utility picker.
     -- Its divider is skipped when no row sits above it: the Custom Spell ID
     -- divider already separates the footer then.
     do

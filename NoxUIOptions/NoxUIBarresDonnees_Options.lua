@@ -3937,7 +3937,7 @@ initFrame:SetScript("OnEvent", function(self)
                 _edbStripRelayout()
             end
         end,
-        -- Reset EUI Module Settings' question names the one bar this reset touches.
+        -- Reset NoxUI Module Settings' question names the one bar this reset touches.
         resetMessage = function()
             local p = ns.GetProfile()
             local cfg = p and ((p.selectedBarId and ns.GetBar(p.selectedBarId)) or (p.bars and p.bars[1]))
@@ -3947,7 +3947,7 @@ initFrame:SetScript("OnEvent", function(self)
         onReset = function()
             -- Resets the SELECTED bar's appearance/behavior to defaults;
             -- keeps its id, name and blocks. Never wipes the bar list.
-            -- (Reset EUI Module Settings confirms and reloads for us.)
+            -- (Reset NoxUI Module Settings confirms and reloads for us.)
             local p = ns.GetProfile()
             if not p then return end
             local cfg = nil

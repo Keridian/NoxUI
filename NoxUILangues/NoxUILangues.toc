@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: NoxUI community translations. Loads on demand for non-English locales.
 ## Author: Nox
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## Dependencies: NoxUI
 ## LoadOnDemand: 1
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
@@ -15,7 +15,7 @@
 # effective locale is non-English. Each line's
 # [AllowLoadTextLocale ...] names the game client languages that read the
 # file at all: its own language, the paired language a client may pick in
-# EUI Options Language (esMX clients read esES; zhCN and zhTW read each
+# NoxUI Options Language (esMX clients read esES; zhCN and zhTW read each
 # other), and English, whose clients load this addon only when that option
 # picks a translation. So a non-English client parses its own file (and its
 # pair) only. To add a language: create <code>.lua here and add its line

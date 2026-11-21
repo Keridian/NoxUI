@@ -63,11 +63,11 @@ local DEFAULTS = {
     profile = {
         -- Blizzard Style (Global Settings > Style) for the health, power and
         -- class resource bars: the personal resource display's bar frame in
-        -- place of the EUI full-bar border. Default OFF; reload-gated.
+        -- place of the NoxUI full-bar border. Default OFF; reload-gated.
         useBlizzardStyleBars = false,
         -- Classic WoW UI (Global Settings > Style): the vanilla cast bar
         -- frame round the health, power and class resource bars in place of
-        -- the EUI full-bar border. Default OFF; reload-gated.
+        -- the NoxUI full-bar border. Default OFF; reload-gated.
         useClassicStyleBars = false,
         health = {
             enabled     = false,
@@ -456,7 +456,7 @@ local DEFAULTS = {
             queueR = 1, queueG = 0.70, queueB = 0.20, queueA = 1,   -- Queued: shared fallback for Heroic Strike / Maul / Raptor Strike
             -- Per-attack colours (queueHSR/G/B/A, queueRaptor..., queueMaul...) are unset by default: they inherit the shared Queued colour above.
             queueCleaveR = 0.95, queueCleaveG = 0.35, queueCleaveB = 0.25, queueCleaveA = 1,   -- Queued: Cleave
-            activeR = 0.047, activeG = 0.824, activeB = 0.616, activeA = 1,   -- On: EUI teal #0CD29D
+            activeR = 0.047, activeG = 0.824, activeB = 0.616, activeA = 1,   -- On: NoxUI teal #0CD29D
             pendingR = 0.659, pendingG = 0.502, pendingB = 0.949, pendingA = 1,   -- Waiting: violet #A880F2
             -- Movement Guide: "off" | "segments" | "windup". GO (the last latency of each swing) on
             -- every row; STILL (the 0.5s a wand / Auto Shot needs the player still, latency earlier)

@@ -732,7 +732,7 @@ function ns.ERB_ApplyBlizzCastChrome(cb, barW)
     if not f then return end
     local clip = f._barClip
     if not f._blizzFrame then
-        -- Own host above the bar and icon (the EUI border child is hidden by
+        -- Own host above the bar and icon (the NoxUI border child is hidden by
         -- its size-0 pass under this style, so the art cannot ride on it).
         local af = CreateFrame("Frame", nil, f)
         af:SetAllPoints(f)
@@ -745,7 +745,7 @@ function ns.ERB_ApplyBlizzCastChrome(cb, barW)
         if tb.SetSnapToPixelGrid then tb:SetSnapToPixelGrid(false); tb:SetTexelSnappingBias(0) end
         f._blizzTextBox = tb
     end
-    -- Same level the EUI border host uses (re-asserted: the bar's level follows its strata setting).
+    -- Same level the NoxUI border host uses (re-asserted: the bar's level follows its strata setting).
     f._blizzArtFrame:SetFrameLevel(f:GetFrameLevel() + 5)
     local fr, tb = f._blizzFrame, f._blizzTextBox
     if ns.ERB_CastClassic() then

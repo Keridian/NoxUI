@@ -448,14 +448,14 @@ ns.GetFFD = GetFFD
 --  External tracker integration (frame-provider APIs)
 -------------------------------------------------------------------------------
 -- Some cooldown/defensive tracker addons anchor icons onto party/raid unit
--- frames, found via a hardcoded addon list or a public provider API. EUI
+-- frames, found via a hardcoded addon list or a public provider API. NoxUI
 -- frames are custom, so where a provider API exists we hand it our buttons;
 -- the unit lives on the secure "unit" attribute (GetAttribute), so no plain
 -- field on the button is needed. Name-scanning trackers (LibGetFrame) match our
 -- button names from that library's default priority list, but the match only runs
 -- against a frame list it caches (see ns._NotifyTrackerProviders).
 
--- Currently-visible EUI unit buttons with a unit assigned (party AND raid). Both sets
+-- Currently-visible NoxUI unit buttons with a unit assigned (party AND raid). Both sets
 -- are pre-created once (the startingIndex -4 / Show / 1 trick) and never destroyed or
 -- recycled -- the secure header only reassigns "unit" and shows/hides -- so a collected
 -- list is exactly as stable for raid as for party; IsVisible + unit is what excludes a
@@ -530,7 +530,7 @@ end
 -- and time-sliced). Resolved per call, not cached: either provider may load late.
 -- Never asked for in combat: the library's walk reads every frame bare and our
 -- aura containers deny tainted reads while auras are secret, so a mid-fight
--- scan can drop every EUI frame for the rest of the fight. The library
+-- scan can drop every NoxUI frame for the rest of the fight. The library
 -- rescans on its own at PLAYER_REGEN_ENABLED, so the regen pass covers it.
 ns._NotifyTrackerProviders = function()
     if ns._trackerRefreshPending then return end
@@ -545,7 +545,7 @@ ns._NotifyTrackerProviders = function()
     end)
 end
 
--- Registers EUI as a frame provider with any installed, supported tracker.
+-- Registers NoxUI as a frame provider with any installed, supported tracker.
 -- Inert when none is present. Called once from OnEnable.
 ns._RegisterTrackerProviders = function()
     -- MiniAuras: stable public global MiniAurasApi.v1, created at its file load and so

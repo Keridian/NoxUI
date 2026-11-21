@@ -1656,13 +1656,13 @@ end
 
 -- Manage Blizzard's player cast bar ownership based on whether UnitFrames renders its
 -- own player cast bar. oUF already handles event plumbing for its own castbar element;
--- this helper only coordinates suppression with other EUI modules and releases control
+-- this helper only coordinates suppression with other NoxUI modules and releases control
 -- cleanly for external addons.
 local function ApplyBlizzCastbarState()
     if NoxUI and NoxUI.SetPlayerCastBarSuppressed and db and db.profile and db.profile.player then
-        -- Only suppress Blizzard's player cast bar when EUI actually provides a
+        -- Only suppress Blizzard's player cast bar when NoxUI actually provides a
         -- replacement. If the player is on the Blizzard (or hidden) frame source,
-        -- there is no EUI cast bar, so leave Blizzard's alone. Visibility "never"
+        -- there is no NoxUI cast bar, so leave Blizzard's alone. Visibility "never"
         -- counts as no replacement too: our cast bar is built now but hides with the
         -- frame, and taking Blizzard's away would leave no player cast bar at all.
         -- Nor while ours stands down for the controller under WoW Forever's

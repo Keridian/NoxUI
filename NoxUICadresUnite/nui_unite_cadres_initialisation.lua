@@ -65,7 +65,7 @@ local function InitializeFrames()
     -- Blizzard frames -- see CLAUDE.md _FFD rule).
     local _blizzCPState = {}  -- { origParent, hooked }
     local savedClassPowerBar = nil
-    -- Only take over the Blizzard class power bar when the EUI player frame is
+    -- Only take over the Blizzard class power bar when the NoxUI player frame is
     -- actually being spawned; otherwise leave it to Blizzard's player frame.
     if classPowerStyle == "blizzard" and playerFrameSource == "eui" then
         local _, classFile = UnitClass("player")
@@ -91,8 +91,8 @@ local function InitializeFrames()
         -- built-in click-casting (and Clique) sets its own type3/type4/type5
         -- attributes on frames registered in ClickCastFrames, and needs the
         -- click event to actually be delivered to fire. Left-button-only
-        -- registration silently ate those clicks whenever EUI's own click-cast
-        -- engine wasn't the one driving RegisterForClicks (i.e. EUI's engine
+        -- registration silently ate those clicks whenever NoxUI's own click-cast
+        -- engine wasn't the one driving RegisterForClicks (i.e. NoxUI's engine
         -- disabled, native/Clique click-casting relied on instead).
         frame:RegisterForClicks("AnyUp")
         -- 12.0.7 gates SecureUnitButton's togglemenu; route right-click securely
@@ -105,10 +105,10 @@ local function InitializeFrames()
         end
         frame:HookScript("OnEnter", UnitFrame_OnEnter)
         frame:HookScript("OnLeave", UnitFrame_OnLeave)
-        -- Expose to click-casting via the standard global table. EUI unit frames
+        -- Expose to click-casting via the standard global table. NoxUI unit frames
         -- replace the Blizzard ones, which the click-cast engine registers by name --
         -- but those are hidden, so the engine never reaches the visible frames.
-        -- Registering ours here lets click-casting (EUI's engine when "All Unit
+        -- Registering ours here lets click-casting (NoxUI's engine when "All Unit
         -- Frames" is on, or Clique otherwise) apply the same bindings + unbound-click
         -- suppression it uses on raid/party. The engine captures/restores each
         -- frame's native click attrs, so these keep their own defaults (no forced
@@ -123,7 +123,7 @@ local function InitializeFrames()
         -- and the secure caller's securecopy of the GetTargetInfo table
         -- hard-errors ("inaccessible secret") -- even with our getter
         -- returning nil. The reported enemy-target-frame ping error also
-        -- reproduces with NO EUI receiver in the path (pre-mixin trace, No
+        -- reproduces with NO NoxUI receiver in the path (pre-mixin trace, No
         -- Lua Taint) and is upstream. Do not re-attempt.
     end
 
@@ -142,7 +142,7 @@ local function InitializeFrames()
         -- Wrapped for the same reason as the spawn above: the suppression
         -- unregisters PlayerFrame's cast bar child, and an unregister seen
         -- outside a capture window reads as a third-party addon claiming the
-        -- frame -- EUI would mark its own silence as somebody else's and
+        -- frame -- NoxUI would mark its own silence as somebody else's and
         -- never hand the bar back.
         NoxUI.CaptureBlizzCastBarEvents()
         ns.Engine.HideBlizzardUnitFrame("player")
@@ -712,7 +712,7 @@ local function InitializeFrames()
     -- Called with the style string: "none", "modern", or "blizzard"
     frames._toggleClassPower = function(style)
         -- Class power is a player-frame feature; if the player is on Blizzard's
-        -- default frame (or hidden), there is no EUI frame to attach it to.
+        -- default frame (or hidden), there is no NoxUI frame to attach it to.
         if not frames.player then return end
         style = style or db.profile.player.classPowerStyle or "none"
         -- What is actually BUILT right now. Read by the reload pass below to
@@ -1529,9 +1529,9 @@ local function InitializeFrames()
         SetupUnitMenu(frames.targettarget, "targettarget")
     end
     -- Blizzard's target-of-target is a child of TargetFrame. When the target frame
-    -- itself is EUI or hidden, TargetFrame is already disabled so the child is gone
+    -- itself is NoxUI or hidden, TargetFrame is already disabled so the child is gone
     -- with it. Only needs suppressing when the target uses Blizzard's live frame but
-    -- the user does NOT want Blizzard's ToT (EUI or hidden) -- else both would show,
+    -- the user does NOT want Blizzard's ToT (NoxUI or hidden) -- else both would show,
     -- or while TargetFrame is kept shown for the WoW Forever gamepad target menu
     -- (ns.UF_TargetMenuOwner): the child, a clickable unit button, would take clicks.
     if (totFrameSource ~= "blizzard" and targetFrameSource == "blizzard") or ns.UF_TargetMenuOwner then

@@ -23,7 +23,7 @@ local function SetupOptionsPanel()
     ns.db = db
     ns.frames = frames
 
-    -- Live Enable Boss Frames for the EUI source. The boss frames spawn at login
+    -- Live Enable Boss Frames for the NoxUI source. The boss frames spawn at login
     -- only, so the enable toggle used to be a silent no-op in the ON->OFF
     -- direction: PromptReloadIfUnspawned only prompts when frames are MISSING,
     -- and nothing hid the live frames -- they kept showing on every boss for the
@@ -681,7 +681,7 @@ local function SetupOptionsPanel()
     -- Boss preview: force boss1/2/3 to render with the player's unit data so
     -- the user can see the boss frame styling live in-game without a real
     -- encounter. Gated out of combat to avoid taint; caller is responsible
-    -- for auto-clearing on EUI options window close.
+    -- for auto-clearing on NoxUI options window close.
     ns.SetBossPreview = function(enabled)
         if InCombatLockdown() then return false end
         ns._bossPreviewActive = enabled and true or false

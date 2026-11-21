@@ -1600,7 +1600,7 @@ local function BuildWindow()
     win:SetMovable(true)
     win:EnableMouse(true)
     win:Hide()
-    -- Escape closes it like every other EUI window (the shared proxy, never
+    -- Escape closes it like every other NoxUI window (the shared proxy, never
     -- a direct UISpecialFrames insert).
     if EUI.RegisterEscapeClose then EUI.RegisterEscapeClose(win) end
 

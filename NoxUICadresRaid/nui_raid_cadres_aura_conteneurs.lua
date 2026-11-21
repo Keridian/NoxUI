@@ -3609,7 +3609,7 @@ bmRegen:RegisterEvent("PLAYER_REGEN_ENABLED")
 bmRegen:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
 bmRegen:RegisterEvent("PLAYER_ENTERING_WORLD")
 -- A new pixel grid invalidates every snapped aura size (see ns.RFC_SnapSize).
--- EUI's own UI Scale (PP.SetUIScale) sets UIParent's scale directly, which fires
+-- NoxUI's own UI Scale (PP.SetUIScale) sets UIParent's scale directly, which fires
 -- no UI_SCALE_CHANGED, so it calls this through the global as well.
 bmRegen:RegisterEvent("UI_SCALE_CHANGED")
 bmRegen:RegisterEvent("DISPLAY_SIZE_CHANGED")

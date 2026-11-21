@@ -1202,7 +1202,7 @@ ns.GetTargetGlowStyle = GetTargetGlowStyle
 -- migration: each toggle returns its own stored key when set, else derives from targetGlowStyle
 -- (stays in defaults so the fallback source is always present). Mapping: noxui ->
 -- NoxUI; vibrant -> NoxUI + Border Color; none -> nothing. On ns (local budget).
--- The WoW Forever style marks its target with Highlight alone: EUI Glow, Border
+-- The WoW Forever style marks its target with Highlight alone: NoxUI Glow, Border
 -- Color and Border Size read off there whatever the profile holds (the saved
 -- choices stay for the other styles).
 function ns.GetTargetGlowNoxUI()
@@ -1362,7 +1362,7 @@ function ns.GetClassPowerEnergyHideFull()
     return v
 end
 local function IsBorderEnabled()
-    -- The stock styles carry their own art instead of an EUI border: the
+    -- The stock styles carry their own art instead of an NoxUI border: the
     -- stock background art (Blizzard Style), the vanilla border sheets
     -- (Classic WoW UI, ns.NP_ApplyClassicHealthArt).
     if ns.NP_Blizz() then return false end

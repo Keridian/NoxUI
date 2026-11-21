@@ -1031,7 +1031,7 @@ qolFrame:SetScript("OnEvent", function(self)
                 end
             end)
         end)
-        -- Uninstall EUI: while the option is on, this character's filter is ours, so it
+        -- Uninstall NoxUI: while the option is on, this character's filter is ours, so it
         -- goes back off (Blizzard's default). Its saved table only exists once Blizzard's
         -- Auction House UI has loaded.
         NoxUI.OnUninstall(function()

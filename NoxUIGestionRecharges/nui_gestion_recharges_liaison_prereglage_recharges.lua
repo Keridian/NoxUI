@@ -2,7 +2,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 -------------------------------------------------------------------------------
 --  nui_gestion_recharges_liaison_prereglage_recharges.lua
 --
---  Dynamic potion display and the cooldown drain for EUI's own preset
+--  Dynamic potion display and the cooldown drain for NoxUI's own preset
 --  frames (ProcessPresetCooldowns and its event lanes).
 --  Reads the earlier hook files through ns and ns._hookInternals.
 -------------------------------------------------------------------------------
@@ -344,7 +344,7 @@ for _, preset in ipairs(ns.CDM_ITEM_PRESETS or {}) do
 end
 
 -------------------------------------------------------------------------------
---  Per-bar "Suppress GCD" for EUI's OWN preset frames.
+--  Per-bar "Suppress GCD" for NoxUI's OWN preset frames.
 --
 --  The setting is implemented as a hooksecurefunc on the cooldown's
 --  SetSwipeColor (see DecorateFrame), which reaches BLIZZARD-owned CDM icons

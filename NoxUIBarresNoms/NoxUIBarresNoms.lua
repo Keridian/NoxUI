@@ -420,7 +420,7 @@ local defaults = {
     -- targetGlowNoxUI/targetGlowBorderColor/targetGlowHighlight deliberately have NO
     -- default: they stay nil so getters can live-convert from the targetGlowStyle string.
     targetBorderColor = { r = 1, g = 1, b = 1 },
-    targetGlowColor = { r = 0.4117, g = 0.6667, b = 1.0 },  -- "Glow Color" for the EUI background glow (signature blue)
+    targetGlowColor = { r = 0.4117, g = 0.6667, b = 1.0 },  -- "Glow Color" for the NoxUI background glow (signature blue)
     targetGlowAlpha = 1.0,
     targetHighlightColor = { r = 1, g = 1, b = 1 },  -- Target Highlight wash color/opacity
     targetHighlightAlpha = 0.20,

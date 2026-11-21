@@ -237,7 +237,7 @@ local CLASS_COLORS = setmetatable({}, { __index = function(_, classFile)
     return nil
 end })
 
--- Power type enum -> EUI power key string mapping for GetPowerColor lookup
+-- Power type enum -> NoxUI power key string mapping for GetPowerColor lookup
 local POWER_ENUM_TO_KEY = {
     [PT.MANA]        = "MANA",
     [PT.RAGE]        = "RAGE",
@@ -266,7 +266,7 @@ local function ResolvePowerKey(powerKey)
     return POWER_KEY_ALIAS[powerKey] or powerKey
 end
 
--- Power color lookup through EUI's color system, falling back to class color. MEMOIZED
+-- Power color lookup through NoxUI's color system, falling back to class color. MEMOIZED
 -- (rule 6): an uncached __index rebuilt {r,g,b} on every bar-update lookup (~170KB/min
 -- churn for palette-stable values). Resolved entries are rawset so hits skip this
 -- function; nil results (parent not ready) are NOT cached, so early-login lookups

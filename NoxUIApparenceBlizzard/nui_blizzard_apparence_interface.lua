@@ -229,7 +229,7 @@ local GetFFD = I.GetFFD
     --  Widget values are SECRET inside instanced content. An insecure write
     --  anywhere in a widget tree resurfaces later as "attempt to compare a
     --  secret number value" out of LayoutFrame, far from the code that caused
-    --  it. So Blizzard's bar is never touched: an EUI-owned StatusBar parented
+    --  it. So Blizzard's bar is never touched: an NoxUI-owned StatusBar parented
     --  to UIParent is merely ANCHORED to it (a write on ours, none on theirs)
     --  and mirrors min/max/value/label through pcall. Any failed or secret read
     --  RETIRES that cover and Blizzard's own bar shows through again;
@@ -895,7 +895,7 @@ local GetFFD = I.GetFFD
         -- frame also hosts unit-frame trees (NoxUI's own health and cast
         -- bars are StatusBars parented under it), and a full walk adopts and
         -- art-strips those. The container is found by the same widgetPools
-        -- probe Discover uses; with EUI nameplates off it sits one level down,
+        -- probe Discover uses; with NoxUI nameplates off it sits one level down,
         -- under the Blizzard unit frame's WidgetContainer key instead.
         for plate in pairs(HUD.plates) do
             local okKids, kids = pcall(KidsOf, plate)

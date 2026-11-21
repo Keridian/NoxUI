@@ -1888,7 +1888,7 @@ initFrame:SetScript("OnEvent", function(self)
     ---------------------------------------------------------------------------
     --  Spell picker dropdown (right-click on icon or click "+" button)
     ---------------------------------------------------------------------------
-    -- Close the spell picker when the main EUI options panel closes
+    -- Close the spell picker when the main NoxUI options panel closes
     NoxUI:RegisterOnHide(function()
         if optState._spellPickerMenu and optState._spellPickerMenu:IsShown() then optState._spellPickerMenu:Hide() end
     end)
@@ -2397,7 +2397,7 @@ initFrame:SetScript("OnEvent", function(self)
                     end
                 end
             end
-            -- No reload here: Reset EUI Module Settings reloads after this returns.
+            -- No reload here: Reset NoxUI Module Settings reloads after this returns.
         end,
     })
 

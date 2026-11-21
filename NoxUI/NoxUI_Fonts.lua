@@ -257,7 +257,7 @@ local function ResolveFontName(fontName)
 end
 NoxUI.ResolveFontName = ResolveFontName
 
--- Floating combat text is in the client's language, not EUI's display language. On a
+-- Floating combat text is in the client's language, not NoxUI's display language. On a
 -- glyph-restricted client, a Combat Text Font key counts only if it can draw that script:
 -- a SharedMedia font or a Blizzard file LSM registers (LSM keeps just the ones flagged
 -- for the client), or a FONT_CYRILLIC face on ruRU.
@@ -1110,12 +1110,12 @@ function NoxUI.ApplyModuleFontFamily(fs, fontPath, size, moduleKey, flags)
     NoxUI.SetFontFamily(fs, fontPath or NoxUI.GetFontPath(moduleKey), size, flags, flags == "")
 end
 
--- Build font dropdown values/order ("EUI Global Font" first) for W:DualRow configs.
+-- Build font dropdown values/order ("NoxUI Global Font" first) for W:DualRow configs.
 function NoxUI.BuildFontDropdownData()
     -- Glyph-restricted locales: bundled Latin fonts cannot render the script (and resolve to the
-    -- system font anyway), so pickers offer only "EUI Global Font", "System Default" and external SharedMedia, matching the global font picker.
+    -- system font anyway), so pickers offer only "NoxUI Global Font", "System Default" and external SharedMedia, matching the global font picker.
     if NoxUI.LOCALE_FONT_FALLBACK then
-        local values = { ["__global"] = { text = "EUI Global Font" },
+        local values = { ["__global"] = { text = "NoxUI Global Font" },
                          [NoxUI.SYSTEM_FONT_KEY] = { text = "System Default", font = NoxUI.LOCALE_FONT_FALLBACK },
                          [NoxUI.EXPRESSWAY_FORCED_KEY] = { text = "Expressway (Latin only)",
                              font = NoxUI.MEDIA_PATH .. "fonts\\Expressway.TTF" } }
@@ -1128,7 +1128,7 @@ function NoxUI.BuildFontDropdownData()
     -- "Blizzard Default" sits right under the inherit entry on unrestricted
     -- locales. Glyph-restricted pickers (branch above) skip it: their "System
     -- Default" entry already IS the client's own font.
-    local values = { ["__global"] = { text = "EUI Global Font" },
+    local values = { ["__global"] = { text = "NoxUI Global Font" },
                      [NoxUI.BLIZZARD_FONT_KEY] = { text = "Blizzard Default",
                          font = NoxUI.GetBlizzardFontPath() } }
     local order  = { "__global", NoxUI.BLIZZARD_FONT_KEY, "---" }

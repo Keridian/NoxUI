@@ -736,7 +736,7 @@ do
         ns.NP_RefreshSlotNameParts()
     end
 end
--- Paints one plate's class- and level-mode slots. Class mode: enemy players take the EUI
+-- Paints one plate's class- and level-mode slots. Class mode: enemy players take the NoxUI
 -- class palette (NoxUI.GetClassColor: custom class colours count; the bar's own class
 -- colour reads RAID_CLASS_COLORS, so the two differ only under a custom palette). A redacted
 -- class token takes the restricted-unit palette, else Blizzard's class colour, handed

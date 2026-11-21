@@ -387,7 +387,7 @@ local _barBindingDefs = {
     { prefix = "MULTIACTIONBAR5BUTTON", startSlot = 145, tier = 6 },  -- bar 6
     { prefix = "MULTIACTIONBAR6BUTTON", startSlot = 157, tier = 7 },  -- bar 7
     { prefix = "MULTIACTIONBAR7BUTTON", startSlot = 169, tier = 8 },  -- bar 8
-    -- EUI bars 9/10 have no native binding command: their keys are routed
+    -- NoxUI bars 9/10 have no native binding command: their keys are routed
     -- through the button with SetOverrideBindingClick against the custom
     -- commands declared in the Action Bars module's Bindings.xml. Because that
     -- route always reads the button's live "action" attr, resolve the slot from
@@ -751,7 +751,7 @@ local function RebuildKeybindCache()
             if key then
                 local slot = def.startSlot + i - 1
                 if def.eabButton then
-                    -- EUI bars 9/10 have no native binding command: their keys
+                    -- NoxUI bars 9/10 have no native binding command: their keys
                     -- are routed through the button with SetOverrideBindingClick
                     -- against the custom commands declared in the Action Bars
                     -- module's Bindings.xml. That route always reads the

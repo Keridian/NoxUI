@@ -38,7 +38,7 @@ I.framesVisibleSetters[#I.framesVisibleSetters + 1] = function(v) framesVisible 
 
 -- Healer Mana Display: its rebuild normally rides the raid/party frame paths
 -- (UpdatePowerEventRegistration tails). A roster change that lands with BOTH
--- frame sets hidden -- leaving a raid to solo, or to a party while EUI party
+-- frame sets hidden -- leaving a raid to solo, or to a party while NoxUI party
 -- frames are disabled -- skips every rebuild, so the display would keep its
 -- last group's content (raid-mode names included) indefinitely.
 local function RebuildHealerManaIfFramesHidden()

@@ -296,7 +296,7 @@ _quickKeybindState.art.ApplyButtonHighlight = function(btn)
     end
 
     -- QuickKeybind manages hover/idle opacity itself. We only replace the
-    -- Blizzard atlas with EUI's square highlight art and matching color.
+    -- Blizzard atlas with NoxUI's square highlight art and matching color.
     SetSquareTexture(tex, HIGHLIGHT_TEXTURES[1])
     tex:SetVertexColor(cr, cg, cb, 1)
 end

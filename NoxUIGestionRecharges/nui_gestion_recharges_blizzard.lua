@@ -237,7 +237,7 @@ local function EnforceCooldownViewerEditModeSettings()
     -- Returns changed(bool). A layout stores a CooldownViewer setting ONLY when changed away
     -- from Blizzard's default, so an absent entry means "at the default" (defaultValue). When
     -- that already equals what we want, leave the entry absent (no change, no forced reload); only add an explicit entry when default differs from desired.
-    -- Each change is noted for Uninstall EUI (only the player's own earlier value is put
+    -- Each change is noted for Uninstall NoxUI (only the player's own earlier value is put
     -- back: these are Blizzard's defaults, so there is no fallback).
     local function UpsertSetting(sysInfo, settingEnum, desiredValue, defaultValue)
         local settings = sysInfo.settings
@@ -474,7 +474,7 @@ end)
 --  CDM owns the viewers, the rolls take the lowest spot up from the column's
 --  bottom, kept under the top of the screen, that covers none of these: a
 --  shown column frame other than the viewers, a CDM bar, a Tracking Bar (or
---  Blizzard's tracked bars in their place), an EUI action bar, or the extra
+--  Blizzard's tracked bars in their place), an NoxUI action bar, or the extra
 --  ability container while it shows. Our bars count unless hidden for good,
 --  so one that shows later never comes up under rolls already up. With
 --  nothing else in the way that is Blizzard's spot with the viewers out of

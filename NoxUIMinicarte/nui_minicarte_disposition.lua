@@ -603,7 +603,7 @@ local MAIL_CORNER_POINTS = { TOPLEFT = true, TOPRIGHT = true, BOTTOMLEFT = true,
 -- as a round button. `crop` trims an atlas icon to its centre fraction (the
 -- group toggle's plate art carries a small glyph) through the sheet file and
 -- coords, since SetTexCoord on an atlas samples garbage. Extra args are the
--- button's own icon textures; the EUI black box hides. Created once,
+-- button's own icon textures; the NoxUI black box hides. Created once,
 -- re-applied per pass. Our own buttons only (keys are written on the button).
 function EBS._ClassicRingButton(btn, crop, ...)
     if not btn then return end
@@ -755,7 +755,7 @@ EBS.FV_HEADER_BUTTONS = {
 -- of the icon's own (every hover state reads the same atlas, so the swaps go
 -- quiet) and an additive copy lights it on mouseover at Blizzard's 0.1, as
 -- the stock header buttons light. Re-applied per pass: the indicator pass
--- sizes the button for the EUI row and the day rollover repaints the
+-- sizes the button for the NoxUI row and the day rollover repaints the
 -- calendar's icon before it. Our own buttons only.
 function EBS._FvHeaderIndicator(btn, key, s)
     local art = btn and EBS.FV_HEADER_BUTTONS[key]
@@ -802,7 +802,7 @@ local function LayoutIndicatorFrames(minimap, p, circleMode)
     local function ResizeIndicator(btn)
         if not btn then return end
         btn:SetSize(sz, sz)
-        -- Stock styles: no EUI black box behind the indicators.
+        -- Stock styles: no NoxUI black box behind the indicators.
         if btn._bg then btn._bg:SetShown(showBg and not blizzHdr) end
         local ratio = btn._upAtlas and INDICATOR_ATLAS_RATIO[btn._upAtlas]
         if ratio and btn._icon then
@@ -1182,7 +1182,7 @@ local function LayoutIndicatorFrames(minimap, p, circleMode)
             btn:SetParent(minimap)
             btn:SetFrameLevel(minimap:GetFrameLevel() + 11)
             btn:ClearAllPoints()
-            -- Black boxes only on the EUI look; Blizzard Style keeps the button's
+            -- Black boxes only on the NoxUI look; Blizzard Style keeps the button's
             -- own dress (the common library dress is the stock round minimap
             -- button) at its native size, restored BEFORE placement so the row
             -- advances by the size the button really draws at.
@@ -1294,7 +1294,7 @@ local function LayoutIndicatorFrames(minimap, p, circleMode)
             if not placedExtra[key] then placedExtra[key] = true; PlaceExtraButton(key) end
         end
 
-        -- Flyout toggle (EUI group button for addon icons)
+        -- Flyout toggle (NoxUI group button for addon icons)
         if flyoutToggle and heb.groupButton then
             flyoutToggle:Hide()
         end

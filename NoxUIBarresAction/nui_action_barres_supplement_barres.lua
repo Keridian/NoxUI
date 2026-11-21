@@ -298,7 +298,7 @@ end
 -------------------------------------------------------------------------------
 AttachExtraBarHoverHooks = function(info)
     -- Position-only Blizzard-owned bars (the QueueStatus eye) never get mouseover
-    -- fade hooks -- EUI controls only their position now, not visibility. Without
+    -- fade hooks -- NoxUI controls only their position now, not visibility. Without
     -- this, a stale "mouseover" setting would fade the eye to alpha 0 on leave.
     if info.noManagedVisibility then return end
     -- Idempotent: only attach once per bar key

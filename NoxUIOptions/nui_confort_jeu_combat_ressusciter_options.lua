@@ -488,7 +488,7 @@ _G._EUI_BuildBattleResSection = function(parent, yOffset, W, PP)
     do
         local fontValues, fontOrder = NoxUI.BuildFontDropdownData()
         local outlineValues = {
-            ["__global"] = { text = "EUI Global Default" },
+            ["__global"] = { text = "NoxUI Global Default" },
             ["none"]     = { text = "Drop Shadow" },
             ["outline"]  = { text = "Outline" },
             ["thick"]    = { text = "Thick Outline" },

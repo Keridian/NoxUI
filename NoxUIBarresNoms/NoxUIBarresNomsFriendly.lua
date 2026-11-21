@@ -709,6 +709,20 @@ local function IsOwnGuildMember(unit)
     return ownGuild ~= nil and unitGuild ~= nil and ownGuild == unitGuild
 end
 
+local socialNameColors = {
+    group = { r = 0.50, g = 0.76, b = 1 },
+    guild = { r = 1, g = 0.82, b = 0.36 },
+}
+
+local function GetSocialNameColor(unit, profile)
+    if not profile or not (profile.colorGroupNames or profile.colorGuildNames) then return end
+    local isPlayer, hostile, self = UnitIsPlayer(unit), UnitCanAttack("player", unit), UnitIsUnit(unit, "player")
+    if issecretvalue and (issecretvalue(isPlayer) or issecretvalue(hostile) or issecretvalue(self)) then return end
+    if not isPlayer or hostile or self then return end
+    if profile.colorGroupNames and IsGroupMember(unit) then return socialNameColors.group end
+    if profile.colorGuildNames and IsOwnGuildMember(unit) then return socialNameColors.guild end
+end
+
 local function UpdateGroupMarker(name, unit)
     local state = groupMarkers[name]
     local active = {}
@@ -771,7 +785,10 @@ local function PaintFriendlyColors(plate, unit, fp)
                 local bc = (fp and fp.friendlyBarColor) or ns.defaults.friendlyBarColor
                 plate.health:SetStatusBarColor(bc.r, bc.g, bc.b)
             end
-            if nameClass and ok then
+            local social = GetSocialNameColor(unit, fp)
+            if social then
+                plate.name:SetTextColor(social.r, social.g, social.b)
+            elseif nameClass and ok then
                 plate.name:SetTextColor(r, g, b)
             else
                 local nc = (fp and fp.friendlyNameColor) or ns.defaults.friendlyNameColor
@@ -782,7 +799,12 @@ local function PaintFriendlyColors(plate, unit, fp)
     end
     local nr, ng, nb = GetFriendlyNPCColor()
     plate.health:SetStatusBarColor(nr, ng, nb)
-    plate.name:SetTextColor(nr, ng, nb)
+    local social = GetSocialNameColor(unit, fp)
+    if social then
+        plate.name:SetTextColor(social.r, social.g, social.b)
+    else
+        plate.name:SetTextColor(nr, ng, nb)
+    end
 end
 ns.NP_PaintFriendlyColors = PaintFriendlyColors   -- the options page's player sample
 
@@ -889,10 +911,13 @@ end
 -- is not Custom (unset included: Blizzard's own colour stands). The escape is
 -- built again only when the colour changes.
 local NameEsc = {}
-function NameEsc.Get()
+function NameEsc.Get(unit)
     local fp = FP()
-    if not fp or fp.friendlyNameColorMode ~= "custom" then return nil end
-    local c = fp.friendlyNameColor or ns.defaults.friendlyNameColor
+    local c = unit and GetSocialNameColor(unit, fp)
+    if not c then
+        if not fp or fp.friendlyNameColorMode ~= "custom" then return end
+        c = fp.friendlyNameColor or ns.defaults.friendlyNameColor
+    end
     if c.r ~= NameEsc.r or c.g ~= NameEsc.g or c.b ~= NameEsc.b then
         NameEsc.r, NameEsc.g, NameEsc.b = c.r, c.g, c.b
         NameEsc.str = string.format("|cff%02x%02x%02x",
@@ -969,7 +994,7 @@ do
         titledCount[mode] = titledCount[mode] + 1
         return s
     end
-    local aFormat, aMode, aBrackets, aLevel, aDiff, aGroupBrackets, aNameEsc, stamped
+    local aFormat, aMode, aBrackets, aLevel, aDiff, aGroupBrackets, aNameEsc, aGroupColor, aGuildColor, stamped
     StampFriendlyNames = function()
         local fp = FP()
         if not fp then return end
@@ -978,6 +1003,7 @@ do
         aLevel, aDiff = fp.friendlyShowLevel == true, fp.friendlyLevelDiffColor == true
         aGroupBrackets = fp.friendlyGroupBrackets == true
         aNameEsc = NameEsc.Get()
+        aGroupColor, aGuildColor = fp.colorGroupNames, fp.colorGuildNames
     end
     -- The Name Format options rows and every settings re-read (ns.RefreshAllSettings:
     -- profile switches, Spec Overrides). Before the first record it only records.
@@ -990,6 +1016,7 @@ do
             and (fp.friendlyShowLevel == true) == aLevel
             and (fp.friendlyLevelDiffColor == true) == aDiff
             and (fp.friendlyGroupBrackets == true) == aGroupBrackets
+            and fp.colorGroupNames == aGroupColor and fp.colorGuildNames == aGuildColor
             and NameEsc.Get() == aNameEsc then
             return
         end
@@ -1097,7 +1124,7 @@ local function UpdateNameOnlyText(nameFS)
     end
     -- Name Color's Custom colour (players only): round the name, inside the
     -- group brackets, which keep their own colours.
-    local esc = isPlayer and NameEsc.Get() or nil
+    local esc = isPlayer and NameEsc.Get(unit) or nil
     if esc then want = esc .. want .. "|r" end
     local gKind
     if isPlayer and ShowFriendlyGroupBrackets() then
@@ -1490,7 +1517,7 @@ local friendlyFrameCache = CreateFramePool("Frame", UIParent, nil, nil, false, f
     function plate:ApplyBorder()
         if not PP then return end
         if ns.NP_Classic() then
-            -- Classic WoW UI: the vanilla border art replaces every EUI border.
+            -- Classic WoW UI: the vanilla border art replaces every NoxUI border.
             PP.HideBorder(plate.health)
             ns.HideCustomBorder(plate)
             ns.NP_ApplyClassicHealthArt(plate, GetFriendlyHealthBarHeight())
@@ -1589,7 +1616,7 @@ local friendlyFrameCache = CreateFramePool("Frame", UIParent, nil, nil, false, f
     if ns.NP_Style and ns.NP_Style() == "blizzard" then plate.hpText:SetDrawLayer("OVERLAY", 7) end
 
     -- Blizzard Style: under the stock ring / deselected overlay (OVERLAY 4/5);
-    -- the EUI and classic looks keep it at 6.
+    -- the NoxUI and classic looks keep it at 6.
     plate.highlight = plate.health:CreateTexture(nil, "OVERLAY", nil, (ns.NP_Style and ns.NP_Style() == "blizzard") and 1 or 6)
     plate.highlight:SetAllPoints()
     local _hc = (FP() and FP().hoverColor) or ns.defaults.hoverColor
@@ -2319,7 +2346,7 @@ ns.UpdateFriendlyClickThrough = ApplyFriendlyClickThrough
 --  nameplateShowFriends / nameplateShowFriendlyPlayers PERSIST across sessions
 --  on Blizzard's side, so re-asserting them on every login can only ever
 --  override the user -- anyone who deliberately hid friendly nameplates in
---  Blizzard's own Nameplate settings got them back every session. EUI now
+--  Blizzard's own Nameplate settings got them back every session. NoxUI now
 --  forces them ON only at moments of explicit intent: the first install, and
 --  the two picks that mean "I want friendly plates" (Friendly Nameplate Style
 --  taken off Blizzard Default, or set to Name Only). Every other path reads
@@ -2406,10 +2433,10 @@ function ns.UpdateFriendlyNameplateSystem()
     -- because GetNamePlateForUnit returns nil for protected frames and our
     -- suppression can't run. SetCVar for nameplate CVars is protected in combat; skip
     -- to avoid taint and re-run the pass on PLAYER_REGEN_ENABLED so nothing is lost.
-    -- Friendly player CVars are only touched when the user has EUI managing friendly
+    -- Friendly player CVars are only touched when the user has NoxUI managing friendly
     -- player nameplates. When disabled we leave those CVars alone so Blizzard's own
     -- Nameplate settings own them. Friendly NPC CVars are always managed because they
-    -- have their own EUI toggle.
+    -- have their own NoxUI toggle.
     if not InCombatLockdown() then
         local fp = FP()
         local euiManagesPlayers = fp and (fp.showFriendlyPlayers ~= false)

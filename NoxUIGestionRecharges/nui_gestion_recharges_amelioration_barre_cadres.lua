@@ -816,7 +816,7 @@ local function ApplyTrackedBuffBarSettings(bar, cfg)
     -- Classic WoW UI: the vanilla cast bar frame over the fill and background.
     if classicBar then ns.ApplyTBBClassicChrome(bar, sb, isVert, isVert and w or h, cfg.stockBorderScale) end
 
-    -- Gradient (an EUI-look effect; the stock styles keep their flat fill)
+    -- Gradient (an NoxUI-look effect; the stock styles keep their flat fill)
     if cfg.gradientEnabled and not blizzBar then
         local dir = cfg.gradientDir or "HORIZONTAL"
         fillTex:SetVertexColor(1, 1, 1, 0)
@@ -1037,7 +1037,7 @@ ns.ApplyTBBBarSettings = ApplyTrackedBuffBarSettings
 -- in bar units, for its unlock element's getMatchPad: exactly the arguments
 -- ApplyTrackedBuffBarSettings passes to ApplyBorderStyle (the numeric step as the
 -- "resourcebars" size key, alpha 1, no scale normalizing). nil under the stock
--- styles (no EUI border) and for a border that draws nothing outside. `frame` is
+-- styles (no NoxUI border) and for a border that draws nothing outside. `frame` is
 -- the bar: its effective scale (a position scale rides on it) is the grid the
 -- border's anchors snap to.
 function ns.TBBBorderMatchPad(cfg, frame)

@@ -2256,7 +2256,7 @@ local function BuildSidebar()
         return cpuByKey
     end
 
-    -- Resource usage tracker (CPU for all EUI addons). Only ticks while the panel is
+    -- Resource usage tracker (CPU for all NoxUI addons). Only ticks while the panel is
     -- visible: parented to sidebar, a descendant of mainFrame (hidden frames never tick).
 
     local resCpuText = MakeFont(sidebar, 10, nil, TEXT_DIM.r, TEXT_DIM.g, TEXT_DIM.b, TEXT_DIM.a)
@@ -2274,7 +2274,7 @@ local function BuildSidebar()
     resPerfLabel:SetPoint("BOTTOMRIGHT", resCpuLabel, "TOPRIGHT", 0, 11)
     resPerfLabel:SetJustifyH("RIGHT")
     resPerfLabel:SetAlpha(0.5)
-    resPerfLabel:SetText(NoxUI.L("All EUI Addons"))
+    resPerfLabel:SetText(NoxUI.L("All NoxUI Addons"))
 
     local resDivider = sidebar:CreateTexture(nil, "ARTWORK")
     resDivider:SetColorTexture(1, 1, 1, 0.15)
@@ -2996,7 +2996,7 @@ local function BuildFooter(rightW, rightX)
     local FOOTER_Y   = 24       -- vertical offset from bottom
 
     -- Reset button  (left side, FOOTER_PAD from left edge). Plugin and other addons'
-    -- pages only: the suite's own resets are in Global Settings' Reset EUI Module
+    -- pages only: the suite's own resets are in Global Settings' Reset NoxUI Module
     -- Settings menu (NoxUI._ShowModuleResetMenu).
     local resetBtn = MakeFooterBtn(footerFrame, FOOTER_BTN_W, FOOTER_BTN_H,
         "BOTTOMLEFT", footerFrame, "BOTTOMLEFT", FOOTER_PAD, FOOTER_Y,
@@ -4780,7 +4780,7 @@ function NoxUI:SelectPage(pageName)
         return
     end
 
-    -- "Disable Addons" is a fake nav item -- close EUI and open the Blizzard addon list.
+    -- "Disable Addons" is a fake nav item -- close NoxUI and open the Blizzard addon list.
     if pageName == "Disable Addons" then
         if NoxUI._mainFrame then NoxUI._mainFrame:Hide() end
         C_Timer.After(0, function()
@@ -5023,7 +5023,7 @@ function NoxUI:GetModuleTitle(folderName)
 end
 
 -------------------------------------------------------------------------------
---  Reset EUI Module Settings (Global Settings): the suite's module resets
+--  Reset NoxUI Module Settings (Global Settings): the suite's module resets
 --  in one menu, each behind the typed confirm. A module's config may set
 --  resetScope ("account": settings every profile shares, "character": this
 --  character's own; default: the current profile) and resetMessage (a
@@ -5694,7 +5694,7 @@ do
     local function IsReservedLabel(label)
         local lower = label:lower()
         if lower:find("^nox") or lower:find("^eui") then return true end
-        local reserved = { "Global Settings", "Profiles", "Patch Notes", "EUI Legends" }
+        local reserved = { "Global Settings", "Profiles", "Patch Notes", "NoxUI Legends" }
         for _, g in ipairs(NUI_ESPACE_NOMS.coreGroups) do reserved[#reserved + 1] = g.label end
         for _, r in ipairs(reserved) do
             if lower == r:lower() or lower == tostring(NoxUI.L(r)):lower() then

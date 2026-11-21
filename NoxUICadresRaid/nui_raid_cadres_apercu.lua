@@ -40,7 +40,7 @@ ns._PV_NAMES = {
     "Ashvane", "Tormund", "Ravynne", "Zulkhar", "Brightwing",
     "Fenwick", "Dawnforge", "Nighthollow", "Stormhelm", "Embertide",
 }
--- EUI LEGENDS event roster (the parent's NoxUI.PREVIEW_ROSTER, shared with
+-- NoxUI LEGENDS event roster (the parent's NoxUI.PREVIEW_ROSTER, shared with
 -- Group Finder's settings preview). Preview slot 1 is always the player; entries
 -- 1-19 fill slots 2-20. Name, class and role travel together through the role
 -- sort (ns._pvNames).

@@ -869,7 +869,7 @@ local function PostUpdateFriendButton(button)
         infoText:SetPoint("TOPLEFT", nameText, "BOTTOMLEFT", 0, -3)
     end
 
-    -- Append friend note (legacy EUI group tag stripped); Blizzard's original text is cached first so a re-skin can't double-append.
+    -- Append friend note (legacy NoxUI group tag stripped); Blizzard's original text is cached first so a re-skin can't double-append.
     if infoText and button.buttonType and button.id then
         local origInfo = GetFFD(button)._origInfo
         if not origInfo then

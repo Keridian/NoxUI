@@ -291,7 +291,7 @@ end
 local function EnsureTargetHighlight(plate)
     if plate.targetHighlight then return end
     -- Blizzard Style: under the stock selection ring and deselected overlay
-    -- (OVERLAY 4/5), still above the fill; the EUI and classic looks keep it on top.
+    -- (OVERLAY 4/5), still above the fill; the NoxUI and classic looks keep it on top.
     local t = plate.health:CreateTexture(nil, "OVERLAY", nil, ns.NP_Style() == "blizzard" and 0 or 5)
     t:SetAllPoints(plate.health)
     local c = ns.GetTargetHighlightColor()
@@ -387,7 +387,7 @@ local function EnsureArrows(plate)
 end
 
 -- Target/Focus overlay textures: stripe overlays live in the nameplates Media folder (resolved
--- by name); everything else resolves through the shared health-bar lookup (EUI + SharedMedia).
+-- by name); everything else resolves through the shared health-bar lookup (NoxUI + SharedMedia).
 ns.OVERLAY_STRIPE_KEYS = {
     ["striped-v2"] = true, ["striped-wide-v2"] = true, ["stripes-medium"] = true,
     ["stripes-small-close"] = true, ["stripes-small-spread"] = true, ["striped-tiny"] = true,

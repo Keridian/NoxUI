@@ -425,7 +425,7 @@ local function BuildNPStyle(kind, variant)
     local kindKey = (kind == "debuffs" and "debuff") or (kind == "buffs" and "buff") or "cc"
     local dur = AuraDurCfg(kindKey)
     local stk = StackCfg()
-    -- Stock styles: the whole icon (zoom 0), no EUI border (GetIconBorderEnabled
+    -- Stock styles: the whole icon (zoom 0), no NoxUI border (GetIconBorderEnabled
     -- is false for every kind under them). Blizzard Style: the stock nameplate
     -- aura item -- the rounded mask with the ring overlay (AuraKit
     -- blizzRoundArt). Classic WoW UI: square icons, buffs borderless, debuffs

@@ -1450,7 +1450,7 @@ do
     -- PRECISE BORDER SIZE. A surface's legacy size key keeps its meaning (solid:
     -- physical px; textured: a step into EDGE_MAP). Its companion key, the legacy
     -- key's name plus "Px", holds an exact size as the string "<px>|<step>|<tex>":
-    -- px = whole pixels at UIParent scale (the unit every EUI pixel slider
+    -- px = whole pixels at UIParent scale (the unit every NoxUI pixel slider
     -- uses), step = the legacy step it was written beside, tex = the texture then.
     -- The value counts only while the surface's legacy step and texture still
     -- equal that pair, so anything that knows only the legacy key (an older

@@ -533,7 +533,7 @@ end
 --  The global keys NoxUIDB.customAccentColor / useClassAccentColor stay
 --  in SavedVariables permanently as that fallback and are NEVER written at
 --  runtime, so profiles without euiAccent keep their existing accent until
---  edited. The EUI Options Theme (activeTheme / panel background) is separate and global.
+--  edited. The NoxUI Options Theme (activeTheme / panel background) is separate and global.
 -------------------------------------------------------------------------------
 function NoxUI.GetActiveProfileData()
     local db = NoxUIDB

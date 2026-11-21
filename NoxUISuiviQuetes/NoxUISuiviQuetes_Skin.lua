@@ -186,7 +186,7 @@ end
 -- when the user changes font path / outline / shadow settings.
 local _eqtFontRegistry = setmetatable({}, { __mode = "k" })
 
--- Reapplies EUI font path with explicit size + outline + shadow.
+-- Reapplies NoxUI font path with explicit size + outline + shadow.
 -- If `size` is nil, preserves Blizzard's current size.
 local function StyleFontStringSized(fs, size)
     if STOCK or not fs or not fs.GetFont then return end
@@ -383,7 +383,7 @@ local function SyncMasterMinimizeButtonLook(masterBtn, collapsed)
 end
 
 -------------------------------------------------------------------------------
--- Header skin: accent color + EUI font. Strips every decorative texture
+-- Header skin: accent color + NoxUI font. Strips every decorative texture
 -- region from the header; keeps the minimize button (+/-) and Text intact.
 -------------------------------------------------------------------------------
 local function SkinHeader(header, knownCollapsed)
@@ -534,7 +534,7 @@ end
 
 -------------------------------------------------------------------------------
 -- Quest type icon system. Replaces Blizzard's per-block type icon with our
--- own atlas picks so the visuals match the rest of EUI.
+-- own atlas picks so the visuals match the rest of NoxUI.
 -------------------------------------------------------------------------------
 local QUEST_ICON_ATLAS = {
     normal    = nil,

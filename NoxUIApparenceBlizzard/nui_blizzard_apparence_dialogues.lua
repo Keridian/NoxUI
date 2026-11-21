@@ -348,7 +348,7 @@ end
 
 -------------------------------------------------------------------------------
 --  Game Menu Skinning
---  Restyles the pause menu (GameMenuFrame) with EUI dark style + border.
+--  Restyles the pause menu (GameMenuFrame) with NoxUI dark style + border.
 --  Runs once on PLAYER_LOGIN so GameMenuFrame is available.
 -------------------------------------------------------------------------------
 do
@@ -393,7 +393,7 @@ do
         gmBg:SetColorTexture(RS.BG_R, RS.BG_G, RS.BG_B, RS.QT_ALPHA)
         local function ApplyButtonStyle(btn)
             local d = GetFFD(btn)
-            -- Blizzard's pooled buttons keep skin data in this addon's FFD; EUI's two custom
+            -- Blizzard's pooled buttons keep skin data in this addon's FFD; NoxUI's two custom
             -- Game Menu buttons are created by the parent addon and keep theirs in ITS FFD. Fall back to that store so live option changes also reach the NoxUI button.
             if not d.gameMenuInset and NoxUI._GetFFD then
                 d = NoxUI._GetFFD(btn)
@@ -454,7 +454,7 @@ do
             if GameMenuFrame.buttonPool then
                 for btn in GameMenuFrame.buttonPool:EnumerateActive() do ApplyButtonStyle(btn) end
             end
-            -- The EUI/Unlock custom buttons are created by the PARENT addon and stored in ITS namespace FFD (NoxUI._GetFFD), not this addon's own FFD; wrong table = dead code.
+            -- The NoxUI/Unlock custom buttons are created by the PARENT addon and stored in ITS namespace FFD (NoxUI._GetFFD), not this addon's own FFD; wrong table = dead code.
             local pd = NoxUI._GetFFD(GameMenuFrame)
             if pd and pd.euiBtn then ApplyButtonStyle(pd.euiBtn) end
             if pd and pd.unlockBtn then ApplyButtonStyle(pd.unlockBtn) end

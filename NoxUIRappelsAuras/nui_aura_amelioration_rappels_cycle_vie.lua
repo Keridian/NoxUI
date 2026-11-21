@@ -277,7 +277,7 @@ function EABR:OnEnable()
     end
     _G._EABR_ApplyStrata = ApplyStrata
 
-    -- Hook EUI panel show/hide
+    -- Hook NoxUI panel show/hide
     if NoxUI then
         NoxUI:RegisterOnShow(function()
             SetPanelOpen(true); HideAllIcons(); BeaconRefresh()

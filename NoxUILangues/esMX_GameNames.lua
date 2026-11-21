@@ -1,6 +1,6 @@
 if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGate.lua)
 -- Spanish (Mexico) world object names exactly as the game shows them: game data, never reworded.
--- Read only by esMX game clients, whatever the EUI Options Language.
+-- Read only by esMX game clients, whatever the NoxUI Options Language.
 
 local G = NoxUI.RegisterGameNames("esMX")
 if not G then return end

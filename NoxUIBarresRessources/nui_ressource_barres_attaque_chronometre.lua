@@ -11,7 +11,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --   C_SwingTimer.IsTargetWithinSwingRange(swingType) -- nil = no check possible
 --   Enum.PlayerSwingType.MainHand | OffHand | Ranged
 -- This file mirrors Blizzard's semantics (which rows exist, when a row restarts,
--- how out-of-range reads) on EUI's own frames; it never touches Blizzard's.
+-- how out-of-range reads) on NoxUI's own frames; it never touches Blizzard's.
 --
 -- One frame, up to three ROWS (Main Hand / Off Hand / Ranged) stacked top to
 -- bottom. A row exists while UnitAttackSpeed reports a speed for its slot
@@ -1184,7 +1184,7 @@ end
 local function ApplyRowLook(row, cfg, w, h)
     row._restyle = nil
     local PP = NoxUI.PP
-    -- A stock style's frame (StockChrome) replaces the EUI border.
+    -- A stock style's frame (StockChrome) replaces the NoxUI border.
     local stock = ns.ST_Style() ~= "eui"
     local bs = (not stock and cfg.borderSize) or 0
     local bdr = row._border

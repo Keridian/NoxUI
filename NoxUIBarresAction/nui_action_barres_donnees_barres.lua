@@ -88,7 +88,7 @@ end })
 -- Custom Border (the data-bar sections' opt-in). Off: the MakeBorder 1px line
 -- stays and nothing here runs past one boolean read. On: an owned host (a
 -- child of the holder, built the first time the option is on) draws the
--- chosen style through ApplyBorderStyle like every other EUI border (exact
+-- chosen style through ApplyBorderStyle like every other NoxUI border (exact
 -- size, pixel-snapped anchors, UI-scale re-apply), and MakeBorder's container
 -- hides. Turning it off retires the host with HideBorderStyle BEFORE Hide, so
 -- the UI-scale re-apply cannot bring an exact-size backdrop back over the

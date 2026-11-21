@@ -57,7 +57,7 @@ ApplyShapeToCDMIcon = function(icon, shape, barData, ssb)
     end
 
     local ifc = FC(icon)
-    -- Stock styles: the style's ring replaces every EUI shape and the square
+    -- Stock styles: the style's ring replaces every NoxUI shape and the square
     -- border, and the icon shows its full art (no zoom) exactly as the viewer
     -- draws it (rounded by the viewer mask under Blizzard Style, square under
     -- Classic WoW UI).
@@ -80,7 +80,7 @@ ApplyShapeToCDMIcon = function(icon, shape, barData, ssb)
         -- fd.borderFrame (child of icon) so Blizzard's secure frames are never tainted; PP.GetBorders(icon) is the fallback for CDM-owned frames that skip DecorateFrame's child wrapper.
         local bdrTarget = (fd and fd.borderFrame) or icon
         if blizzArt then
-            -- Blizzard Style draws no EUI border (the ring overlay is the frame).
+            -- Blizzard Style draws no NoxUI border (the ring overlay is the frame).
         elseif fd and fd.borderFrame or NoxUI.PP.GetBorders(icon) then
             local texKey = barData.borderTexture or "solid"
             -- Exact size (borderSizePx) belongs to the bar's own step: a per-icon
@@ -568,7 +568,7 @@ local function RefreshCDMIconAppearance(barKey)
 
     local borderSize = barData.borderSize or 1
     local zoom = barData.iconZoom or 0.08
-    -- Blizzard Style: full art, no EUI border/background; the ring overlay and
+    -- Blizzard Style: full art, no NoxUI border/background; the ring overlay and
     -- rounded mask are (re)applied after the shape pass below.
     local blizzArt = ns.CdmBlizzIcons()
     if blizzArt then zoom = 0 end
@@ -847,7 +847,7 @@ local function RefreshCDMIconAppearance(barKey)
         -- Update border (PP or textured via ApplyBorderStyle)
         local bdrTgt = (fd and fd.borderFrame) or icon
         if blizzArt then
-            -- Blizzard Style: no EUI border or background (ring + mask instead).
+            -- Blizzard Style: no NoxUI border or background (ring + mask instead).
         elseif fd and fd.borderFrame or NoxUI.PP.GetBorders(icon) then
             local textureKey = barData.borderTexture or "solid"
             NoxUI.ApplyBorderStyle(bdrTgt, borderSize, barData.borderR or 0, barData.borderG or 0, barData.borderB or 0, barData.borderA or 1, textureKey, barData.borderTextureOffset, barData.borderTextureOffsetY, barData.borderTextureShiftX, barData.borderTextureShiftY, "cdm", barData.borderThickness or "thin", true,
@@ -1028,7 +1028,7 @@ local function RefreshCDMIconAppearance(barKey)
                         end
                     end
                     -- Event-driven re-evaluation: Resource Aware glows always, plus plain/on-CD
-                    -- glows on EUI custom frames (their SetDesaturation never fires the
+                    -- glows on NoxUI custom frames (their SetDesaturation never fires the
                     -- SetDesaturated hook that would re-evaluate them). Fake-Active-owned
                     -- frames (PresetHasCdState) excluded.
                     local watchGlow = glowUsable
@@ -1167,7 +1167,7 @@ local function RefreshCDMIconAppearance(barKey)
                         end
                     end
                     -- Resource Aware glows always watch cooldown events. Plain/on-CD glows normally
-                    -- re-evaluate through the SetDesaturated hook, but EUI's custom frames
+                    -- re-evaluate through the SetDesaturated hook, but NoxUI's custom frames
                     -- (racial/trinket/potion/custom) drive desaturation via SetDesaturation(float),
                     -- which never fires that hook -- without a watch their glow stays lit for the
                     -- whole cooldown. Frames owned by the Fake-Active preset path (PresetHasCdState) are excluded; that engine glows them.

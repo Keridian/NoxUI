@@ -236,7 +236,7 @@ local function CreateCustomClassPower(playerFrame, style)
         local cc = db.profile.player.classPowerCustomColor or { r = 1, g = 0.82, b = 0 }
         cr, cg, cb = cc.r, cc.g, cc.b
     else
-        -- Pull from EUI global color system: resource color > class color
+        -- Pull from NoxUI global color system: resource color > class color
         local rc = NoxUI.GetResourceColor(playerClass)
         if rc then
             cr, cg, cb = rc.r, rc.g, rc.b

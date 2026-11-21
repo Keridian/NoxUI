@@ -11,7 +11,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --    - Tab restyling (custom fonts, colors, spacing, and borders)
 --    - Blizzard chrome removal
 --    - Timestamps (showTimestamps CVar, rides Blizzard's secure formatter)
---    - Thin EUI scrollbar on our message frames
+--    - Thin NoxUI scrollbar on our message frames
 --    - Copy Chat button + session history (own message store)
 -------------------------------------------------------------------------------
 local addonName, ns = ...
@@ -33,7 +33,7 @@ local ECHAT = ns.ECHAT
 -- our own container, drawn from the same settings. The old in-place reskin of
 -- Blizzard's tabs (host clip, per-tab host trios, seat normalizes) is gone.
 
--- Chat uses the same tuned Blizzard-border offsets as other rectangular EUI
+-- Chat uses the same tuned Blizzard-border offsets as other rectangular NoxUI
 -- panels. Without this registration the shared engine's lookup resolves to
 -- zero, clipping the border texture into the panel.
 EUI.RegisterBorderDefaults("chat", {
@@ -302,7 +302,7 @@ end
 
 -- Published for the tabs and the stock sidebar, which follow the Chat page's own font and
 -- outline pickers, not just the global "chat" module font. Going straight to
--- EUI.GetFontPath("chat") skips the cfg.font / cfg.outlineMode overrides above.
+-- NoxUI.GetFontPath("chat") skips the cfg.font / cfg.outlineMode overrides above.
 ECHAT.GetFont = GetFont
 ECHAT.GetOutlineFlag = GetOutlineFlag
 
@@ -367,7 +367,7 @@ local function GetInnerBorderColor(cfg)
 end
 
 -- Chat frame text size is Blizzard's per-frame setting (right-click tab ->
--- Font Size); the EUI profile mirrors the latest user-selected value.
+-- Font Size); the NoxUI profile mirrors the latest user-selected value.
 local function GetFrameFontSize(id)
     if FCF_GetChatWindowInfo then
         local _, fontSize = FCF_GetChatWindowInfo(id)
@@ -714,7 +714,7 @@ end
 
 -- One size for every chat window (the options slider). Persistence rides
 -- Blizzard's own per-window storage -- SetChatWindowSize is a plain C write.
--- The EUI profile mirrors the latest size selected either here or through a
+-- The NoxUI profile mirrors the latest size selected either here or through a
 -- chat tab's right-click menu, so the native menu choice survives reload.
 -- NEVER route
 -- this through FCF_SetChatWindowFontSize: the old in-place skin's size
@@ -892,7 +892,7 @@ function ECHAT.ApplyBorders()
 end
 
 -- Sidebar hints use the fully skinned GameTooltip when the BlizzardSkin
--- module's tooltip reskin is active; otherwise the lightweight EUI widget
+-- module's tooltip reskin is active; otherwise the lightweight NoxUI widget
 -- tooltip, so Chat has no hard dependency on that module.
 local function ShowSidebarIconTooltip(owner, label)
     local isLoaded = C_AddOns and C_AddOns.IsAddOnLoaded
@@ -1447,7 +1447,7 @@ do
             if ECHAT.SB_SyncBackdrop then ECHAT.SB_SyncBackdrop() end
         end
         -- Blizzard's tab menu writes the frame font directly and does not emit
-        -- UPDATE_CHAT_WINDOWS. Mirror the changed stored size into the EUI
+        -- UPDATE_CHAT_WINDOWS. Mirror the changed stored size into the NoxUI
         -- profile while this existing interaction-only watcher is armed, then
         -- refresh our visible copy from Blizzard's storage.
         for i = 1, 20 do

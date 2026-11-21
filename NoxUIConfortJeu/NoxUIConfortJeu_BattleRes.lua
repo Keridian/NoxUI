@@ -87,7 +87,7 @@ end
 
 -------------------------------------------------------------------------------
 --  Font resolution -- mirrors the Chat module's font / outline settings:
---  "__global" follows the EUI global font defaults, a named key resolves
+--  "__global" follows the NoxUI global font defaults, a named key resolves
 --  through the shared font registry, and outline overrides stay slug-gated.
 -------------------------------------------------------------------------------
 local function GetBrezFont()
@@ -257,7 +257,7 @@ local function ApplyShape()
             iconTex:SetTexCoord(0, 1, 0, 1)
         end
 
-        -- Pixel-perfect border via PP.CreateBorder (canonical EUI pattern).
+        -- Pixel-perfect border via PP.CreateBorder (canonical NoxUI pattern).
         if PP then
             if not PP.GetBorders(frame) then PP.CreateBorder(frame, 0, 0, 0, 1, 1, "OVERLAY", 2) end
             if bs > 0 then

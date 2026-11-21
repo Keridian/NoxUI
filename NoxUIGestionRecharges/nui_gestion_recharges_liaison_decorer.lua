@@ -121,7 +121,7 @@ local function DecorateFrame(frame, barData)
     -- decoration) so a reclaimed pooled frame stays correctly layered.
     local baseLvl = frame:GetFrameLevel()
 
-    -- Blizzard Style (Global Settings > Style): no EUI background or border;
+    -- Blizzard Style (Global Settings > Style): no NoxUI background or border;
     -- the viewer's rounded mask stays and ns.CdmApplyBlizzIconArt draws the
     -- ring. Stamped on fd so the swipe hooks read one flag per push.
     local blizzArt = ns.CdmBlizzIcons()
@@ -1387,7 +1387,7 @@ local function DecorateFrame(frame, barData)
                     -- Plain CD Ready Glow: cooldown state only, decided right here
                     -- -- no usability reads, no deferral, no events for genuine
                     -- Blizzard frames (Blizzard calls SetDesaturated on them at
-                    -- every cd transition, re-firing this hook). EUI's own custom
+                    -- every cd transition, re-firing this hook). NoxUI's own custom
                     -- frames (racials / trinkets / potions / custom spells) instead
                     -- drive desaturation via SetDesaturation(float), which does NOT
                     -- trigger this SetDesaturated hook -- so on those the glow would
@@ -1437,7 +1437,7 @@ local function DecorateFrame(frame, barData)
                         end
                     end
                     -- Track this frame for the event-driven re-evaluation loop:
-                    -- every Resource Aware glow, and On CD glows on EUI's custom
+                    -- every Resource Aware glow, and On CD glows on NoxUI's custom
                     -- frames (see the plain branch). The loop's events stay
                     -- unregistered until the first watch, so the whole system is
                     -- inert unless such a glow is actually configured somewhere.

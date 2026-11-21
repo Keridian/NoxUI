@@ -443,7 +443,7 @@ local function BuildBars()
             end
         end
         if ns.ERB_BarsBlizz() then
-            -- Blizzard Style / Classic WoW UI: the stock bar frame replaces the EUI border.
+            -- Blizzard Style / Classic WoW UI: the stock bar frame replaces the NoxUI border.
             healthBar:ApplyBorder(0, 0, 0, 0, 0)
             local bw, bh = OrientedSize(hpWidth, hpHeight, hpOri)
             ns.ERB_ApplyBlizzBarChrome(healthBar, healthBar._sb, bw, bh, ns.IsVerticalOrientation(hpOri), ns.ERB_BarFrameK(hp))
@@ -637,7 +637,7 @@ local function BuildBars()
         -- dragged branches above; anchorTo/unlock-anchored branches grow per their
         -- own anchor edge.
         if ns.ERB_BarsBlizz() then
-            -- Blizzard Style / Classic WoW UI: the stock bar frame replaces the EUI border.
+            -- Blizzard Style / Classic WoW UI: the stock bar frame replaces the NoxUI border.
             primaryBar:ApplyBorder(0, 0, 0, 0, 0)
             local bw, bh = OrientedSize(ppWidth, ppHeight, ppOri)
             ns.ERB_ApplyBlizzBarChrome(primaryBar, primaryBar._sb, bw, bh, ns.IsVerticalOrientation(ppOri), ns.ERB_BarFrameK(pp))

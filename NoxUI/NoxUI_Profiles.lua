@@ -2499,7 +2499,7 @@ local FULL_EXPORT_EXCLUDED = {
     classBuffByChar       = true, -- and last class buff lines
     spellUprankChars      = true, -- Auto Uprank: highest ranks per character and pet
     global                = true, -- friend groups, keyed by BattleTag
-    -- Game settings from before NoxUI, put back by Uninstall EUI
+    -- Game settings from before NoxUI, put back by Uninstall NoxUI
     restoreOnUninstall    = true, -- NoxUI_Uninstall.lua
     gfxBackup             = true, -- Optimize My FPS and Graphics' Restore values
     friendlyPlateVisSaved = true, -- friendly plates hidden in a follower dungeon
@@ -5114,7 +5114,7 @@ end
 --  Silent partner-installer import (public API, additive)
 --
 --  Ports a creator's export string EXACTLY for installer addons that own the
---  whole setup (no EUI dialogs); the interactive dialog flow is untouched.
+--  whole setup (no NoxUI dialogs); the interactive dialog flow is untouched.
 --  Fonts, custom colors, accent, CDM spell layouts, overrides, the
 --  window/tooltip skin bundle and UI scale all apply as carried (presence is
 --  consent), so the recipient lands on the creator's complete look.

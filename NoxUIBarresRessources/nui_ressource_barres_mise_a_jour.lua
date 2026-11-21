@@ -1104,7 +1104,7 @@ end
 -- Blizzard's tracked-buff (cooldown viewer) Ignore Pain icon displays, observed
 -- via hooksecurefunc on its stack FontString's SetText. Every direct read is
 -- secret (absorbs, aura data, bar value, rendered fill rect); no dependency on
--- the EUI CDM module. Degrades gracefully: viewer hidden/IP untracked falls back
+-- the NoxUI CDM module. Degrades gracefully: viewer hidden/IP untracked falls back
 -- to the fill-width readback (clean values only) or stays blank.
 IP.FrameSpellID = function(frame)
     if frame.GetSpellID then
@@ -1164,7 +1164,7 @@ end
 
 -- Scan BOTH Blizzard viewers for Ignore Pain. Tracked Buffs carry the stack
 -- FontString at frame.Applications.Applications; Tracked Bars at
--- frame.Icon.Applications (same child the EUI CDM buff bars read). Whichever has
+-- frame.Icon.Applications (same child the NoxUI CDM buff bars read). Whichever has
 -- IP wins. force: rescan even with a capture held (used when the captured FS
 -- went invisible, possibly stranded on a released pool frame); a forced scan
 -- finding nothing leaves the current capture in place.

@@ -2,7 +2,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 -------------------------------------------------------------------------------
 --  NoxUI_FirstInstall.lua
 --
---  One-time popup on first install that lets the user pick which EUI addons
+--  One-time popup on first install that lets the user pick which NoxUI addons
 --  to keep enabled. Visual style mirrors the Spec Assign popup (dimmer +
 --  dark panel + white border + Check All / Uncheck All links + Done button).
 --

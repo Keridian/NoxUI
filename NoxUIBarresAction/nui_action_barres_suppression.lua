@@ -308,7 +308,7 @@ do
     -- only, never Hide(): the parent has taint history around its protected
     -- shown state, and these are ordinary QuickKeybindButtonTemplate buttons,
     -- so disabling mouse is unprotected, combat-safe, and enough. Nothing of
-    -- ours clicks them -- EUI's paging arrows drive their own secure buttons.
+    -- ours clicks them -- NoxUI's paging arrows drive their own secure buttons.
     local function KillPagerMouse(bar)
         local pager = bar and bar.ActionBarPageNumber
         if not pager then return end

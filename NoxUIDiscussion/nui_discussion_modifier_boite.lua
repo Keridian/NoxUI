@@ -74,7 +74,7 @@ ECHAT.IDLE_WAKE_GROUPS = IDLE_WAKE_GROUPS
 --  recall-cursor reset, idle-fade and hover focus tracking.
 --
 --  Deliberately NOT widget HookScripts on a Blizzard edit box. THE RULE: no
---  EUI code may execute inside a Blizzard chat-state execution. An addon
+--  NoxUI code may execute inside a Blizzard chat-state execution. An addon
 --  closure invoked by a script dispatch inside a secure execution leaves that
 --  execution tainted after it returns, and the chat-state functions write the
 --  edit box's chatType ATTRIBUTE after the script dispatches they perform:
@@ -101,7 +101,7 @@ ECHAT.IDLE_WAKE_GROUPS = IDLE_WAKE_GROUPS
 local _chatStateCallbacksDone = false
 
 -- Blizzard fires these callbacks for EVERY chat edit box, including the temp
--- whisper windows (11+). Deriving EUI state from one of those poisons
+-- whisper windows (11+). Deriving NoxUI state from one of those poisons
 -- HistoryKeeper through the secret BN_WHISPER tellTarget, which is what the
 -- "idx <= 10" gate in SkinEditBox exists to prevent, so the same filter has
 -- to be re-applied inside each callback body.

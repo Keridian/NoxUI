@@ -1072,7 +1072,7 @@ local function InitBuffBarsPage(PP, DB, Refresh, FONT_PATH, GetCDMOptOutline, Ga
 
         for _, sp in ipairs(trackedBars) do MakeSpellItem(sp) end
 
-        -- "Missing Spells?" prompt (centered, accent-colored) closes EUI options and opens
+        -- "Missing Spells?" prompt (centered, accent-colored) closes NoxUI options and opens
         -- Blizzard's CDM; sits at the end of Buffs so it reads as the way to add more.
         do
             local FOOTER_H = 38

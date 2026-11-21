@@ -630,7 +630,7 @@ end
 -- settings catalog, talented or not (GetCDMSpellsForBar's own sources). Added
 -- by Spell ID, such a spell is drawn from Blizzard's frame, which never reads
 -- the custom-spell settings its menu writes. A spell set to Not Displayed is
--- left out, as the list leaves it out: it has no Blizzard frame, so EUI draws
+-- left out, as the list leaves it out: it has no Blizzard frame, so NoxUI draws
 -- its own and those settings work. Built per call (Add Custom Spell only).
 function ns.IsCDMTrackedCooldown(spellID)
     if not _IsUsableSID(spellID) then return false end

@@ -1169,7 +1169,7 @@ local function CreateMover(barKey)
             return
         end
         -- Element-declared dynamic block on NEW matches (clearing above stays
-        -- allowed): e.g. action bars in Blizzard Style, where EUI doesn't
+        -- allowed): e.g. action bars in Blizzard Style, where NoxUI doesn't
         -- size the bars and a match would only write junk settings.
         if elem and elem.matchUnavailable then
             local why = elem.matchUnavailable(barKey)
@@ -3426,7 +3426,7 @@ local function CreateMover(barKey)
         end
 
         -- "Element Options" -- navigate to this element's settings page (top of menu)
-        -- Queue Status is a Blizzard-owned element with no EUI settings page; its
+        -- Queue Status is a Blizzard-owned element with no NoxUI settings page; its
         -- "Element Options" opens Blizzard Edit Mode instead of navigating to a tab
         -- (the same action as clicking a Blizzard Edit Mode overlay in unlock mode).
         local opensEditMode = (barKey == "QueueStatus")

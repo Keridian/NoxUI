@@ -283,7 +283,7 @@ function ns.UF_PowerCostColor(s)
 end
 
 -- True while the player power bar draws: a position other than None (under a
--- stock style: Hide Power Bar off), and a height above 0 in the EUI look (a
+-- stock style: Hide Power Bar off), and a height above 0 in the NoxUI look (a
 -- stock style draws the attached bar at its own height). Spell Cost
 -- Prediction and the mana regen spark gate on it.
 function ns.UF_PowerBarDraws(settings)
@@ -512,7 +512,7 @@ local function CreatePowerBar(frame, unit, settings)
             local cf = s2.customPowerFillColor
             if cf then self:SetStatusBarColor(cf.r, cf.g, cf.b) else self:SetStatusBarColor(0, 0, 1) end
         elseif haveBase then
-            -- Power/class-color mode without gradient: apply EUI's GLOBAL color.
+            -- Power/class-color mode without gradient: apply NoxUI's GLOBAL color.
             -- oUF.colors.power is not overridden, so oUF would otherwise leave the
             -- bar on its built-in default instead of the user's.
             self:SetStatusBarColor(bR, bG, bB)

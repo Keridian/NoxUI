@@ -797,7 +797,7 @@ function NameplateFrame:ApplyTarget()
     -- (Custom wrap: re-syncs the lower piece and seam to the size and colour just set.)
     if self._wrapActive or self._cbWrapActive then self:UpdateBorderWrap() end
     -- Blizzard Style: stock selection ring / deselected overlay. The classic
-    -- plate marks its target through the EUI effects above alone.
+    -- plate marks its target through the NoxUI effects above alone.
     if ns.NP_Style() == "blizzard" then ns.NP_ApplyBlizzSelection(self, isTarget) end
     -- Highlight: translucent wash across the health bar (color + opacity are
     -- configurable; re-applied on show so live edits and pooled textures update)
@@ -857,7 +857,7 @@ function NameplateFrame:ApplyMouseover()
     end
 end
 
--- Hover Effect extra channels (EUI Glow / Border Color / Border Size --
+-- Hover Effect extra channels (NoxUI Glow / Border Color / Border Size --
 -- mirrors ApplyTarget's branches; the Highlight channel lives inside
 -- ShowHoverEffect). TARGET PRECEDENCE per shared visual: while this plate is
 -- the target and the TARGET effect drives the same channel, hover leaves it
@@ -868,7 +868,7 @@ function ns.ApplyHoverExtras(plate)
     local isTarget = plate._isTarget
     local any = false
     local wrapSync = false  -- one cast bar wrap re-sync at the end, after size and colour
-    -- EUI Glow (shared self.glow visual).
+    -- NoxUI Glow (shared self.glow visual).
     if ns.GetHoverGlowNoxUI() and not (isTarget and ns.GetTargetGlowNoxUI()) then
         EnsureGlow(plate)
         if plate.glowTextures then

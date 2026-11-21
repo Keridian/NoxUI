@@ -603,7 +603,7 @@ ns.ResolveBgClassColor = function(classUnit)
 end
 
 -- External nickname providers key us by this addon name. Suite = "NoxUI" (the
--- registered brand) so one provider checkbox controls every EUI module; standalone =
+-- registered brand) so one provider checkbox controls every NoxUI module; standalone =
 -- our renamed folder name, which always contains "Standalone" (rename-immune token).
 -- On ns for the Lua 5.1 200-local ceiling.
 ns.NICK_ADDON = addonName:find("Standalone") and addonName or "NoxUI"
@@ -629,8 +629,8 @@ function ns.ResolveUnitNickname(unit)
     local display
     -- MethodInternal's surface choice is authoritative for known Method players,
     -- including Character Name (which deliberately equals the raw name). It sits
-    -- ahead of the EUI master toggle so the MethodInternal-owned setting works on
-    -- its selected surface; unknown players continue through EUI's normal chain.
+    -- ahead of the NoxUI master toggle so the MethodInternal-owned setting works on
+    -- its selected surface; unknown players continue through NoxUI's normal chain.
     if EasyNicknameAPI and EasyNicknameAPI.GetNicknameForUnitForSurface then
         local ok, dn, handled = pcall(
             EasyNicknameAPI.GetNicknameForUnitForSurface, unit, "unitFrames")
@@ -748,7 +748,7 @@ end
 -- TimelineReminders retry on PLAYER_LOGIN/PLAYER_ENTERING_WORLD. Registrant key MUST
 -- be "NoxUICadresUnite", not "NoxUI": Raid Frames owns that key and
 -- CallbackHandler keys registrations by it, so reuse would clobber one module. The
--- provider CHECKBOX key stays shared (ns.NICK_ADDON/"EUI") so one toggle drives raid AND unit frames.
+-- provider CHECKBOX key stays shared (ns.NICK_ADDON/"NoxUI") so one toggle drives raid AND unit frames.
 do
     local function RefreshNames() if ns.RefreshAllUnitNames then ns.RefreshAllUnitNames() end end
     local function RegisterMethodInternal()

@@ -549,7 +549,7 @@ initFrame:SetScript("OnEvent", function(self)
                 -- Classic WoW UI paints every header icon with vanilla art that
                 -- carries its own colours, and WoW Forever tints the glyphs its
                 -- own tan on their plates: both swatches inert. (Blizzard Style
-                -- keeps the EUI glyphs, so the tint stays live there.)
+                -- keeps the NoxUI glyphs, so the tint stays live there.)
                 local stockIcons = NoxUI.BlizzStyle.Active("damagemeters") == "classic"
                     or NoxUI.BlizzStyle.Forever("damagemeters")
                 local function refreshHdrIcon()

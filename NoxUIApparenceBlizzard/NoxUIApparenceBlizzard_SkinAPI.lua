@@ -12,7 +12,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --     facade signatures are additive-only, versioned by S.apiVersion.
 --   - Style is OUR concern, invisible to the dev: S.Shell resolves through
 --     the "tp:<name>" virtual winKey -> NoxUI.GetThirdPartySkinStyle()
---     majority vote (most windows Modern -> modern, else EUI). Registered
+--     majority vote (most windows Modern -> modern, else NoxUI). Registered
 --     shells live-restyle through the normal RefreshStyles path.
 --   - Third-party skinning is decoupled from the window-skin kill switch and
 --     from every per-window enable: it has its own master + per-addon

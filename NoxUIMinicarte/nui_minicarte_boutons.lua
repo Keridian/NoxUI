@@ -322,7 +322,7 @@ local function GatherMinimapButtons()
                 elseif IsPinFrame(name) then
                     -- skip pin/POI frames
                 elseif child:IsObjectType("Button") and name
-                    and not name:match("%d+$") then
+                    and (name:find("LibDBIcon10_", 1, true) == 1 or not name:match("%d+$")) then
                     local w = child:GetWidth() or 0
                     -- Width gate applies to first discovery only; once tracked in
                     -- _addonVisible a button is always re-collected, so our own SetSize (slider < 20) can't permanently drop it.

@@ -177,7 +177,7 @@ visFrame:RegisterUnitEvent("UNIT_EXITED_VEHICLE", "player")
 -- (repo-proven event); takeoff/landing while staying mounted fires
 -- PLAYER_IS_GLIDING_CHANGED, which is probed because nothing registered it before this
 -- feature. When the probe fails on a client, the dragonriding checklist items lock
--- (EUI._hasGlidingEvent) instead of evaluating with stale edges.
+-- (NoxUI._hasGlidingEvent) instead of evaluating with stale edges.
 visFrame:RegisterEvent("PLAYER_CAN_GLIDE_CHANGED")
 do
     local ok

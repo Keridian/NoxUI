@@ -887,7 +887,7 @@ local function HookGreatVault()
 
     d.hooked = true
 
-    -- Window-style system: treat Blizzard's vault scene as this window's EUI
+    -- Window-style system: treat Blizzard's vault scene as this window's NoxUI
     -- backdrop, so picking Modern fades the scene and shows the flat user
     -- color instead (nil-safe if the scene texture key is absent).
     if ns.WSkin and ns.WSkin.AdoptShell then

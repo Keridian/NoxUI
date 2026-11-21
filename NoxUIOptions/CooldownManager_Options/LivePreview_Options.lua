@@ -1871,7 +1871,7 @@ local function BuildCDMLivePreview(parent, yOff)
             if slot._bg.SetSnapToPixelGrid then slot._bg:SetSnapToPixelGrid(false); slot._bg:SetTexelSnappingBias(0) end
 
             ns.ApplyShapeToCDMIcon(slot, shape, bd)
-            -- Blizzard Style: no EUI border or background; the live art pass
+            -- Blizzard Style: no NoxUI border or background; the live art pass
             -- adds the viewer's rounded mask and ring to the slot exactly as
             -- it does to a bar's own icons. The preview's overlays (text,
             -- hover and hosted-buff borders, glow) move above the ring, at
@@ -1943,7 +1943,7 @@ local function BuildCDMLivePreview(parent, yOff)
                     local sid = slot._previewSpellID
                     local chargeInfo = sid and C_Spell.GetSpellCharges and C_Spell.GetSpellCharges(sid)
                     local maxC = chargeInfo and chargeInfo.maxCharges
-                    -- A custom CD/utility spell EUI draws itself has no Blizzard charge
+                    -- A custom CD/utility spell NoxUI draws itself has no Blizzard charge
                     -- frame: the live icon shows a count only with its Show Charges
                     -- opt-in, so match it. A Blizzard-tracked one draws Blizzard's frame.
                     local sdSc = sid and not isBuffBar and not isCustomBuffBar and ns.GetBarSpellData(bd.key)

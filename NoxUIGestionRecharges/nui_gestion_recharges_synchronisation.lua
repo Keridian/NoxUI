@@ -782,7 +782,7 @@ function ns.CDMGetProviderDisplayData(provider)
 end
 
 -- Active BLIZZARD CDM layout id (the user's "preset"), not to be confused with
--- ns.GetActiveLayoutName (EUI's own account-wide spell-layout system). Used to
+-- ns.GetActiveLayoutName (NoxUI's own account-wide spell-layout system). Used to
 -- scope the automatic-reseed session gate by layout as well as spec: a spell
 -- only tracked on a preset the user switches to LATER in the session was
 -- invisible at the first reseed and must still get its own materialize pass.

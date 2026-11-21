@@ -559,7 +559,7 @@ do
                         -- On cooldown always stops the glow -- a safety net
                         -- independent of the SetDesaturated hook, in case that
                         -- hook doesn't fire for a given transition (it never does
-                        -- for EUI custom frames -- they use SetDesaturation).
+                        -- for NoxUI custom frames -- they use SetDesaturation).
                         shouldGlow = false
                     elseif usableGlow then
                         -- Resource Aware: also require castability (resources,

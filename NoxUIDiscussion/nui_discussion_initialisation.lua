@@ -104,7 +104,7 @@ initFrame:SetScript("OnEvent", function(self)
     --      iterates it mid-build, so the whole menu -- every click handler
     --      wired after that read -- runs tainted, and any item touching a
     --      whisper window's secret-keyed tables errors
-    --      (FCF_RestoreChatsToFrame forbidden-table iteration). EUI font size
+    --      (FCF_RestoreChatsToFrame forbidden-table iteration). NoxUI font size
     --      is applied at skin time instead.
     ---------------------------------------------------------------------------
 
@@ -638,7 +638,7 @@ initFrame:SetScript("OnEvent", function(self)
                 end
             end
             ECHAT.ApplyWhisperMute()
-            -- Uninstall EUI: a mute of ours would outlive the reload.
+            -- Uninstall NoxUI: a mute of ours would outlive the reload.
             NoxUI.OnUninstall(function()
                 if _tellMuted or (NoxUIDB and NoxUIDB.chatTellMuted) then
                     UnmuteSoundFile(TELL_SOUND_FILE)

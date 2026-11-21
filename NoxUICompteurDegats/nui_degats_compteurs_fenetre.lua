@@ -65,7 +65,7 @@ local function MakeMenuPanel(level)
     f:SetClampedToScreen(true); f:EnableMouse(true)
     local bg = f:CreateTexture(nil, "BACKGROUND"); bg:SetAllPoints()
     bg:SetColorTexture(RS.BG_R or 0.067, RS.BG_G or 0.067, RS.BG_B or 0.067, RS.CTX_ALPHA or 0.95)
-    -- WoW Forever: Forever's dropdown panel in place of the EUI border.
+    -- WoW Forever: Forever's dropdown panel in place of the NoxUI border.
     if not ns.DMFvMenuArt(f, bg) then
         local PP_L = EUI.PP
         if PP_L and PP_L.CreateBorder then PP_L.CreateBorder(f, 1, 1, 1, RS.BRD_ALPHA or 0.18, 1) end
@@ -329,7 +329,7 @@ local function CreateDMWindow(winIdx)
         function bar.ApplyBorder()
             local c = DB()
             local sz = c.borderSize or 0
-            -- Stock-style rows carry no EUI border: Blizzard Style draws the
+            -- Stock-style rows carry no NoxUI border: Blizzard Style draws the
             -- stock shadow edge, Classic WoW UI a plain bar.
             if sz <= 0 or ns.DMBlizz() or (c.barSeparators and ns.DMUseBarSeparators(c)) then
                 if bar._borderFrame then bar._borderFrame:Hide() end
@@ -710,7 +710,7 @@ local function CreateDMWindow(winIdx)
         local ic = c.iconColor; return ic and ic.r or 1, ic and ic.g or 1, ic and ic.b or 1
     end
 
-    -- artKey: the header key whose stock-style art replaces the EUI glyph
+    -- artKey: the header key whose stock-style art replaces the NoxUI glyph
     -- under a stock style (ns.DM_HDR_ART); the glyph stays where none exists.
     local function MakeHeaderBtn(texFile, xOff, tooltip, onClick, artKey)
         local btn = CreateFrame("Button", nil, header)

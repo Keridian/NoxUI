@@ -21,9 +21,9 @@ I.dbSetters[#I.dbSetters + 1] = function(v) db = v end
 -------------------------------------------------------------------------------
 --  Stock styles (Global Settings > Style). A stock unit frame look on our own
 --  frames: the frame art, portrait masks, bar shapes and bar placement of one
---  ART KIT, applied as an idempotent post-pass over the built EUI frame so
---  every EUI feature (text zones, auras, absorbs, cast bars, class power,
---  unlock movers) keeps working; only the EUI-look settings step aside. The
+--  ART KIT, applied as an idempotent post-pass over the built NoxUI frame so
+--  every NoxUI feature (text zones, auras, absorbs, cast bars, class power,
+--  unlock movers) keeps working; only the NoxUI-look settings step aside. The
 --  pass runs after every geometry re-apply (UpdateBordersForScale, the class
 --  power re-anchor, the ReloadFrames sweep), creates its regions once per
 --  frame, and costs nothing while the style is off. Two kits share the pass:
@@ -32,7 +32,7 @@ I.dbSetters[#I.dbSetters + 1] = function(v) db = v end
 --  frame files, plain rectangular bars). ns.UF_BLIZZ is the ACTIVE kit,
 --  pointed at the latched style once per session (ns.UF_Style). An art entry
 --  is an atlas name (validated once per session; a missing one leaves that
---  piece on the EUI look) or a file descriptor { key, file, l, r, t, b, w,
+--  piece on the NoxUI look) or a file descriptor { key, file, l, r, t, b, w,
 --  h, point, x, y }. Reload-gated per-profile flags. ns fields only:
 --  written under the main file's local cap.
 -------------------------------------------------------------------------------
@@ -855,8 +855,8 @@ function ns.UF_SetMask(tex, mask)
 end
 -- Health + power bars: the user's own Bar Texture stays on the fills (the
 -- stock fill art is pre-coloured and would darken every chosen colour), so
--- colours, gradients, opacity and textures render exactly as on the EUI
--- look; the stock rounded masks shape the fills AND the EUI bar backgrounds,
+-- colours, gradients, opacity and textures render exactly as on the NoxUI
+-- look; the stock rounded masks shape the fills AND the NoxUI bar backgrounds,
 -- so Bar Background keeps working inside the stock track. Masks are
 -- (re)seated after every texture swap (a swap replaces the fill object), so
 -- a re-apply can never leave a bar unmasked.
@@ -938,7 +938,7 @@ function ns.UF_ApplyBlizzBarArt(frame)
                     -- Mirrored small frame: in the track, unmasked.
                     ns.UF_BlizzBarShadow(power, nil, G.power.h)
                 elseif power._blizzShadow then
-                    -- Detached bar: it carries its own EUI border.
+                    -- Detached bar: it carries its own NoxUI border.
                     for i = 1, 4 do power._blizzShadow[i]:Hide() end
                 end
             end
@@ -1311,7 +1311,7 @@ end
 
 -- Portrait: always shown (the stock frames carry one), the stock size and
 -- position with the stock mask (round, or the player frame's own crop), full
--- art, no EUI backdrop, and UNDER the frame art (the art's ring and bar edge
+-- art, no NoxUI backdrop, and UNDER the frame art (the art's ring and bar edge
 -- overlap it exactly as on the stock frame).
 function ns.UF_ApplyBlizzPortrait(frame, G)
     local pt = frame.Portrait
@@ -1687,7 +1687,7 @@ function ns.UF_BlizzCastIcon(cb)
             PP.Point(ico, "TOPLEFT", host, "TOPLEFT", offX, offY)
         end
         -- The bar takes the rest of the footprint (LayoutCastbarIcon inset it
-        -- by the EUI square; this icon is wider).
+        -- by the NoxUI square; this icon is wider).
         cb:ClearAllPoints()
         if onRight then
             PP.Point(cb, "TOPLEFT", host, "TOPLEFT", 0, 0)
@@ -1702,7 +1702,7 @@ function ns.UF_BlizzCastIcon(cb)
         PP.Point(ico, "TOPRIGHT", host, "TOPLEFT", offX, offY)
     end
 end
--- Cast bar: stock background, fill art, frame and text box; the EUI tint
+-- Cast bar: stock background, fill art, frame and text box; the NoxUI tint
 -- layer stays off (the fill art is its own colour). Border and icon frame go.
 function ns.UF_ApplyBlizzCastbar(cb)
     if not cb then return end
@@ -1713,7 +1713,7 @@ function ns.UF_ApplyBlizzCastbar(cb)
     if CK then
         -- Classic kit: the vanilla cast bar frame round the user's own fill
         -- and colours; no stock background, fill art or text box (the spell
-        -- name stays on the bar in its EUI zone). The frame is the shared
+        -- name stays on the bar in its NoxUI zone). The frame is the shared
         -- nine-slice anchored to the HOLDER's corners (bar plus icon: the
         -- icon is part of the bar under this kit and sits inside the frame's
         -- window), so no rect is read here. Its pieces ride an art child of
@@ -1817,7 +1817,7 @@ function ns.UF_ApplyBlizzCastbar(cb)
     else
         cb._blizzTextBox:Hide()
     end
-    -- The icon is the bare art, as stock: no EUI black plate, no border and
+    -- The icon is the bare art, as stock: no NoxUI black plate, no border and
     -- no 1px inset (the inset was that border's room).
     local ico = cb._iconFrame
     if ico then
@@ -1975,7 +1975,7 @@ function ns.UF_ApplyBlizzardLayout(frame, unit)
 
     ns.UF_ApplyBlizzPortrait(frame, G)
 
-    -- No EUI chrome: unified border and text bar step aside for the art.
+    -- No NoxUI chrome: unified border and text bar step aside for the art.
     if frame.unifiedBorder then frame.unifiedBorder:Hide() end
     if frame.BottomTextBar then frame.BottomTextBar:Hide() end
 

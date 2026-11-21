@@ -179,7 +179,7 @@ function EQT.Blizz() return ns.QT_Style() ~= "eui" end
 function EQT.Classic() return ns.QT_Style() == "classic" end
 
 -------------------------------------------------------------------------------
--- Cross-module suppression API. Other EUI modules (e.g. M+ Timer preview
+-- Cross-module suppression API. Other NoxUI modules (e.g. M+ Timer preview
 -- mode) can call _EQT_SetSuppressed(key, true) to temporarily hide our
 -- tracker. Suppression stacks across callers.
 --

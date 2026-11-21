@@ -145,7 +145,7 @@ end
 -- with (plate:ApplyBorder, ns.ApplyCustomBorderStyle). kind "strips" = Basic
 -- and Custom Solid, four strips inside the bar, Extra Border Size added; kind
 -- "slices" = a textured Custom border, the eight pieces its edge art is cut
--- into. nil while the plate draws no EUI border (Border None, a stock style,
+-- into. nil while the plate draws no NoxUI border (Border None, a stock style,
 -- size 0, an unresolved texture): then there is nothing to color.
 local function BorderSpec()
     if ns.NP_Blizz() then return nil end
@@ -970,7 +970,7 @@ local function CreateBundle(plate)
         level = plate.health:GetFrameLevel(), containers = {},
         kit = config.anyMissing and Kit(plate) or nil,
     }
-    -- Tint shares the fill's frame level; EUI's text, target/focus patterns,
+    -- Tint shares the fill's frame level; NoxUI's text, target/focus patterns,
     -- border and absorb effects keep their own higher layers.
     b.holder = CreateFrame("Frame", nil, plate.health)
     b.holder:SetAllPoints(plate.health)

@@ -292,7 +292,7 @@ local function ShowSpellPicker(anchorFrame, barKey, slotIndex, excludeSet, onSel
     end
 
     -- Main buffs bar, Blizzard-tracked buff (not injected custom): can't be removed in
-    -- EUI (Blizzard owns tracking), so offer a "Delete Spell" row that opens Blizzard's CDM (closes EUI options), matching the page's link behavior.
+    -- NoxUI (Blizzard owns tracking), so offer a "Delete Spell" row that opens Blizzard's CDM (closes NoxUI options), matching the page's link behavior.
     if slotIndex and barKey == "buffs" and not rmIsInjected and rmSpellID then
         local dsItem = CreateFrame("Button", nil, inner)
         dsItem:SetHeight(ITEM_H)
@@ -5940,7 +5940,7 @@ local function ShowSpellPicker(anchorFrame, barKey, slotIndex, excludeSet, onSel
     end
 
     -- "Missing Spells?" footer: centered accent prompt that opens Blizzard's
-    -- CDM and closes EUI options (same action as the link under the buff bar
+    -- CDM and closes NoxUI options (same action as the link under the buff bar
     -- preview). Shown for bars that list Blizzard CDM spells (CD/utility and
     -- buff); skipped for custom-buff bars (Custom Spell ID only, no CDM list).
     if not isCustomBuff then

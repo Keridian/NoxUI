@@ -1185,7 +1185,7 @@ local function BuildInfo(accountInfo)
             text = (loc == "enUS" or loc == "enGB") and "In App" or "Battle.Net"
         end
     end
-    -- Legacy ||EUI:Group|| tags are stripped from any note we display.
+    -- Legacy ||NoxUI:Group|| tags are stripped from any note we display.
     local note = NoxUI.StripFriendNoteTag(accountInfo.note)
     if note then
         if text ~= "" then

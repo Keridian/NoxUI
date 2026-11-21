@@ -58,7 +58,7 @@ end
 
 local function FrameBorderEnter(self)
     if not self.unifiedBorder then return end
-    if self._blizzArtFrame then return end  -- Blizzard Style: no EUI border to recolor
+    if self._blizzArtFrame then return end  -- Blizzard Style: no NoxUI border to recolor
     local unit = self._euiUnit or "player"
     if unit:match("^boss%d$") then
         self._hovered = true
@@ -88,7 +88,7 @@ local function FrameBorderEnter(self)
 end
 local function FrameBorderLeave(self)
     if not self.unifiedBorder then return end
-    if self._blizzArtFrame then return end  -- Blizzard Style: no EUI border to recolor
+    if self._blizzArtFrame then return end  -- Blizzard Style: no NoxUI border to recolor
     local unit = self._euiUnit or "player"
     if unit:match("^boss%d$") then
         self._hovered = false

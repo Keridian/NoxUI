@@ -1,6 +1,6 @@
 if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGate.lua)
 -- nui_ressource_barres_minuteurs.lua
--- Mirror Timers: the Breath, Fatigue and Feign Death bars, on EUI's own frames.
+-- Mirror Timers: the Breath, Fatigue and Feign Death bars, on NoxUI's own frames.
 --
 -- Blizzard calls them mirror timers (Blizzard_MirrorTimer): started by
 -- MIRROR_TIMER_START(timer, value, maxValue, scale, paused, label), paused by
@@ -260,7 +260,7 @@ local function ApplyLook(obj, cfg, own)
     local style = StockStyle()
     local stock = style ~= "eui"
     local blizzKit = style == "blizzard"
-    -- No EUI border under a stock style: its frame art is the border.
+    -- No NoxUI border under a stock style: its frame art is the border.
     local bs = (not stock and cfg.borderSize) or 0
     local bdr = obj.border
     local pl = f:GetFrameLevel()

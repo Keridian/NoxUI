@@ -581,7 +581,7 @@ function EUI_Bags:SyncHeaderIcons()
     if junkOn and self._junkBtn then
         edge = self._sellJunkBtn:IsShown() and self._sellJunkBtn or self._junkBtn
     end
-    -- The leftmost shown icon bounds the search on Forever and the title on EUI.
+    -- The leftmost shown icon bounds the search on Forever and the title on NoxUI.
     if forever then
         local search, header = self._searchBox, bags:GetParent()
         search:ClearAllPoints()

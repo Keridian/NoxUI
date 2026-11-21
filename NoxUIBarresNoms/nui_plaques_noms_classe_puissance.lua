@@ -99,7 +99,7 @@ function ns.GetPipIconAtlas(kind, filled, index)
     return nil
 end
 
--- Class/power color from the EUI global system. Bar-type keys (_BAR suffix)
+-- Class/power color from the NoxUI global system. Bar-type keys (_BAR suffix)
 -- return the power color; class resources return resource color > class color.
 local CP_DEFAULT_COLOR = { 1.00, 0.84, 0.30 }
 local function GetClassPipColor(classFile, powerKey)

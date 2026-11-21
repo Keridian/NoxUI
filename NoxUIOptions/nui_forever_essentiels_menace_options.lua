@@ -30,7 +30,7 @@ local ICON_STYLES = { none = "None", blizzard = "Blizzard", modern = "Modern", p
 local ICON_STYLE_ORDER = { "none", "---", "blizzard", "modern", "pixel", "pixelsComic", "glyph", "arcade", "legend", "midnight", "runic" }
 local BAR_COLORS = { class = "Class Color", accent = "Accent Color", custom = "Custom Color" }
 local BAR_COLOR_ORDER = { "class", "accent", "custom" }
-local OUTLINES = { __global = "EUI Global Default", none = "Drop Shadow", outline = "Outline", thick = "Thick Outline" }
+local OUTLINES = { __global = "NoxUI Global Default", none = "Drop Shadow", outline = "Outline", thick = "Thick Outline" }
 local OUTLINE_ORDER = { "__global", "none", "outline", "thick" }
 local PCT_POSITIONS = { RIGHT = "Inside Right", LEFT = "Inside Left", CENTER = "Inside Center" }
 local PCT_POSITION_ORDER = { "RIGHT", "LEFT", "CENTER" }

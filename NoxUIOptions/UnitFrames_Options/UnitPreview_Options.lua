@@ -63,7 +63,7 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
     -- Mini frames (ToT/FoT/Pet) have no power bar, cast bar or auras at
     -- runtime, so the preview draws none, except the pet's opt-in buffs and
     -- debuffs (drawn while their Location is set) and, on WoW Forever, the
-    -- pet's power bar in the EUI look (the stock styles paint their own).
+    -- pet's power bar in the NoxUI look (the stock styles paint their own).
     local isMiniPreview = (unitKey == "targettarget" or unitKey == "focustarget" or unitKey == "pet")
     local noPowerPreview = isMiniPreview
         and not (unitKey == "pet" and ns.UF_PetHasPower and not ResolveBlizzPreview(unitKey, settings))
@@ -1634,11 +1634,11 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
     -- Blizzard Style: the stock look laid over the built mock at the end of
     -- every Update, the way the live layout pass lays it over the built
     -- frame -- same geometry table, art painter, masks and bar shadow from
-    -- the module, so it overrides the EUI-look pass instead of forking it.
+    -- the module, so it overrides the NoxUI-look pass instead of forking it.
     -- Nothing here runs while the style is off. Draw order (levels above
     -- pf, nothing goes under it): portrait +1 < art +2 < bars +3 < absorb
     -- pieces +4; text, class power and icons sit higher already. The cast
-    -- bar keeps its EUI placement below the frame and takes the stock chrome.
+    -- bar keeps its NoxUI placement below the frame and takes the stock chrome.
     local function ApplyBlizzPreview(s, G, mirror, extras, ch, drop)
         local lvl = pf:GetFrameLevel()
         local pct = optState._previewHealthPct or 0.70
@@ -2005,7 +2005,7 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
             leftFS:SetWidth(G.name.w)
         end
 
-        -- No EUI chrome: the border and text bar step aside for the art.
+        -- No NoxUI chrome: the border and text bar step aside for the art.
         border:Hide()
         if btbFrame then btbFrame:Hide() end
 
@@ -2186,7 +2186,7 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
         elseif unitKey == "focustarget" then s = db.profile.focustarget
         else s = db.profile.player end
 
-        -- Blizzard Style: stock geometry (nil = EUI look); Frame Scale rides
+        -- Blizzard Style: stock geometry (nil = NoxUI look); Frame Scale rides
         -- the preview scale so every anchor and the header math follow it.
         local blizzG, blizzMirror, blizzExtras = pf._blizzResolve(unitKey, s)
         pf._previewScale = (pf._previewBaseScale or pf._previewScale or 1)
@@ -2259,8 +2259,8 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
         -- frames' ns.UF_BossBorderSettings).
         local bds = (unitKey == "boss") and ns.UF_BossBorderSettings() or ds
 
-        -- The preview mocks the EUI frame, so it counts as "enabled" only when the
-        -- unit's source is the EUI frame.
+        -- The preview mocks the NoxUI frame, so it counts as "enabled" only when the
+        -- unit's source is the NoxUI frame.
         local unitKey2 = unitKey:match("^boss") and "boss" or unitKey
         local isEnabled = ns.GetUnitFrameSource(unitKey2) == "eui"
         if isEnabled then
@@ -2787,7 +2787,7 @@ function ns.UFO_BuildUnitPreview(parent, unitKey, side)
                 end
                 ppPreviewFS:SetText(ppTxt)
                 if s.powerPercentTextPowerColor then
-                    -- EUI global power color (player's current power) as the swatch
+                    -- NoxUI global power color (player's current power) as the swatch
                     -- and real frame use, not hardcoded blue.
                     local _, pToken = UnitPowerType("player")
                     local info = NoxUI.GetPowerColor(pToken or "MANA")

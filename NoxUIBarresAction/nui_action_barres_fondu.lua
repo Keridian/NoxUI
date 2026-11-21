@@ -530,7 +530,7 @@ function EAB:RefreshMouseover(onlyHoverGated)
             local frame = BarAlphaFrame(key, info)
             if frame then
                 if info.noManagedVisibility then
-                    -- Position-only Blizzard-owned eye (QueueStatus): EUI no longer
+                    -- Position-only Blizzard-owned eye (QueueStatus): NoxUI no longer
                     -- controls its visibility, so never fade or alpha-hide it --
                     -- force full opacity regardless of stale mouseover settings.
                     StopFade(frame, 1)

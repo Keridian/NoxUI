@@ -120,7 +120,7 @@ local function RegisterUFUnlockElements()
                     return 0
                 end,
                 -- Blizzard Style: stock frame sizes, so new width/height matches are refused
-                -- and unlock resizes never write frameWidth/healthHeight into the EUI-look settings.
+                -- and unlock resizes never write frameWidth/healthHeight into the NoxUI-look settings.
                 matchUnavailable = function()
                     if ns.UF_Blizz() then
                         return NoxUI.L("Size matching is unavailable with Blizzard Style Unit Frames.")
@@ -304,7 +304,7 @@ local function RegisterUFUnlockElements()
 
         -- Core unit frames. Only register a mover for units that actually use
         -- the NoxUI frame; a unit set to Blizzard-default or Hidden has no
-        -- EUI frame to move.
+        -- NoxUI frame to move.
         local function AddUFElement(u, order)
             if ns.GetUnitFrameSource(u) == "eui" then
                 elements[#elements + 1] = MakeUFElement(u, order)

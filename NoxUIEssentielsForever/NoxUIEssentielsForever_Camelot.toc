@@ -5,7 +5,7 @@
 ## Group: NoxUI
 ## Notes: Essential tools for WoW Forever.
 ## Author: Nox
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## Dependencies: NoxUI
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
 

@@ -84,7 +84,7 @@ local function BuildBarVisibilityLayout(parent, y, ctx)
     -- key is read at the click, so it highlights the bar the selector shows.
     NoxUI.BuildSectionUnlockJump(hdr, { key = SelectedKey })
 
-    -- A data bar under Blizzard's own data bars: the rows EUI cannot apply to it grey out.
+    -- A data bar under Blizzard's own data bars: the rows NoxUI cannot apply to it grey out.
     local _visBlizzDis
     local _VIS_BLIZZ_TIP = "This option does not work with Blizzard Bars. Please use Blizzard Edit Mode."
     if IsDataBar() then

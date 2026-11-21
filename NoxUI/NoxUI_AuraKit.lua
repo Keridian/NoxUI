@@ -1305,7 +1305,7 @@ function AK.MakeInitializer(styleKey, extra, rec)
         -- Engine aura buttons come CLICK-enabled. On nameplates a click-alive
         -- icon sits between the cursor and the plate's click region, eating
         -- target-switch clicks (measured in-game: the M+ "takes several
-        -- clicks to swap target" report was an EUI plate aura icon with
+        -- clicks to swap target" report was an NoxUI plate aura icon with
         -- clicks on). This is the ONLY reliable place to turn them off:
         -- post-creation writes on the button are denied in secret contexts
         -- (12.x DenyTaintedAccessWhenAurasAreSecret), which is combat --

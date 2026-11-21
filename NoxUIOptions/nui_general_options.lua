@@ -3,7 +3,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --  nui_general_options.lua -- Global Settings module (CVar-based settings
 --  shared by all NoxUI addons).
 --
---  Default-application policy: EUI preferred defaults apply ONLY while
+--  Default-application policy: NoxUI preferred defaults apply ONLY while
 --  C_CVar.GetCVarInfo shows the CVar still at Blizzard's default (untouched
 --  by player/other addon). Widgets always read the live CVar to stay in sync.
 -------------------------------------------------------------------------------
@@ -109,6 +109,53 @@ end
 --  deep-links via NavigateToElementSettings(module, page, section, preSelect, highlight).
 -------------------------------------------------------------------------------
 NoxUI._WHATSNEW_PATCHES = {
+    {
+        version = "0.2.5.0",
+        features = {
+            { module = "Noms et barres de vie", title = "Noms et barres de vie", desc = "Les amis, les amis Battle.net dont le personnage est identifiable et les anciens coéquipiers de la session peuvent avoir leur propre couleur. Groupe, raid et guilde restent prioritaires. Les états AFK et Ne pas déranger se mettent à jour sur les plaques alliées déjà visibles lorsque le client signale un changement." },
+            { module = "Plaques alliées en instance", title = "Plaques alliées en instance", desc = "L’option Noms seuls en instance applique ce mode en donjon, raid et champ de bataille. Le mode habituel revient à la sortie. La taille de la ligne de guilde se règle indépendamment du nom dans les deux modes d’affichage." },
+            { module = "Familiers et personnages non joueurs", title = "Familiers et personnages non joueurs", desc = "Une option affiche le nom complet du maître à côté du nom d’un familier du personnage, du groupe ou du raid lorsque le client identifie le lien. Les couleurs des personnages non joueurs peuvent distinguer les rares et les élites." },
+            { module = "Cadres de la cible et du focus", title = "Cadres de la cible et du focus", desc = "Le filtre des améliorations permet d’inclure ou d’exclure des effets précis, ou de limiter l’affichage à la liste d’inclusion. Une exclusion prime si un effet figure dans les deux listes. Le filtrage des affaiblissements reste indépendant." },
+            { module = "Cadres de groupe et de raid", title = "Cadres de groupe et de raid", desc = "La plage du réglage de hauteur supplémentaire descend jusqu’à moins 200 pour les familiers, les boss alliés et les cadres supplémentaires. L’interface applique la hauteur minimale prévue par chaque cadre." },
+            { module = "Lueurs de recharge", title = "Lueurs de recharge", desc = "Une lueur peut dépendre de la vie et de la ressource principale du personnage. Les conditions Au plus et Au moins incluent la valeur du seuil. Si les deux seuils sont configurés, ils doivent être satisfaits ensemble. Le style par défaut s’applique aux nouvelles lueurs. Les lueurs déjà réglées conservent leur style." },
+            { module = "Balayage de la prochaine attaque", title = "Balayage de la prochaine attaque", desc = "Les sorts concernés affichent le même cycle de main principale dans les barres d’action et le gestionnaire de recharges. Le balayage suit le changement de page, disparaît à l’arrêt de l’attaque et possède son propre affichage de progression. Les données d’action protégées sont ignorées." },
+            { module = "Double spécialisation", title = "Double spécialisation", desc = "Le nouveau bloc de la barre de plugins affiche l’arbre dominant et détaille les points au survol. Maj avec un clic gauche choisit la spécialisation principale, Maj avec un clic droit la secondaire, si elle est disponible et hors combat. La spécialisation secondaire peut aussi servir de condition dans les réglages d’interface." },
+            { module = "Tenues par activité", title = "Tenues par activité", desc = "Dans Services de Forever, l’onglet Tenues associe par personnage un ensemble d’équipement à chaque spécialisation. Une tenue spécifique à l’activité prime sur la tenue par défaut. Une spécialisation peut être choisie à l’arrivée. NoxUI attend sa confirmation avant d’équiper la tenue et reporte l’opération en combat ou pendant la mort du personnage. Les pièces manquantes donnent lieu à un message. Le bouton Appliquer à mon activité actuelle rejoue la règle en cours." },
+            { module = "Rappels de talents", title = "Rappels de talents", desc = "L’onglet Talents permet de choisir des talents par nom et par branche, pour le donjon, le raid, le champ de bataille ou l’arène. À l’arrivée, le rappel attend l’issue du changement automatique de spécialisation et liste les talents dont l’absence est confirmée. Les rappels existants figurent dans leur propre section." },
+            { module = "Partage des rappels de talents", title = "Partage des rappels de talents", desc = "Une liste peut être exportée et importée sur un personnage de la même classe. L’import ajoute les rappels à l’activité concernée sans les doubler. Un code invalide laisse les réglages existants intacts. La recherche des réglages retrouve les tenues, les spécialisations et les rappels." },
+            { module = "Inventaire et réactifs", title = "Inventaire et réactifs", desc = "Les objets du sac de réactifs peuvent porter un repère au choix en grille, en liste et dans le sac détaché. Une option permet de classer ce contenu avec les autres objets de l’inventaire du personnage connecté. Les sacs de métier de Forever conservent leur traitement." },
+            { module = "Objets récents", title = "Objets récents", desc = "Le mode Quantité ramassée regroupe les objets identiques et affiche la quantité cumulée pendant la session. La valeur est disponible en grille, en vue compacte et dans la colonne Quantité de la liste. Les piles réelles restent accessibles à leur emplacement habituel." },
+            { module = "Minicarte et trajets", title = "Minicarte et trajets", desc = "Le menu des boutons de minicarte peut afficher le nom des extensions à côté de leurs icônes. Si l’espace vertical manque, la liste passe sur plusieurs colonnes. La grille reste le mode par défaut. Sur la carte des vols, le survol d’une destination accessible affiche une estimation lorsque la distance est connue." },
+            { module = "Campement et repos", title = "Campement et repos", desc = "Pendant le sommeil dans le sac de couchage, une option affiche les charges de repos et le temps estimé pour atteindre la troisième charge. L’estimation se recale quand une charge est gagnée et s’arrête à trois charges. L’indicateur de repos du cadre joueur peut aussi être ancré au portrait et reprend son emplacement habituel si le portrait est masqué." },
+            { module = "Canaux et messages", title = "Canaux et messages", desc = "La police native du chat du jeu peut être choisie dans NoxUI. La couleur de classe des expéditeurs et celle des noms cités dans les messages se règlent séparément." },
+            { module = "Dialogues de quête", title = "Dialogues de quête", desc = "Quand les raccourcis de dialogue sont actifs, les touches numériques peuvent choisir une récompense visible hors combat. La validation de la quête reste une action séparée." },
+            { module = "Profils et placements", title = "Profils et placements", desc = "Les exports qui incluent le placement enregistrent la résolution et l’échelle. À l’import, NoxUI peut signaler qu’un placement provient d’un affichage différent. Les anciens exports restent lisibles." },
+            { module = "Rappels d’auras", title = "Rappels d’auras", desc = "Le rappel d’encensoir en donjon reconnaît l’attracteur élémentaire de la Horde. Le chasseur peut activer un rappel visuel du pistage adapté à sa cible hostile si le pistage est accessible et inactif." },
+        },
+    },
+    {
+        version = "0.2.3.9",
+        features = {
+            { module = "Noms et barres de vie", title = "Couleurs des alliés", desc = "Deux réglages permettent de colorer le nom des membres de votre groupe ou raid et de votre guilde. Les repères restent réglables séparément." },
+            { module = "Minicarte", title = "Boutons des extensions", desc = "Les boutons enregistrés par LibDBIcon restent disponibles si leur nom se termine par un chiffre." },
+            { module = "Cadres du joueur et de la cible", title = "Ajout de texte", desc = "Le bouton indique si toutes les positions sont occupées ou si tous les textes disponibles sont déjà affichés." },
+        },
+    },
+    {
+        version = "0.2.3.8",
+        features = {
+            { module = "Carte du monde", title = "OpenMap par défaut", desc = "La touche M ouvre OpenMap même si Forever Maps avait enregistré cette touche pour sa carte. Les raccourcis enregistrés restent disponibles pour la restauration." },
+            { module = "Carte du monde", title = "Accès à Forever Maps", desc = "Ouvrez Forever Maps depuis OpenMap et retrouvez la carte principale en fermant la carte des itinéraires." },
+        },
+    },
+    {
+        version = "0.2.3.7",
+        features = {
+            { module = "Carte du monde", title = "Réouverture de la carte", desc = "La dernière vue valide reste disponible si la carte se ferme pendant une transition. En instance, elle sert de repli lorsque la position du personnage est indisponible." },
+            { module = "Carte du monde", title = "Raccourci de carte", desc = "Le raccourci de la carte est resynchronisé lors du chargement des modules cartographiques." },
+            { module = "Interface", title = "Identité NoxUI", desc = "Les libellés des menus, les traductions et la documentation des extensions utilisent le nom NoxUI." },
+        },
+    },
     {
         version = "0.2.3.6",
         features = {
@@ -267,7 +314,7 @@ initFrame:SetScript("OnEvent", function(self)
 
     -- Graphics and sound settings (Optimize My FPS and Graphics, its Restore and
     -- Increase Game Image Quality) are written as they are, not through
-    -- NoxUI.SetCVar: Optimize keeps its own Restore, and Uninstall EUI
+    -- NoxUI.SetCVar: Optimize keeps its own Restore, and Uninstall NoxUI
     -- never touches them.
     local function SetGfxCVar(cvar, value)
         if InCombatLockdown() then return end
@@ -287,7 +334,7 @@ initFrame:SetScript("OnEvent", function(self)
     end
 
     ---------------------------------------------------------------------------
-    --  EUI preferred defaults -- only applied when CVar == Blizzard default
+    --  NoxUI preferred defaults -- only applied when CVar == Blizzard default
     --
     --  { cvarName, euiPreferred }
     ---------------------------------------------------------------------------
@@ -388,8 +435,8 @@ initFrame:SetScript("OnEvent", function(self)
 
     local function BuildGraphicsActions(parent, y)
         -------------------------------------------------------------------
-        --  TOP SECTION: one row, Reset EUI Module Settings | Optimize My FPS
-        --  and Graphics | Uninstall EUI. While a graphics backup exists the
+        --  TOP SECTION: one row, Reset NoxUI Module Settings | Optimize My FPS
+        --  and Graphics | Uninstall NoxUI. While a graphics backup exists the
         --  Optimize card restores it instead.
         -------------------------------------------------------------------
         local MEDIA_ICONS = "Interface\\AddOns\\NoxUI\\media\\icons\\"
@@ -398,7 +445,7 @@ initFrame:SetScript("OnEvent", function(self)
         local WARN = { r = 0.9, g = 0.3, b = 0.3 }
         local GO = { r = 184 / 255, g = 195 / 255, b = 204 / 255 }
 
-        -- Reset ALL's wipe: every EUI addon back to its defaults.
+        -- Reset ALL's wipe: every NoxUI addon back to its defaults.
         local function ResetAllNow()
             -- Nuclear wipe: same logic as the beta-exit popup
             local svNames = {
@@ -454,8 +501,8 @@ initFrame:SetScript("OnEvent", function(self)
                     savedQoL[k] = NoxUIDB[k]
                 end
             end
-            -- Game settings, not EUI ones: the record of the settings from
-            -- before EUI (Uninstall EUI) and Optimize Graphics' Restore values.
+            -- Game settings, not NoxUI ones: the record of the settings from
+            -- before NoxUI (Uninstall NoxUI) and Optimize Graphics' Restore values.
             local oldRestore = NoxUIDB.restoreOnUninstall
             local oldGfx = NoxUIDB.gfxBackup
             _G["NoxUIDB"] = {}
@@ -481,19 +528,19 @@ initFrame:SetScript("OnEvent", function(self)
             NoxUI:ShowConfirmPopup({
                 title         = "Reset ALL Settings",
                 -- The wipe replaces the whole account store, profiles included.
-                message       = "Are you sure you want to reset ALL EUI addon settings to their defaults? This deletes ALL of your profiles, not just the current one, and reloads your UI.",
+                message       = "Are you sure you want to reset ALL NoxUI addon settings to their defaults? This deletes ALL of your profiles, not just the current one, and reloads your UI.",
                 disclaimer    = "Every profile on this account is deleted. Export any profile you want to keep first.",
                 typeToConfirm = "Confirm",
                 confirmText   = "Reset All & Reload",
                 cancelText    = "Cancel",
                 onConfirm     = function()
                     NoxUI.RequestReload(NoxUI.L("Reset ALL Settings"),
-                        NoxUI.L("Reload to finish resetting EUI."), ResetAllNow)
+                        NoxUI.L("Reload to finish resetting NoxUI."), ResetAllNow)
                 end,
             })
         end
 
-        -- Uninstall EUI is refused in combat (it reloads) and while Edit Mode is open (it
+        -- Uninstall NoxUI is refused in combat (it reloads) and while Edit Mode is open (it
         -- saves its own copy of the layouts on exit, over the ones put back). True when
         -- it was refused.
         local function UninstallRefused()
@@ -505,7 +552,7 @@ initFrame:SetScript("OnEvent", function(self)
             end
             if not msg then return false end
             NoxUI:ShowConfirmPopup({
-                title       = NoxUI.L("Uninstall EUI"),
+                title       = NoxUI.L("Uninstall NoxUI"),
                 message     = msg,
                 confirmText = NoxUI.L("OK"),
                 hideCancel  = true,
@@ -513,29 +560,29 @@ initFrame:SetScript("OnEvent", function(self)
             return true
         end
 
-        -- Uninstall EUI: puts back the game settings NoxUI changed, turns it off for
+        -- Uninstall NoxUI: puts back the game settings NoxUI changed, turns it off for
         -- every character and reloads (NoxUI_Uninstall.lua). Profiles are kept. The
         -- reload is a RequestReload from onConfirm, not reload = true: the refusal is
         -- checked again there, and reload = true would reload even when it is refused.
         local function ConfirmUninstall()
             if UninstallRefused() then return end
-            local message = NoxUI.L("Puts back the game settings EUI changed, such as nameplate, action bar, chat and tooltip options, and turns EUI off for every character, then reloads the UI.") .. "\n\n"
-                .. NoxUI.L("Your profiles are kept, so you can turn EUI back on later in the AddOns list.")
+            local message = NoxUI.L("Puts back the game settings NoxUI changed, such as nameplate, action bar, chat and tooltip options, and turns NoxUI off for every character, then reloads the UI.") .. "\n\n"
+                .. NoxUI.L("Your profiles are kept, so you can turn NoxUI back on later in the AddOns list.")
             if NoxUIDB and NoxUIDB.gfxBackup then
                 message = message .. "\n\n" .. NoxUI.L("Graphics changed by Optimize My FPS and Graphics stay as they are. To undo them, click Restore My Graphics Settings first.")
             end
             NoxUI:ShowConfirmPopup({
-                title         = NoxUI.L("Uninstall EUI"),
+                title         = NoxUI.L("Uninstall NoxUI"),
                 message       = message,
                 disclaimer    = (not NoxUI.UninstallKnowsOriginals())
-                    and NoxUI.L("EUI was installed before it kept a record of your original settings, so the settings it still manages go back to the game's defaults.")
+                    and NoxUI.L("NoxUI was installed before it kept a record of your original settings, so the settings it still manages go back to the game's defaults.")
                     or nil,
                 confirmText   = NoxUI.L("Uninstall & Reload"),
                 cancelText    = NoxUI.L("Cancel"),
                 onConfirm     = function()
                     if UninstallRefused() then return end
-                    NoxUI.RequestReload(NoxUI.L("Uninstall EUI"),
-                        NoxUI.L("Reload to finish uninstalling EUI."), NoxUI.Uninstall)
+                    NoxUI.RequestReload(NoxUI.L("Uninstall NoxUI"),
+                        NoxUI.L("Reload to finish uninstalling NoxUI."), NoxUI.Uninstall)
                 end,
             })
         end
@@ -614,7 +661,7 @@ initFrame:SetScript("OnEvent", function(self)
         local actionSpecs = {
             -- A menu of ALL Settings and each module's own reset (NoxUI_Panel.lua).
             { icon = MEDIA_ICONS .. "sync.png", accent = WARN,
-              title = NoxUI.L("Reset EUI Module Settings"),
+              title = NoxUI.L("Reset NoxUI Module Settings"),
               desc = NoxUI.L("Pick a module, or ALL, to return to defaults."),
               onClick = function(card) NoxUI._ShowModuleResetMenu(card, ConfirmResetAll) end },
             { icon = gfxIcon, title = gfxTitle, desc = gfxDesc,
@@ -627,7 +674,7 @@ initFrame:SetScript("OnEvent", function(self)
               end },
             -- power.png's glyph fills its whole canvas: drawn smaller, it matches sync.png.
             { icon = MEDIA_ICONS .. "power.png", accent = WARN, iconSize = 22,
-              title = NoxUI.L("Uninstall EUI"), desc = NoxUI.L("Revert EUI's changes and disable."),
+              title = NoxUI.L("Uninstall NoxUI"), desc = NoxUI.L("Revert NoxUI's changes and disable."),
               onClick = ConfirmUninstall },
         }
         local gfxCard
@@ -676,7 +723,7 @@ initFrame:SetScript("OnEvent", function(self)
             themeValues[name] = name
         end
 
-        -- Row 1: UI Accent Color | EUI Options Theme
+        -- Row 1: UI Accent Color | NoxUI Options Theme
         local themeRow
         themeRow, h = W:DualRow(parent, y,
             { type="multiSwatch", text="UI Accent Color",
@@ -722,7 +769,7 @@ initFrame:SetScript("OnEvent", function(self)
                       return (select(1, NoxUI.GetActiveAccentState())) and 0.3 or 1
                   end },
               } },
-            { type="dropdown", text="EUI Options Theme",
+            { type="dropdown", text="NoxUI Options Theme",
               values=themeValues,
               order=NoxUI.THEME_ORDER,
               getValue=function()
@@ -739,7 +786,7 @@ initFrame:SetScript("OnEvent", function(self)
               end }
         );  y = y - h
 
-        -- Inline color swatch on EUI Options Theme (right region)
+        -- Inline color swatch on NoxUI Options Theme (right region)
         if not NoxUI._prebuilding then
             local rightRgn = themeRow._rightRegion
             local function isCustomColorOff()
@@ -781,7 +828,7 @@ initFrame:SetScript("OnEvent", function(self)
             end)
         end
 
-        -- EUI Options Language (Row 2's right slot): options-panel display language (auto-detects the client; untranslated text falls back to English).
+        -- NoxUI Options Language (Row 2's right slot): options-panel display language (auto-detects the client; untranslated text falls back to English).
         local langCfg
         do
             -- _noLoc: the language list itself is never translated, so a player who booted the wrong language can always read and change it.
@@ -832,7 +879,7 @@ initFrame:SetScript("OnEvent", function(self)
                 return "Needs the game client set to English or to this language."
             end
 
-            langCfg = { type="dropdown", text="EUI Options Language",
+            langCfg = { type="dropdown", text="NoxUI Options Language",
                 tooltip="The display language for the NoxUI options panel. Auto follows your game client. Untranslated text falls back to English.",
                 values=langValues, order=langOrder, disabledValues=LanguageUnavailable,
                 getValue=function() return (NoxUIDB and NoxUIDB.displayLocale) or "auto" end,
@@ -843,7 +890,7 @@ initFrame:SetScript("OnEvent", function(self)
                 end }
         end
 
-        -- Row 2: UI Scale | EUI Options Language
+        -- Row 2: UI Scale | NoxUI Options Language
         _, h = W:DualRow(parent, y,
             { type="slider", text="UI Scale",
               min=0.40, max=1.00, step=0.01,
@@ -891,19 +938,19 @@ initFrame:SetScript("OnEvent", function(self)
             langCfg
         );  y = y - h
 
-        -- Row 3: EUI Buttons (merged button toggles) | Disable Sync Icons (+ cog)
-        -- "EUI Buttons" merges the Pause Menu, Unlock Mode Menu and Minimap
+        -- Row 3: NoxUI Buttons (merged button toggles) | Disable Sync Icons (+ cog)
+        -- "NoxUI Buttons" merges the Pause Menu, Unlock Mode Menu and Minimap
         -- toggles into one checkbox-dropdown over the SAME backend variables: front-end grouping only, settings/defaults unchanged.
         local euiBtnItems = {
             { key = "pause",   label = "Hide Pause Menu Button",
               tooltip = "Hides the NoxUI button from the game's Escape/pause menu." },
             { key = "unlock",  label = "Hide Unlock Mode Menu Button",
-              tooltip = "Hides the Unlock Mode button from the game's Escape/pause menu. You can still toggle Unlock Mode from the EUI options panel." },
+              tooltip = "Hides the Unlock Mode button from the game's Escape/pause menu. You can still toggle Unlock Mode from the NoxUI options panel." },
             { key = "minimap", label = "Show Minimap Button" },
         }
         local euiBtnRow
         euiBtnRow, h = W:DualRow(parent, y,
-            { type="dropdown", text="EUI Buttons",
+            { type="dropdown", text="NoxUI Buttons",
               tooltip="Toggle NoxUI's optional buttons: the Escape menu buttons and the minimap button.",
               values={ ["_placeholder"]="..." }, order={ "_placeholder" },
               getValue=function() return "_placeholder" end,
@@ -919,7 +966,7 @@ initFrame:SetScript("OnEvent", function(self)
                   if NoxUI._refreshAllSyncIcons then NoxUI._refreshAllSyncIcons() end
               end }
         );  y = y - h
-        -- EUI Buttons checkbox-dropdown (left region)
+        -- NoxUI Buttons checkbox-dropdown (left region)
         if not NoxUI._prebuilding then
             local rgn = euiBtnRow._leftRegion
             if rgn._control then rgn._control:Hide() end
@@ -1451,10 +1498,10 @@ initFrame:SetScript("OnEvent", function(self)
                 end)
             end
         end,
-        -- Reset EUI Module Settings: these settings sit on the account.
+        -- Reset NoxUI Module Settings: these settings sit on the account.
         resetScope  = "account",
         onReset     = function()
-            -- Reset CVars to EUI preferred defaults (ignoring current state)
+            -- Reset CVars to NoxUI preferred defaults (ignoring current state)
             for _, entry in ipairs(EUI_DEFAULTS) do
                 SetCVarSafe(entry[1], entry[2])
             end

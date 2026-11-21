@@ -853,7 +853,7 @@ initFrame:SetScript("OnEvent", function(self)
 
         -- Show Health Strip | Background
         -- Background, the unified tooltip background: controls BOTH the Blizzard
-        -- tooltip reskin and the EUI custom tooltips (read live via
+        -- tooltip reskin and the NoxUI custom tooltips (read live via
         -- NoxUI.GetTooltipBg). Defaults to the RESKIN palette (#111111 @ 92%);
         -- the next tooltip shown picks up changes, so no reload is needed. One
         -- setting, like Global Settings > Colors' Dark Mode Background: the opacity
@@ -3244,7 +3244,7 @@ initFrame:SetScript("OnEvent", function(self)
             key   = "stable",
             title = "Pet Stable",
             desc  = "The hunter pet stable: pet model, XP bar, pet slots and the slot purchase row.",
-            reloadMsg = "Changing the Pet Stable reskin requires a UI reload to fully swap between Blizzard and Ellesmere styles.",
+            reloadMsg = "Changing the Pet Stable reskin requires a UI reload to fully swap between Blizzard and NoxUI styles.",
             setEnabled = function(v)
                 if not NoxUIDB then NoxUIDB = {} end
                 NoxUIDB.reskinStable = v
@@ -3774,7 +3774,7 @@ initFrame:SetScript("OnEvent", function(self)
         eyebrow:SetFont(FONT, 13, "")
         eyebrow:SetTextColor(EG.r, EG.g, EG.b, 0.9)
         PP.Point(eyebrow, "TOP", host, "TOP", 0, -122)
-        eyebrow:SetText(L("EUI FEATURE"))
+        eyebrow:SetText(L("NoxUI FEATURE"))
 
         local title = host:CreateFontString(nil, "OVERLAY")
         title:SetFont(FONT, 25, "")
@@ -3792,7 +3792,7 @@ initFrame:SetScript("OnEvent", function(self)
         desc:SetText(L("Blizzard's windows match the NoxUI theme with a WoW 2.0 Dark Theme, from the Dungeon Journal to the Auction House and beyond."))
 
         local BULLETS = {
-            "Every major Blizzard window themed to match EUI",
+            "Every major Blizzard window themed to match NoxUI",
             "Recolor the theme to any color and opacity you like",
             "Scale any window larger or smaller with Shifter",
         }
@@ -3835,7 +3835,7 @@ initFrame:SetScript("OnEvent", function(self)
     end
 
     ---------------------------------------------------------------------------
-    --  THIRD-PARTY ADDONS section: addons that registered for EUI skinning
+    --  THIRD-PARTY ADDONS section: addons that registered for NoxUI skinning
     --  via NoxUI.RegisterSkin (SkinAPI). Deliberately independent of
     --  the per-profile kill switch and of every per-window setting -- window
     --  styles only decide WHICH theme third-party skins get -- so it renders
@@ -4299,7 +4299,7 @@ initFrame:SetScript("OnEvent", function(self)
                       get = function() return CBVal("fontSize") end,
                       set = function(v) CBSetStyle("fontSize", v) end },
                     { type = "dropdown", label = "Outline",
-                      values = { __global = "EUI Global Outline", none = "Drop Shadow",
+                      values = { __global = "NoxUI Global Outline", none = "Drop Shadow",
                                  outline = "Outline", thick = "Thick Outline" },
                       order = { "__global", "none", "outline", "thick" },
                       get = function() return CBVal("outline") end,

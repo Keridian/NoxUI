@@ -1700,7 +1700,7 @@ local function BuildStyle(unit, base, s, unitFrame)
     end
 
     -- Blizzard Style: buffs borderless like the stock frames, debuffs on the
-    -- engine-stamped stock dispel border (AuraKit blizzBorder); no EUI ring.
+    -- engine-stamped stock dispel border (AuraKit blizzBorder); no NoxUI ring.
     local blizz = ns.UF_Blizz and ns.UF_Blizz() or false
     local border, dispel, blizzBorder, dispelTex, dcMap, dcFP
     if blizz then

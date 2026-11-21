@@ -1371,7 +1371,7 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
             end
         end
     elseif view then
-        -- Virtual view (EUI_CategoryManager:RegisterVirtualView): EUI's Pinned Items and
+        -- Virtual view (EUI_CategoryManager:RegisterVirtualView): NoxUI's Pinned Items and
         -- Recent Items sections first when the view keeps them, then the view's groups in
         -- its order, "Other" after them, and our own Junk section last (junk is never
         -- offered to the provider). As in All Items, Pinned and Recent repeat their items:
@@ -1395,7 +1395,7 @@ function ns.RenderGridView(tempItems, displayItems, emptySlots, child, columns, 
             end
         end
         local headerIdx = 0
-        -- One section. kind: "pinned" / "recent" (EUI's own: its hint, Hide link, the pin
+        -- One section. kind: "pinned" / "recent" (NoxUI's own: its hint, Hide link, the pin
         -- "+" cell and the Clear link, as in All Items) or nil (a group).
         local function RenderViewSection(label, sItems, kind, hint)
             if #sItems > 0 then

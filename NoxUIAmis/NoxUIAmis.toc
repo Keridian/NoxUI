@@ -5,7 +5,7 @@
 ## Group: NoxUI
 ## Notes: A modern friends list with built-in organization tools.
 ## Author: Nox
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIFriendsDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

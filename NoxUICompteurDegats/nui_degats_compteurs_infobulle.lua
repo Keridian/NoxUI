@@ -100,7 +100,7 @@ local function EnsureTooltipFrame()
     _ttFrame._bg:SetAllPoints()
     _ttFrame._bg:SetColorTexture(0, 0, 0, 0.95)
     -- WoW Forever: the bronze line round the outside (the rows run flush)
-    -- in place of the EUI border.
+    -- in place of the NoxUI border.
     if not ns.DMFvFrameArt(_ttFrame, true) then
         if EUI.MakeBorder then _ttFrame._legacyBorder = EUI.MakeBorder(_ttFrame, 0, 0, 0, 1) end
         ApplyInheritedBlizzardBorder(_ttFrame, "tooltip")

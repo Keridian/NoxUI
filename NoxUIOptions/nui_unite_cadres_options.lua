@@ -1816,7 +1816,7 @@ initFrame:SetScript("OnEvent", function(self)
     -- Blizzard Style preview: the stock geometry the live layout pass uses
     -- (module table), resolved for this unit + Portrait Side exactly as
     -- ns.UF_BlizzResolve does it for the live frame. nil while the style is
-    -- not active this session, and the preview then mocks the EUI look.
+    -- not active this session, and the preview then mocks the NoxUI look.
     local function ResolveBlizzPreview(unitKey, s)
         local BS = NoxUI.BlizzStyle
         if not (BS and BS.Get and BS.Get("unitframes")) then return nil end
@@ -2012,7 +2012,7 @@ initFrame:SetScript("OnEvent", function(self)
         return y - 54
     end
 
-    -- A unit whose source was Blizzard/Hidden at login has no spawned EUI frame this
+    -- A unit whose source was Blizzard/Hidden at login has no spawned NoxUI frame this
     -- session (and Blizzard's frame can't be torn down live), so a visibility/enable
     -- change can't apply live -- prompt for a /reload. unitKeys: "boss" checks boss1.
     local function PromptReloadIfUnspawned(unitKeys)
@@ -2353,7 +2353,7 @@ initFrame:SetScript("OnEvent", function(self)
         -- The sections live in UnitFrames_Options\Shared*_Options.lua and read
         -- this page's accessors through ctx. Each returns the new y plus the rows
         -- the click mapping below points at; Display returns true second when
-        -- the unit has no EUI frame (only the inactive notice is built).
+        -- the unit has no NoxUI frame (only the inactive notice is built).
         local ctx = {
             W = W, SGet = SGet, SSet = SSet, SDB = SDB, SVal = SVal,
             SSetSupported = SSetSupported, SGetSupported = SGetSupported, SValSupported = SValSupported,
@@ -3152,7 +3152,7 @@ initFrame:SetScript("OnEvent", function(self)
         end,
         onReset     = function()
             db:ResetProfile()
-            -- No reload here: Reset EUI Module Settings reloads after this returns.
+            -- No reload here: Reset NoxUI Module Settings reloads after this returns.
         end,
         -- Tears down Boss Preview on module switch (RegisterOnHide above
         -- only covers closing the whole options window).

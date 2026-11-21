@@ -214,7 +214,7 @@ local function ApplyMinimap()
     for _, name in ipairs(minimapDecorations) do
         local frame = _G[name]
         -- Blizzard Style keeps the stock compass ring (placed once the map has
-        -- its size); Classic WoW UI draws its own ring and hides it like EUI.
+        -- its size); Classic WoW UI draws its own ring and hides it like NoxUI.
         if frame and not (blizz and not EBS._MinimapClassic() and name == "MinimapCompassTexture") then frame:Hide() end
     end
     -- WoW Forever's Rotate Minimap shows a fixed ring under the compass, and
@@ -227,7 +227,7 @@ local function ApplyMinimap()
     -- The addon compartment is placed (or parked) by EBS._ApplyAddonCompartment
     -- at the end of this pass, once the map has its final size and position.
 
-    -- The stock map is round and Forever Square square; the stored shape waits for the EUI look.
+    -- The stock map is round and Forever Square square; the stored shape waits for the NoxUI look.
     local shape = EBS._MapShape(p)
     local isCircle = (shape == "circle" or shape == "textured_circle")
     local isRectangular = (shape == "rectangular")
@@ -292,7 +292,7 @@ local function ApplyMinimap()
 
     if blizz then
         -- Stock styles: the stock chrome (compass ring + top bar, or the vanilla
-        -- ring + banner) instead of any EUI border.
+        -- ring + banner) instead of any NoxUI border.
         if EBS._MinimapClassic() then
             EBS._ApplyClassicMinimapChrome(minimap, mapSize)
         else
@@ -311,7 +311,7 @@ local function ApplyMinimap()
     elseif EBS._fvSquare then
         -- A square frame on the Forever client (the WoW Forever look's heavy
         -- bronze frame, or Blizzard Style's slim line) in place of the
-        -- NoxUI border (latched for the session, so no EUI border is
+        -- NoxUI border (latched for the session, so no NoxUI border is
         -- ever built beside it).
         EBS._ApplyForeverSquare(minimap)
     elseif not isCircle then
@@ -387,7 +387,7 @@ local function ApplyMinimap()
     end
 
     -- Live-update border on accent change, only while the border actually resolves to the accent (accent swatch active, no class colour override).
-    -- Neither square frame on the Forever client draws an EUI border to recolour.
+    -- Neither square frame on the Forever client draws an NoxUI border to recolour.
     if p.useClassColor and not p.borderUseClassColor and not EBS._fvSquare then
         if not GetFFD(minimap).accentBorderCB then
             GetFFD(minimap).accentBorderCB = function(ar, ag, ab)

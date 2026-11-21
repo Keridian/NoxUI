@@ -155,7 +155,7 @@ local function GetAddonBtnSize()
     return mp and mp.addonBtnSize or FLYOUT_BTN_SIZE
 end
 
--- EUI-look black box behind an addon button, on the button row and in the flyout grid alike.
+-- NoxUI-look black box behind an addon button, on the button row and in the flyout grid alike.
 -- A child frame of the button, so it is re-pinned just below the button on every layout:
 -- the flyout's child loop lifts every child above the button, which would bury the icon.
 -- EBS field, not local.
@@ -247,7 +247,7 @@ local function LayoutFlyoutButtons()
     end
 
     local btnSize = GetAddonBtnSize()
-    -- EUI look: each cell gets the flat black box the ungrouped row buttons wear, so a
+    -- NoxUI look: each cell gets the flat black box the ungrouped row buttons wear, so a
     -- button looks the same in the grid and on the row. Stock styles (and Button
     -- Backgrounds off) keep the stock-map ring around each icon.
     local mp = EBS.db and EBS.db.profile.minimap

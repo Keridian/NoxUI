@@ -546,7 +546,7 @@ function ns.RF_SyncPetCompact()
 end
 
 -------------------------------------------------------------------------------
---  A new pixel grid (UI_SCALE_CHANGED, DISPLAY_SIZE_CHANGED and EUI's own UI
+--  A new pixel grid (UI_SCALE_CHANGED, DISPLAY_SIZE_CHANGED and NoxUI's own UI
 --  Scale, all through ns.RFC_PixelGridChanged): a live mode whose one pixel
 --  moved re-lays its frames, at once out of combat and when combat ends in it,
 --  and an attached boss group takes the new pitch (ns.FB_Repitch).

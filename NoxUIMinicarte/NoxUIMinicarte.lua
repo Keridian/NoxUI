@@ -29,7 +29,7 @@ local defaults = {
         minimap = {
             enabled       = true,
             -- Blizzard Style (Global Settings > Style): the stock compass ring,
-            -- top border bar and element placement on our map with every EUI
+            -- top border bar and element placement on our map with every NoxUI
             -- feature intact. Default OFF; reload-gated.
             useBlizzardStyle = false,
             -- Classic WoW UI (Global Settings > Style): the vanilla ring, zone

@@ -133,7 +133,7 @@ ns.ApplyWindowBorder = function()
     ns.DMInvalidateAppearance()
     local cfg = DB()
     -- Stock-style windows carry their own frame art (the stock panel, the
-    -- classic tooltip edge), no EUI border.
+    -- classic tooltip edge), no NoxUI border.
     local size = ns.DMBlizz() and 0 or (tonumber(cfg.windowBorderSize) or 0)
     local texture = cfg.windowBorderTexture or "solid"
     -- Exact size (nil = the legacy step path); a stock style forces size 0, no px.

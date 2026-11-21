@@ -13882,7 +13882,7 @@ end
 -- Square the icons of a ScrollBox's currently-materialised rows.
 --
 -- NO border is added and Blizzard's is stripped: passing a parent to SquareIcon
--- draws an EUI border, and .IconBorder is a rounded quality ring. Between them
+-- draws an NoxUI border, and .IconBorder is a rounded quality ring. Between them
 -- that is two borders on something that was asked to be a square icon.
 --
 -- ForEachFrame is the ScrollBox's own API for "the rows that exist right now".
@@ -14012,8 +14012,8 @@ function HP.ApplyDelvePicker()
         -- HP.Shell, no region fade and no font pass here: Blizzard's
         -- background, title, scenario label, description, scenic art, reward
         -- text and challenge grid all stay exactly as shipped.
-        --   1. ornate dialog border -> EUI's window border
-        --   2. close button        -> EUI's X
+        --   1. ornate dialog border -> NoxUI's window border
+        --   2. close button        -> NoxUI's X
         --   3. tier dropdown + Enter button
         --   4. "Chance to receive" icons squared
         -- Resist re-adding anything else here; the restraint IS the request.
@@ -14085,7 +14085,7 @@ WSkin.RegisterWindow({
 -- RegisterForWidgetSet on it. They can NEVER be skinned in place -- that is the
 -- secret-value rule, and it is why HP.IsWidget already refuses to descend into
 -- them. Instead they are handed to the HUD cover system, which draws an
--- EUI-owned bar anchored over Blizzard's without writing to it.
+-- NoxUI-owned bar anchored over Blizzard's without writing to it.
 --
 -- Handed over rather than discovered: the cover system's own sweep only walks
 -- UIParent's direct children, and these containers are two levels inside a
@@ -14413,7 +14413,7 @@ WSkin.RegisterWindow({
 -- THE CURRENCY ROW: STRIP BLIZZARD'S SURROUND, ADD NOTHING.
 --
 -- Two different things got conflated when this was "stripped" the first time:
---   - DRAWING an EUI box on the row -- that was the reskin attempt, it is gone
+--   - DRAWING an NoxUI box on the row -- that was the reskin attempt, it is gone
 --     and stays gone;
 --   - FADING Blizzard's own surround (the money insets and the gold-edged
 --     recipient box) -- that is just stray chrome removal, and pulling it out
@@ -14799,7 +14799,7 @@ end
 -- globals at all, which is what most of those rounds were chasing.
 --
 -- The inset behind the row was the one reachable object, and boxing it just put
--- an EUI border around three Blizzard boxes -- rejected on sight. It still gets
+-- an NoxUI border around three Blizzard boxes -- rejected on sight. It still gets
 -- its art faded via HP.TRADE_INSETS like every other inset, and that is all.
 --
 -- Do not try again unless /euitrade starts reporting something reachable.

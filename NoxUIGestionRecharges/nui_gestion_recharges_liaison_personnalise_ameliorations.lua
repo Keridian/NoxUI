@@ -173,7 +173,7 @@ function _AC.BuildStyle(bd, fixedIcon)
     local SZ = _AC.SnapPx(rawSZ)
     local zoom = (bd and bd.iconZoom) or 0.08
     local shape = (bd and bd.iconShape) or "none"
-    -- Stock styles: full art, the style's ring instead of a border, no EUI
+    -- Stock styles: full art, the style's ring instead of a border, no NoxUI
     -- shape (see the blizz block in _AC.ApplyExtra); Blizzard Style rounds
     -- the art with the viewer mask, Classic WoW UI keeps it square.
     local blizz = ns.CdmBlizzIcons()
@@ -385,7 +385,7 @@ function _AC.ApplyExtra(button, d, style)
         fixed:SetShown(artOn)
     end
     if d.cdmBg then
-        -- Blizzard Style has no EUI background (hidden once below, never
+        -- Blizzard Style has no NoxUI background (hidden once below, never
         -- shown here first).
         if c.onlyNumbers or c.blizz then
             d.cdmBg:Hide()
@@ -472,7 +472,7 @@ function _AC.ApplyExtra(button, d, style)
     end
 
     -- Stock styles: ring overlay sized to the button (the same geometry as
-    -- the bar's own icons) and no EUI background; Blizzard Style also seats
+    -- the bar's own icons) and no NoxUI background; Blizzard Style also seats
     -- the rounded viewer mask on the art and the viewer's rounded swipe
     -- (Classic WoW UI keeps the square art and swipe). Anchored to
     -- d.borderHost like the shape geometry above (button-relative points are

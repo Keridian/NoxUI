@@ -1607,7 +1607,7 @@ function ns.UFO_BuildPetOptions(W, parent, y)
     end
 
     -- WoW Forever: the pet has power (its POWER BAR section exists in the
-    -- EUI look only; the stock styles paint their own stock bar) and
+    -- NoxUI look only; the stock styles paint their own stock bar) and
     -- hunter pets track happiness (PET HAPPINESS, below the power bar).
     -- Retail builds neither.
     local petOpts, petPower, happyHeader, happyRow
@@ -1900,7 +1900,7 @@ function ns.UFO_BuildBossOptions(W, parent, y)
                 if not v and ns._bossPreviewActive and ns.SetBossPreview then
                     ns.SetBossPreview(false)
                 end
-                -- Live apply on the spawned EUI frames (unit-watch register/
+                -- Live apply on the spawned NoxUI frames (unit-watch register/
                 -- unregister). Frames never spawned this session no-op here
                 -- and hit the reload prompt below instead.
                 if ns.UF_SetBossFramesActive then ns.UF_SetBossFramesActive(v) end
@@ -1921,7 +1921,7 @@ function ns.UFO_BuildBossOptions(W, parent, y)
         AttachFrameSourceCog(portraitRow._leftRegion, "boss", {
             onBeforeSet = function(v)
                 -- Force-stop the in-game preview when boss frames are no longer
-                -- EUI-owned; it rides on the real boss frames and renders broken.
+                -- NoxUI-owned; it rides on the real boss frames and renders broken.
                 if v ~= "eui" and ns._bossPreviewActive and ns.SetBossPreview then
                     ns.SetBossPreview(false)
                 end

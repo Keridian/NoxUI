@@ -32,7 +32,7 @@ local SLOT_SIZE, SPACING = 34, 4
 local GetItemInfoInstant = C_Item.GetItemInfoInstant
 local IsEquippableItem = C_Item.IsEquippableItem
 
--- Red-tint usability test (shared with the bank module via EUI). Tooltip must come from
+-- Red-tint usability test (shared with the bank module via NoxUI). Tooltip must come from
 -- the real item, never GetItemByID: scaling gear's bonus IDs lower its required level, but
 -- GetItemByID shows the unscaled base item's level (reads red). Prefer bag slot > link > ID; cache by link, cleared on a level-up or a skill change.
 local _canUseCache = {}
@@ -95,7 +95,7 @@ local function BagsItemUnusable(bagID, slot, itemLink, itemID)
     _canUseCache[item] = unusable
     return unusable
 end
-NoxUI._BagsItemUnusable = BagsItemUnusable  -- local EUI alias is declared further down
+NoxUI._BagsItemUnusable = BagsItemUnusable  -- local NoxUI alias is declared further down
 do
     local f = CreateFrame("Frame")
     f:RegisterEvent("PLAYER_LEVEL_UP")
@@ -160,7 +160,7 @@ local EUI = NoxUI
 local _emptyP = {}
 local function BP() return (EUI._bagsDB and EUI._bagsDB.profile) or _emptyP end
 
--- Uninstall EUI: Sort to Bottom flips Blizzard's own sort direction, so the
+-- Uninstall NoxUI: Sort to Bottom flips Blizzard's own sort direction, so the
 -- player's is handed back, as turning the option off does.
 EUI.OnUninstall(function()
     local p = BP()
@@ -301,7 +301,7 @@ end
 ns.PinnedItems = PinnedItems
 
 -- Default bag-type view ("all"|"onebag"|"multibag"), falling back to legacy
--- bagDefaultOneBag bool (imports converted in ApplyProfileData before DeepMergeDefaults masks it); exposed on EUI so bank file matches.
+-- bagDefaultOneBag bool (imports converted in ApplyProfileData before DeepMergeDefaults masks it); exposed on NoxUI so bank file matches.
 local function GetDefaultBagType()
     local v = BP().bagDefaultBagType
     if v == "all" or v == "onebag" or v == "multibag" then return v end

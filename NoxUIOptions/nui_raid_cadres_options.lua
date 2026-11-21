@@ -1854,7 +1854,7 @@ initFrame:SetScript("OnEvent", function(self)
             -- Clearing the first-install flag re-captures position on reload.
             if db.sv then db.sv._capturedOnce_RF = nil end
             db:ResetProfile()
-            -- No reload here: Reset EUI Module Settings reloads after this returns.
+            -- No reload here: Reset NoxUI Module Settings reloads after this returns.
         end,
         -- Tears down all 6 Raid Frames preview mechanisms on cross-module
         -- switch (Real/Party/Size/HealthAnim/PowerAnim/HM previews).

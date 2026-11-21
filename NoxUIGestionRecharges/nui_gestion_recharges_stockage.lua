@@ -84,7 +84,7 @@ function ns.GetTBBSmoothSettings()
 end
 
 -- Active SPELL LAYOUT name. Layouts are an account-wide library (spellAssignments.profiles[name])
--- with a SINGLE account-wide active pointer (spellAssignments.activeLayout), DETACHED from EUI
+-- with a SINGLE account-wide active pointer (spellAssignments.activeLayout), DETACHED from NoxUI
 -- profiles: a profile only changes the active layout via an opt-in binding
 -- (spellAssignments.profileBindings) applied by ns.ApplyProfileBinding on profile load. Self-heals to a valid layout.
 function ns.GetActiveLayoutName()
@@ -108,7 +108,7 @@ function ns.GetActiveLayoutName()
     return name
 end
 
--- specProfiles for the active PROFILE (the live CDM bucket): spell content is per-EUI-profile,
+-- specProfiles for the active PROFILE (the live CDM bucket): spell content is per-NoxUI-profile,
 -- no account-wide layout pointer mediates rendering. Combat-hot and CACHED (re-deriving cost
 -- ~20ms/min of combat CPU): invalidated by the spec-key cache lifecycle (ProcessSpecChange /
 -- InvalidateSpecKey) plus BuildAllCDMBars' head as belt -- every profile apply, import, layout

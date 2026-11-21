@@ -12,7 +12,7 @@ local I = ns._internals
 if not I or I.last ~= "Dialogs" then return end
 
 -------------------------------------------------------------------------------
---  UberTooltips CVar enforcement (only if user has manually set it in EUI)
+--  UberTooltips CVar enforcement (only if user has manually set it in NoxUI)
 -------------------------------------------------------------------------------
 do
     local f = CreateFrame("Frame")
@@ -194,8 +194,8 @@ do
 end
 
 -------------------------------------------------------------------------------
---  Fixed Tooltip Position (EUI-owned, movable in Unlock Mode)
---  EUI permanently owns the default GameTooltip's screen position: every default-anchored
+--  Fixed Tooltip Position (NoxUI-owned, movable in Unlock Mode)
+--  NoxUI permanently owns the default GameTooltip's screen position: every default-anchored
 --  tooltip is re-pointed onto OUR anchor frame, dragged via a real Unlock Mode mover.
 --  Position is PER PROFILE (profiles[name].tooltipFixedPos); a profile with none gets a
 --  ONE-TIME seed captured from wherever Blizzard's Edit Mode container currently sits, so

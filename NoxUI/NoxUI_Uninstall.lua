@@ -3,7 +3,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --  NoxUI_Uninstall.lua
 --  The game settings NoxUI changes that outlive it, and what puts them
 --  back: the login pass that puts back the CVars of a module turned off, and
---  the Uninstall EUI action (Global Settings > General) for everything.
+--  the Uninstall NoxUI action (Global Settings > General) for everything.
 --
 --  Every such change goes through the setters here: CVars (whole values and
 --  single bits), Edit Mode layout settings, chat window font sizes and the
@@ -31,7 +31,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --  it keeps its own backup (gfxBackup), which its card restores.
 --
 --  Snapshots are kept only on an account that started on this build or later,
---  or since Uninstall EUI ran (fresh), and only for the Edit Mode layouts
+--  or since Uninstall NoxUI ran (fresh), and only for the Edit Mode layouts
 --  there were at NoxUI's first Edit Mode note (a layout made or renamed
 --  since may be a copy of one it had changed). Elsewhere NoxUI may have
 --  changed a setting before its first record here, so Uninstall puts a CVar
@@ -744,7 +744,7 @@ local function RestoreBindings(acct, mine)
 end
 
 -------------------------------------------------------------------------------
---  Uninstall EUI
+--  Uninstall NoxUI
 -------------------------------------------------------------------------------
 local _steps = {}
 

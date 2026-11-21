@@ -1,9 +1,9 @@
 # NoxUI Skinning API (for addon developers)
 
 Make your addon match the NoxUI look with a few one-line calls. You hand
-us your frames; EUI paints them in the user's current theme and keeps them in
+us your frames; NoxUI paints them in the user's current theme and keeps them in
 sync with every future theme tweak, live accent/color changes included. You
-never touch EUI textures, fonts, colors, or settings directly.
+never touch NoxUI textures, fonts, colors, or settings directly.
 
 ## Quick start
 
@@ -38,10 +38,10 @@ is needed.
 
 - Once per session, at `PLAYER_LOGIN` (or immediately at registration if you
   register later than that, e.g. from a load-on-demand addon).
-- Only when the user has EUI's third-party skinning enabled for your addon
-  (it is on by default; users can toggle it per addon in EUI's options).
+- Only when the user has NoxUI's third-party skinning enabled for your addon
+  (it is on by default; users can toggle it per addon in NoxUI's options).
 - Your callback is isolated: an error in it is reported through the normal
-  error handler and never breaks EUI or other addons' skins.
+  error handler and never breaks NoxUI or other addons' skins.
 
 If you create frames after login (pooled rows, lazy panels), keep the `S`
 you were given and call the primitives from your own creation/refresh code.
@@ -61,7 +61,7 @@ end
 
 ## Which theme does the user get?
 
-You never choose. EUI resolves it from the user's own window-skin settings:
+You never choose. NoxUI resolves it from the user's own window-skin settings:
 if most of their Blizzard windows use the Modern flat-color style your addon
 gets Modern, otherwise it gets the NoxUI style. The two differ only in
 the `S.Shell` backdrop; every other primitive looks identical in both. Style
@@ -140,7 +140,7 @@ end
   alpha-only art removal, no Hide/SetParent), but Blizzard frames inside your
   window are your responsibility to pick sensibly.
 - Prefer the primitives over the getters. A frame skinned via primitives
-  tracks every future EUI tweak automatically; custom drawing via
+  tracks every future NoxUI tweak automatically; custom drawing via
   `S.GetAccentColor()` etc. is for the rare element we have no primitive for.
 - Do not cache getter results across sessions or long lifetimes; re-read them
   (or use `S.OnLooksChanged`) so live recolors reach your custom elements.

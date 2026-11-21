@@ -201,7 +201,7 @@ local function OnBlizzardFlyoutShow(flyout)
     end
 
     -- Skin each visible button. Classic WoW UI: the vanilla ring at the
-    -- flyout button's own size in place of the EUI shape/border skin, painted
+    -- flyout button's own size in place of the NoxUI shape/border skin, painted
     -- once per button (its size never changes; the paint stamps classicArt
     -- in the button's record).
     local classic = ns.AB_Style() == "classic"

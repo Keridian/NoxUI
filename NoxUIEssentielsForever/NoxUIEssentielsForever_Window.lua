@@ -14,7 +14,7 @@ if not (NoxUI and NoxUI.IS_FOREVER) then return end
 --  > Style) draws differently: window and header backgrounds, the header
 --  line, the header glyphs and their hover, the lock art, the bar fill's
 --  seat and background, a per-row restyle hook, the title's accent colour
---  and the menus' look. The EUI look, the two stock looks and Blizzard
+--  and the menus' look. The NoxUI look, the two stock looks and Blizzard
 --  Style's WoW Forever variant are set here; ns.UseLook copies a stock
 --  look's entries in (never replacing the table) before the first surface
 --  is built.
@@ -49,12 +49,12 @@ end
 ns.WindowCorner = Corner
 
 -------------------------------------------------------------------------------
---  Look: the EUI look's painters.
+--  Look: the NoxUI look's painters.
 --    inset       how far the header and rows sit inside the window
 --    clipRows    true when the rows draw clipped to the area inside the inset
 --                under the header (nil: unclipped)
 --    iconPad     gap between header buttons (the glyphs carry their own margin)
---    stock       true for a stock look: no EUI window or bar borders, no
+--    stock       true for a stock look: no NoxUI window or bar borders, no
 --                configurable header line
 --    IconSize(size)                 header button size for a configured size
 --    WindowBg(tex, r, g, b, a)
@@ -109,11 +109,11 @@ local GlyphIcon, GlyphHover = Look.HeaderIcon, Look.HeaderHover
 -------------------------------------------------------------------------------
 --  Stock looks (Global Settings > Style), the Damage Meters window's two.
 --  Blizzard Style: the stock meter's header and bar art over a flat black
---  body with a softer top band, the EUI glyphs kept. Classic WoW UI: the
+--  body with a softer top band, the NoxUI glyphs kept. Classic WoW UI: the
 --  tiled tooltip background inside the vanilla chat tab's border, a lighter
 --  band of the same tile under a rim-grey hairline as the header, vanilla
 --  art on the cog and lock, smaller header buttons with a gap between them.
---  Neither draws the EUI window or bar borders. ns.UseLook installs one
+--  Neither draws the NoxUI window or bar borders. ns.UseLook installs one
 --  before the first surface is built; each region's art is made once.
 -------------------------------------------------------------------------------
 local WHITE = "Interface\\Buttons\\WHITE8X8"
@@ -123,7 +123,7 @@ local iconArt = setmetatable({}, { __mode = "k" })    -- header button -> its ar
 local tiled = setmetatable({}, { __mode = "k" })      -- textures already set to tile
 
 -- Whether this client has an atlas, checked once per name: a missing piece
--- falls back to the EUI paint (header, bar track) or is left out (edge).
+-- falls back to the NoxUI paint (header, bar track) or is left out (edge).
 local atlasOK = {}
 local function HasAtlas(name)
     local ok = atlasOK[name]
@@ -602,7 +602,7 @@ local function UseForever()
     end
 end
 
--- styleKey: "blizzard" or "classic" (anything else keeps the EUI look);
+-- styleKey: "blizzard" or "classic" (anything else keeps the NoxUI look);
 -- forever: Blizzard Style's WoW Forever variant.
 function ns.UseLook(styleKey, forever)
     local src = (styleKey == "blizzard" and Blizzard) or (styleKey == "classic" and Classic) or nil

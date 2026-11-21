@@ -81,10 +81,10 @@ local DEFAULTS = {
     bgAlpha = 0.5,
     borderSize = 1,
     borderColor = { r = 0, g = 0, b = 0, a = 1 },
-    -- Key into the shared font registry; "__global" follows the EUI global font.
+    -- Key into the shared font registry; "__global" follows the NoxUI global font.
     font = "__global",
     fontSize = 12,
-    -- "__global" follows the EUI global outline mode; "none" is the drop shadow.
+    -- "__global" follows the NoxUI global outline mode; "none" is the drop shadow.
     outline = "__global",
     -- Channel -> true: speaker name in the bubble's top right corner for that channel.
     showName = {},

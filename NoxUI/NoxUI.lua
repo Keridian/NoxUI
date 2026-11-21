@@ -1,6 +1,6 @@
 if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGate.lua)
 -------------------------------------------------------------------------------
---  NoxUI.lua  -  Custom Options Panel, shared across the whole EUI suite.
+--  NoxUI.lua  -  Custom Options Panel, shared across the whole NoxUI suite.
 --  Scaffold: background, sidebar, header, content area, controls.
 -------------------------------------------------------------------------------
 -- NUI_ESPACE_NOMS is this addon's private namespace (the TOC vararg): shared by the core
@@ -345,7 +345,7 @@ NoxUI.CLASS_ICON_SPRITE_COORDS = {
     DEMONHUNTER = { 0.375, 0.5,   0.25,  0.375 },
 }
 
--- EUI LEGENDS event roster (PERMANENT): the event winners + team members who
+-- NoxUI LEGENDS event roster (PERMANENT): the event winners + team members who
 -- earned a spot in the suite's previews, with class-balancing filler names. The
 -- Raid & Party Frames preview fills its slots 2-20 with these in this order (Name,
 -- class and role travel together through its role sort; hpal = a holy paladin),
@@ -1504,7 +1504,7 @@ function NoxUI.BuildFullName(charName, realmName)
     return base .. "-" .. suffix
 end
 
--- A friend or guild note for display. Old Friends builds wrote a "||EUI:Group||" tag
+-- A friend or guild note for display. Old Friends builds wrote a "||NoxUI:Group||" tag
 -- into friend notes that was never removed: the text before it is kept, trailing
 -- space trimmed. nil for a non-string, secret or empty note.
 function NoxUI.StripFriendNoteTag(note)
@@ -1869,7 +1869,7 @@ NoxUI.QUEUE_TIMER = {
     TEXT_SIZE = 9, BAR_HEIGHT = 11, TEXT_OFFSET_Y = 0,
 }
 
--- Unified tooltip background for BOTH the Blizzard tooltip reskin and EUI widget tooltips.
+-- Unified tooltip background for BOTH the Blizzard tooltip reskin and NoxUI widget tooltips.
 -- Customizable via Blizz UI Enhanced > Blizzard Tooltip (tooltipBgColor/tooltipBgOpacity in
 -- NoxUIDB); unset = RESKIN palette. Returns r,g,b,a (0 is valid: Lua 0 is truthy, so `or` fallback fires on nil only).
 function NoxUI.GetTooltipBg()
@@ -3069,7 +3069,7 @@ function NoxUI.MakeUnlockElement(opts)
         sizeFixedByLook   = opts.sizeFixedByLook,
         getSettingSize    = opts.getSettingSize,
         -- matchUnavailable: function(key) -> reason string when a NEW width/height match
-        -- is impossible (action bars in Blizzard Style, where EUI does not control
+        -- is impossible (action bars in Blizzard Style, where NoxUI does not control
         -- sizing). Clearing an existing match stays allowed.
         matchUnavailable  = opts.matchUnavailable,
         -- keepMoverWhenAnchored: isAnchored() reflecting a module option (ERB "Anchor
@@ -3534,7 +3534,7 @@ end
 -------------------------------------------------------------------------------
 --  Slash commands
 -------------------------------------------------------------------------------
-NoxUI.VERSION = "0.2.3.6"
+NoxUI.VERSION = "0.2.5.0"
 
 -- Register this addon's version into a shared global table (taint-free at load time)
 if not _G._EUI_AddonVersions then _G._EUI_AddonVersions = {} end
@@ -4229,7 +4229,7 @@ initFrame:SetScript("OnEvent", function(self, event)
     NoxUI.ApplyModuleFontFailsafe()
 
     ---------------------------------------------------------------------------
-    --  Escape proxy: single UISpecialFrames entry for all EUI frames.
+    --  Escape proxy: single UISpecialFrames entry for all NoxUI frames.
     --  Child addons call NoxUI.RegisterEscapeClose(frame[, opts]) to opt
     --  in (defined here, at PLAYER_LOGIN). Every opt is optional; a frame
     --  registered without opts closes one per Escape press, newest registration
@@ -4435,7 +4435,7 @@ initFrame:SetScript("OnEvent", function(self, event)
     -- Add NoxUI + Unlock Mode buttons to the Game Menu (pause menu); both share a single Layout hook to avoid double-push conflicts.
     if GameMenuFrame and not NoxUI._GetFFD(GameMenuFrame).euiBtn then
         -- Game menu frame+button skinning lives in NoxUIApparenceBlizzard (nui_blizzard_apparence_dialogues.lua) so it only
-        -- applies when that addon is enabled; detect whether the skin is active so EUI's own buttons match the skinned menu style.
+        -- applies when that addon is enabled; detect whether the skin is active so NoxUI's own buttons match the skinned menu style.
         local _blizzSkinLoaded = C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("NoxUIApparenceBlizzard")
         -- "Reskin Pause Menu" is an independent toggle (default on); the migration blizzskin_reskin_master_split_v1 seeds reskinGameMenu for existing users.
         local _reskinMenu = _blizzSkinLoaded and (not NoxUIDB or NoxUIDB.reskinGameMenu ~= false)
@@ -4657,7 +4657,7 @@ initFrame:SetScript("OnEvent", function(self, event)
         local theme = NoxUIDB.activeTheme or NoxUI.DEFAULT_THEME
         NOX_GREEN._themeEnabled = true
         local themeR, themeG, themeB = NoxUI.ResolveThemeColor(theme)
-        -- Apply theme color to the window background only. The EUI Options Theme
+        -- Apply theme color to the window background only. The NoxUI Options Theme
         -- is a SEPARATE, global control from the UI accent color (per-profile).
         if NoxUI._applyBgTint then
             NoxUI._applyBgTint(themeR, themeG, themeB)
@@ -4774,7 +4774,7 @@ initFrame:SetScript("OnEvent", function(self, event)
                     cancelText  = NoxUI.L("Ignore"),
                     reload      = true,
                     onConfirm   = function()
-                        -- The player's own fix, which Uninstall EUI must not
+                        -- The player's own fix, which Uninstall NoxUI must not
                         -- undo: plain SetCVar, not NoxUI.SetCVar.
                         pcall(C_CVar.SetCVar, "taintLog", "0")
                         pcall(C_CVar.SetCVar, "scriptProfile", "0")

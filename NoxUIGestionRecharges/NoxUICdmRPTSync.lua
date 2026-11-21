@@ -31,7 +31,7 @@ local function GetSA()
     return sa
 end
 
--- The active EUI profile's spell-store bucket (holds specProfiles + rptSyncSpecs).
+-- The active NoxUI profile's spell-store bucket (holds specProfiles + rptSyncSpecs).
 -- Ensure it exists (GetActiveSpecProfiles seeds it), then return it.
 local function GetActiveBucket()
     local sa = GetSA(); if not sa then return nil end
@@ -93,7 +93,7 @@ end
 
 -- Like GetCDMSpecInfo, but for the "Sync From" SOURCE picker: lets you pick a
 -- source spec from ANY class, not just the current one. A sync can span classes
--- when one EUI profile is shared across characters (the target spec picker
+-- when one NoxUI profile is shared across characters (the target spec picker
 -- already shows all classes). To keep the source list meaningful (and short --
 -- that picker has no scroll), the current class's specs are always listed, and
 -- every OTHER class's specs are listed only when this profile actually holds CDM

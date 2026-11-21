@@ -1,6 +1,7 @@
 ## Interface: 16001
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## X-Upstream-Version: 1.0.7 c
+## X-Upstream-Fixes: 1.0.7 d
 
 ## Title: NoxUIDialogueUI
 ## Dependencies: NoxUI

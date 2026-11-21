@@ -609,7 +609,7 @@ NoxUI.RegisterMigration({
             end
         end
 
-        -- Active layout is remembered PER EUI PROFILE: point each profile at the
+        -- Active layout is remembered PER NoxUI PROFILE: point each profile at the
         -- surviving layout holding its own pre-consolidation CDM, so a profile
         -- switch loads that setup. Never clobber a user-set pointer.
         sa.activeLayoutByProfile = sa.activeLayoutByProfile or {}
@@ -1938,7 +1938,7 @@ NoxUI.RegisterMigration({
 NoxUI.RegisterMigration({
     id          = "ab_queuestatus_reset_visibility_v1",
     scope       = "profile",
-    description = "Reset stale QueueStatus (LFG eye) visibility/mouseover settings to neutral. EUI used to control the eye's visibility but now only controls its position; old saved values (e.g. barVisibility 'mouseover' with mouseoverAlpha 0) could leave the eye permanently invisible with no UI left to restore it.",
+    description = "Reset stale QueueStatus (LFG eye) visibility/mouseover settings to neutral. NoxUI used to control the eye's visibility but now only controls its position; old saved values (e.g. barVisibility 'mouseover' with mouseoverAlpha 0) could leave the eye permanently invisible with no UI left to restore it.",
     body = function(ctx)
         local ab = ctx.profile.addons and ctx.profile.addons.NoxUIBarresAction
         local qs = ab and ab.bars and ab.bars.QueueStatus
@@ -4765,7 +4765,7 @@ if NoxUI.IS_FOREVER == true then
 
     -- A class reads its Forever spec key before its retail keys (SpecFor), so a
     -- bucket under the Forever key hides a retail-keyed layout of the class. A
-    -- profile apply created one, empty, which EUI then filled with Blizzard's
+    -- profile apply created one, empty, which NoxUI then filled with Blizzard's
     -- default layout at the next login. Drop it only while it holds no more
     -- than that, and only when the key the class reads next holds a layout.
     -- An imported bucket stays: it is the sharer's, its Hidden CDs stripped.

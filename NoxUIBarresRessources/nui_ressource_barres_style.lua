@@ -76,7 +76,7 @@ ns.SPARK_TEX = SPARK_TEX
 --  atlases on our own frame: every feature (timer, latency, ticks, pips, kick
 --  hints) keeps working; only the art changes. Atlas names are validated once
 --  per session (GetAtlasInfo) with a legacy spelling as fallback, so a missing
---  atlas degrades to the EUI look for that piece instead of a blank texture.
+--  atlas degrades to the NoxUI look for that piece instead of a blank texture.
 --  On ns.
 -------------------------------------------------------------------------------
 ns.ERB_CAST_BLIZZ = {
@@ -112,7 +112,7 @@ function ns.ERB_CastForever()
     return ns._erbFvCast == true
 end
 -- Stock-art mode: true for both stock styles (the geometry, gating and
--- chrome they share: EUI border off, full icon art, art child frame).
+-- chrome they share: NoxUI border off, full icon art, art child frame).
 function ns.ERB_CastBlizz() return ns.ERB_CastStyle() ~= "eui" end
 function ns.ERB_CastClassic() return ns.ERB_CastStyle() == "classic" end
 -- The one-time stock-style seed on the cast bar profile `cb`: the "Blizzard"
@@ -186,9 +186,9 @@ end
 -- The style the health, power and class resource bars render this session,
 -- latched like the cast bar's. Blizzard Style: the personal resource
 -- display's bar frame (the viewer's shadowed bar background, overhanging the
--- bar) in place of the EUI full-bar border. Classic WoW UI: the vanilla cast
+-- bar) in place of the NoxUI full-bar border. Classic WoW UI: the vanilla cast
 -- bar frame round each bar instead. Fills, pips (with their own borders and
--- spacing), texts and every setting stay EUI under both.
+-- spacing), texts and every setting stay NoxUI under both.
 function ns.ERB_BarsStyle()
     local v = ns._erbBarsStyle
     if v == nil then

@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Modern action bars built for performance and clarity.
 ## Author: Nox
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## Dependencies: NoxUI
 ## OptionalDeps: Masque
 ## SavedVariables: NoxUIActionBarsDB

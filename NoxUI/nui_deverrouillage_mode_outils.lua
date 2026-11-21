@@ -1247,7 +1247,7 @@ local BLIZZ_OWNED_OVERLAY_DEFS = {
       end, showAlways = true, fallbackW = 206, fallbackH = 32 },
     { label = "Buffs",         frame = function() return _G.BuffFrame end },
     { label = "Debuffs",       frame = function() return _G.DebuffFrame end },
-    -- Blizzard Edit Mode's default tooltip anchor. EUI permanently owns the default
+    -- Blizzard Edit Mode's default tooltip anchor. NoxUI permanently owns the default
     -- tooltip position (fixed anchor in NoxUIApparenceBlizzard, a real draggable
     -- mover) and Anchor to Cursor pins it to the mouse -- either way this read-only
     -- overlay steps aside. Only shows with "Reskin Tooltip" off, where Blizzard's

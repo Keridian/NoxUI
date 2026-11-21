@@ -1312,11 +1312,11 @@ function CategoryManager:OnVirtualAnswersChanged() end
 --    def.isAtlas    true when def.icon is an atlas
 --    def.order      views sort by this, then by id (default 0)
 --    def.otherName  the group for items classify() leaves out (default "Other")
---    def.keepPinned true: EUI's Pinned Items section comes first, while Show
+--    def.keepPinned true: NoxUI's Pinned Items section comes first, while Show
 --                   Pinned Items is on. As in All Items, a pinned item shows
 --                   there and in its group too, unless Hide Items in Their
 --                   Categories is on. Default: off.
---    def.keepRecent true: EUI's Recent Items section comes next, while Show
+--    def.keepRecent true: NoxUI's Recent Items section comes next, while Show
 --                   Recent Items is on. As in All Items, a recent item shows
 --                   there and in its group too. Default: off.
 --    def.groups     { { id = "sell", name = "Sell", order = 1 }, ... } shown by
@@ -1324,7 +1324,7 @@ function CategoryManager:OnVirtualAnswersChanged() end
 --    def.classify   function(itemLink, itemID, bag, slot, quality) -> a group
 --                   id, or nil / an unknown id for "Other".
 --  Junk (grey and marked items while the Junk Marker is on: what Sell Junk
---  sells) is not offered to the provider: it shows in a Junk section of EUI's
+--  sells) is not offered to the provider: it shows in a Junk section of NoxUI's
 --  own, last. An item whose link has not loaded is not offered either, and is
 --  not drawn until it has.
 --  The view covers the bags window. The bank and another character's bags

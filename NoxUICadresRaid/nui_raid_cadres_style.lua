@@ -1075,7 +1075,7 @@ local function StyleButton(button)
         end
         local style = s.powerBorderStyle or "eui"
         if style == "eui" then
-            -- EUI style: 1px divider, white at 20% opacity
+            -- NoxUI style: 1px divider, white at 20% opacity
             PP.UpdateBorder(d.powerBorderFrame, 1, 1, 1, 1, 0.2)
             d.powerBorderFrame:Show()
             local ppC = PP.GetBorders(d.powerBorderFrame)
@@ -1244,7 +1244,7 @@ ns._StyleButtonSecure = function(button)
         button:SetAttribute("ping-receiver", true)
     end
 
-    -- Register for click-casting (EUI built-in system)
+    -- Register for click-casting (NoxUI built-in system)
     if ns.CC_RegisterFrame then
         ns.CC_RegisterFrame(button)
     elseif ClickCastFrames then

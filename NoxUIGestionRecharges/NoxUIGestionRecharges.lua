@@ -110,7 +110,7 @@ ns.CDM_BLIZZ_RING_X  = 0.18
 ns.CDM_BLIZZ_RING_Y  = 0.16
 -- Classic WoW UI icon art: the vanilla action button ring, a plain 66px
 -- texture on a 36px button centred one pixel low, sized by the icon it rings.
--- Classic icons are square: no mask, full art, EUI's own square swipe.
+-- Classic icons are square: no mask, full art, NoxUI's own square swipe.
 ns.CDM_CLASSIC_RING       = "Interface\\Buttons\\UI-Quickslot2"
 ns.CDM_CLASSIC_RING_SCALE = 66 / 36
 ns.CDM_CLASSIC_RING_Y     = -1 / 36
@@ -121,13 +121,13 @@ function ns.CdmPlaceClassicRing(ov, anchor, w, h)
     ov:SetPoint("CENTER", anchor, "CENTER", 0, h * ns.CDM_CLASSIC_RING_Y)
 end
 -- The swipe file the latched icon style draws: the viewer's rounded swipe
--- under Blizzard Style, EUI's square swipe otherwise.
+-- under Blizzard Style, NoxUI's square swipe otherwise.
 function ns.CdmSwipeFile()
     if ns.CdmIconStyle() == "blizzard" then return ns.CDM_BLIZZ_SWIPE end
     return "Interface\\AddOns\\NoxUI\\media\\white-square.png"
 end
 -- Creation-time crop for icons on frames we build ourselves (trinkets,
--- placeholders, custom buffs, item presets): the EUI 8% zoom, or the full art
+-- placeholders, custom buffs, item presets): the NoxUI 8% zoom, or the full art
 -- under a stock style (RefreshCDMIconAppearance re-applies the same rule).
 function ns.CdmOwnIconCrop(tex)
     if ns.CdmBlizzIcons() then
@@ -639,8 +639,8 @@ local DEFAULTS = {
         -- reload-gated. Blizzard Style: icons keep Blizzard's rounded mask,
         -- overlay ring and swipe art; tracked buff bars use Blizzard's bar
         -- art. Classic WoW UI: square icons in the vanilla action button
-        -- ring; tracked buff bars in the vanilla cast bar frame. Every EUI
-        -- feature keeps working; only the EUI-look settings are disabled.
+        -- ring; tracked buff bars in the vanilla cast bar frame. Every NoxUI
+        -- feature keeps working; only the NoxUI-look settings are disabled.
         useBlizzardStyle     = false,
         useBlizzardStyleBars = false,
         useClassicStyle      = false,

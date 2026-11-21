@@ -564,7 +564,7 @@ NoxUI.RegisterSyncExclusions("NoxUISacs", {
 
 -------------------------------------------------------------------------------
 --  Sync Popup -- anchored flush to sidebar's right edge, centered on clicked sync icon,
---  clamped to the EUI window bottom.
+--  clamped to the NoxUI window bottom.
 -------------------------------------------------------------------------------
 do
     local _syncPopup = nil
@@ -885,7 +885,7 @@ do
             local btnMidY = select(2, anchorBtn:GetCenter()) or 0
             local sidebarMidY = select(2, sidebar:GetCenter()) or 0
             local offsetY = btnMidY - sidebarMidY
-            -- Clamp to EUI window bottom
+            -- Clamp to NoxUI window bottom
             if root then
                 local rootBot = root:GetBottom() or 0
                 local popupBot = btnMidY - popupH / 2

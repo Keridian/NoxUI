@@ -16,7 +16,7 @@ local function BP() return (EUI._bagsDB and EUI._bagsDB.profile) or _emptyP end
 -- The bank has no MultiBank view, so both the OneBag and MultiBag default
 -- types open the bank to its consolidated OneBank/OneWarbank view; only the
 -- "all" default opens the categorized All-Tabs view. Resolver lives in the
--- main bags file (EUI._GetBagDefaultType) and honors the legacy boolean.
+-- main bags file (NoxUI._GetBagDefaultType) and honors the legacy boolean.
 local function BankDefaultsToOne()
     if not EUI._GetBagDefaultType then return false end
     return EUI._GetBagDefaultType() ~= "all"
@@ -762,7 +762,7 @@ EUI_BankTabConfigFrame:Hide()
 -- Built lazily on the first right-click of a bank tab.
 local function EnsureBankTabConfigFrame()
     if EUI_BankTabConfigFrame.OpenBankTabSettings then return end
-    -- Options surface is LoadOnDemand; load it so EUI.BuildCheckboxControl exists.
+    -- Options surface is LoadOnDemand; load it so NoxUI.BuildCheckboxControl exists.
     if not EUI.BuildCheckboxControl then EUI:EnsureLoaded() end
     if not EUI.BuildCheckboxControl then return end
     local bgAtlasBTC = EUI_BankTabConfigFrame:CreateTexture(nil, "BACKGROUND")
@@ -1019,7 +1019,7 @@ local function EnsureBankTabConfigFrame()
         -- Setup widgets
         local displayName = tabData.name
         if self.bankType == Enum.BankType.Account then
-            -- Remove "Warbank " prefix as this is a prefix added by EUI and not the real tab name. This is necessary to edit the tab
+            -- Remove "Warbank " prefix as this is a prefix added by NoxUI and not the real tab name. This is necessary to edit the tab
             local prefix = EUI.L("Warbank") .. " "
             local prefix_len = #prefix
             if strsub(tabData.name, 1, prefix_len) == prefix then
@@ -1304,12 +1304,12 @@ end
 --  TradeSkillMaster compatibility
 -------------------------------------------------------------------------------
 -- TSM decides whether its Banking UI targets the character bank or the warband bank by
--- watching Blizzard's BankPanel, which EUI reparents to a hidden frame, so TSM never
--- sees bank/warbank switches made in the EUI sidebar. TSM supports addon-provided bank
+-- watching Blizzard's BankPanel, which NoxUI reparents to a hidden frame, so TSM never
+-- sees bank/warbank switches made in the NoxUI sidebar. TSM supports addon-provided bank
 -- frames through two globals (TSM Core/Service/Banking/Core.lua): it calls
 -- Addon_GetBankType() to read the active bank type, and hooksecurefunc's
 -- Addon_SetBankType at init so it can re-check whenever the view changes. Both globals
--- must exist before TSM initializes; EUI loads first alphabetically. Cost when TSM is
+-- must exist before TSM initializes; NoxUI loads first alphabetically. Cost when TSM is
 -- absent is one comparison per RefreshBank. Guarded so another bag addon that already
 -- implements the contract wins.
 

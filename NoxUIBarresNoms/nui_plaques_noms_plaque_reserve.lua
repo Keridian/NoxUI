@@ -89,7 +89,7 @@ local frameCache = CreateFramePool("Frame", UIParent, nil, nil, false, function(
     function plate:ApplyBorder()
         if not PP then return end
         if ns.NP_Classic() then
-            -- Classic WoW UI: the vanilla border art replaces every EUI border.
+            -- Classic WoW UI: the vanilla border art replaces every NoxUI border.
             PP.HideBorder(plate.health)
             ns.HideCustomBorder(plate)
             ns.NP_ApplyClassicHealthArt(plate)
@@ -187,7 +187,7 @@ local frameCache = CreateFramePool("Frame", UIParent, nil, nil, false, function(
     -- Mouseover highlight: parented to the health bar (not the higher-level text
     -- frame) so it renders BEHIND the border (a child at health level + 1).
     -- Blizzard Style: under the stock ring / deselected overlay (OVERLAY 4/5),
-    -- above the target wash (0). The EUI and classic looks keep it at 6.
+    -- above the target wash (0). The NoxUI and classic looks keep it at 6.
     plate.highlight = plate.health:CreateTexture(nil, "OVERLAY", nil, ns.NP_Style() == "blizzard" and 1 or 6)
     plate.highlight:SetAllPoints(plate.health)
     local _hc = (p and p.hoverColor) or defaults.hoverColor
@@ -275,7 +275,7 @@ local frameCache = CreateFramePool("Frame", UIParent, nil, nil, false, function(
         if not PP or not PP.CreateBorder then return end
         local sz = (p and p.castBorderSize) or defaults.castBorderSize or 0
         -- The stock styles carry their own cast bar art (the stock art, the
-        -- vanilla cast border): no EUI border.
+        -- vanilla cast border): no NoxUI border.
         if ns.NP_Blizz() then sz = 0 end
         if sz and sz > 0 then
             if PP.GetBorders(plate.cast) then
@@ -310,7 +310,7 @@ local frameCache = CreateFramePool("Frame", UIParent, nil, nil, false, function(
     -- (ns.NP_UpdateCustomBorderWrap, plate._cbWrapActive), run after it.
     function plate:UpdateBorderWrap()
         if not PP or not PP.GetBorders then return end
-        -- Classic WoW UI: no EUI borders to wrap (the vanilla art is drawn).
+        -- Classic WoW UI: no NoxUI borders to wrap (the vanilla art is drawn).
         if ns.NP_Classic() then return end
         local shouldWrap = ns.GetWrapBorderCastbar()
             and plate.cast and plate.cast:IsShown()
@@ -456,7 +456,7 @@ local frameCache = CreateFramePool("Frame", UIParent, nil, nil, false, function(
     plate.castIcon:SetPoint("TOPLEFT", plate.castIconFrame, "TOPLEFT", 0, 0)
     plate.castIcon:SetPoint("BOTTOMRIGHT", plate.castIconFrame, "BOTTOMRIGHT", 0, 0)
     if PP and PP.DisablePixelSnap then PP.DisablePixelSnap(plate.castIcon) end
-    -- Stock styles draw the whole icon (zoom 0); the EUI look trims the art's rim.
+    -- Stock styles draw the whole icon (zoom 0); the NoxUI look trims the art's rim.
     if ns.NP_Blizz() then
         plate.castIcon:SetTexCoord(0, 1, 0, 1)
     else
@@ -766,7 +766,7 @@ end
 function ns.RefreshStackingMotion()
     if not (Enum and Enum.NamePlateStackType) then return end
     local db = p or defaults
-    -- Enemy stacking is always EUI-owned; apply every time. Must NOT be gated on friendly
+    -- Enemy stacking is always NoxUI-owned; apply every time. Must NOT be gated on friendly
     -- players, or enemy plates stop stacking for anyone who hands friendly plates to Blizzard.
     NoxUI.SetCVarBitfield("nameplateStackingTypes", Enum.NamePlateStackType.Enemy, db.stackingEnabled ~= false, "NoxUIBarresNoms")
     -- Friendly stacking is only ours to write while we manage friendly players; when

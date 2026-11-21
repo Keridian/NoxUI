@@ -84,7 +84,7 @@ end
 -- Shared outline dropdown data (safe to share by reference: dropdown menus
 -- render only the keys their order lists).
 local MODULE_OUTLINE_VALUES = {
-    ["__global"] = { text = "EUI Global Outline" },
+    ["__global"] = { text = "NoxUI Global Outline" },
     ["none"]     = { text = "Drop Shadow" },
     ["outline"]  = { text = "Outline" },
     ["thick"]    = { text = "Thick Outline" },
@@ -94,7 +94,7 @@ local MODULE_OUTLINE_ORDER = { "__global", "none", "outline", "thick" }
 -- Per-module outline row config (left slot of each card's first row).
 local function ModuleOutlineCfg(folder, display)
     return { type = "dropdown", text = "Module Outline",
-        tooltip = "Outline style override for all " .. display .. " text. EUI Global Outline follows the global Outline Mode setting above.",
+        tooltip = "Outline style override for all " .. display .. " text. NoxUI Global Outline follows the global Outline Mode setting above.",
         values = MODULE_OUTLINE_VALUES, order = MODULE_OUTLINE_ORDER,
         getValue = function()
             local entry = FindModuleFontEntry(folder)
@@ -553,7 +553,7 @@ local function TileQoL(parent, y, W, tile)
                   if _G._EUI_BattleRes_Apply then _G._EUI_BattleRes_Apply() end
               end })
         add({ type = "dropdown", text = "Battle Res Outline",
-              values = { ["__global"] = { text = "EUI Global Default" },
+              values = { ["__global"] = { text = "NoxUI Global Default" },
                          ["none"]     = { text = "Drop Shadow" },
                          ["outline"]  = { text = "Outline" },
                          ["thick"]    = { text = "Thick Outline" } },
@@ -632,7 +632,7 @@ local function TileChat(parent, y, W, tile)
           end });  y = y - h
     _, h = W:DualRow(parent, y,
         { type = "dropdown", text = "Chat Outline Mode",
-          values = { ["__global"] = { text = "EUI Global Default" },
+          values = { ["__global"] = { text = "NoxUI Global Default" },
                      ["none"]     = { text = "Drop Shadow" },
                      ["outline"]  = { text = "Outline" },
                      ["thick"]    = { text = "Thick Outline" } },

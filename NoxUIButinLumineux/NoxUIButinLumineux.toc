@@ -1,9 +1,10 @@
 ## Interface: 16001
 ## Dependencies: NoxUI
 ## Title: NoxUI Butin lumineux
-## Notes: Always shows the sparkle effect on lootable quest items. Switches the loot sparkle back on at login and whenever a graphics change resets it. Options under Options > AddOns.
+## Notes: Always shows the sparkle effect on lootable quest items. Switches the loot sparkle back on at login and whenever a graphics change resets it. Settings in NoxUI.
+## Notes-frFR: Rétablit les lueurs de butin sur les objets de quête. Réglages dans NoxUI.
 ## Author: Ashtar Senior
-## Version: 0.2.3.6
+## Version: 0.2.5.0
 ## X-Upstream-Version: v2.0.0
 ## IconTexture: Interface\AddOns\NoxUIButinLumineux\Icon
 ## SavedVariables: ForeverLootSparklesDB

@@ -181,7 +181,7 @@ end
 
 -- Protected content = anywhere chat/whisper secret values can taint Blizzard's chat
 -- code: a Mythic+ run (entire run), raid combat, rated/instanced PvP. That is exactly
--- NoxUI.InProtectedInstance(), the canonical EUI guard for taint-sensitive ops.
+-- NoxUI.InProtectedInstance(), the canonical NoxUI guard for taint-sensitive ops.
 -- Whispering is suppressed entirely there; invites stay allowed.
 local function FTTInProtectedContent()
     return NoxUI.InProtectedInstance() or false

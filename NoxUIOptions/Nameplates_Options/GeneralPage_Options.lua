@@ -50,6 +50,19 @@ local function BuildGeneralPage(pageName, parent, yOffset)
     _, h = W:DualRow(parent, y,
         markerOption("socialMarkerGuild", "Rond doré pour la guilde", "Affiche un rond au dessus du nom des membres de votre guilde."),
         NoxUI.BlankRowCfg()); y = y - h
+    local function nameColorOption(key, label, description)
+        return { type = "toggle", text = label, tooltip = description,
+            getValue = function() return DBVal(key) == true end,
+            setValue = function(value)
+                DB()[key] = value
+                if ns.RefreshSocialMarkers then ns.RefreshSocialMarkers() end
+            end }
+    end
+    _, h = W:DualRow(parent, y,
+        nameColorOption("colorGroupNames", "Noms bleus pour le groupe et le raid",
+            "Colore les noms des membres de votre groupe ou raid. Cette couleur est prioritaire sur la couleur de guilde."),
+        nameColorOption("colorGuildNames", "Noms dorés pour la guilde",
+            "Colore les noms des membres de votre guilde.")); y = y - h
     _, h = W:SectionHeader(parent, SECTION_FRIENDLY, y); y = y - h
 
     local function friendlyPlayersOff() return DBVal("showFriendlyPlayers") == false end
@@ -63,8 +76,8 @@ local function BuildGeneralPage(pageName, parent, yOffset)
 
     local friendlyRow
     _, h = W:DualRow(parent, y,
-        { type="toggle", text="Show EUI Friendly Player Nameplates",
-          tooltip="When disabled, EUI relinquishes full control of friendly player nameplates to Blizzard. Use Blizzard's own Nameplate settings (Esc > Options > Nameplates) to control them.",
+        { type="toggle", text="Show NoxUI Friendly Player Nameplates",
+          tooltip="When disabled, NoxUI relinquishes full control of friendly player nameplates to Blizzard. Use Blizzard's own Nameplate settings (Esc > Options > Nameplates) to control them.",
           getValue=function() return DBVal("showFriendlyPlayers") ~= false end,
           setValue=function(v)
             DB().showFriendlyPlayers = v
@@ -74,7 +87,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
                     local p = DB()
                     local nameOnly = (p and p.friendlyNameOnly ~= false)
                     local classColor = (p and p.classColorFriendly ~= false)
-                    -- One of only two places EUI is allowed to force friendly plates visible; also clears any follower-dungeon capture.
+                    -- One of only two places NoxUI is allowed to force friendly plates visible; also clears any follower-dungeon capture.
                     if ns.ForceFriendlyPlayerCVarsOn then
                         ns.ForceFriendlyPlayerCVarsOn()
                     end
@@ -83,7 +96,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
                     pcall(NoxUI.SetCVar, "ShowClassColorInFriendlyNameplate", classColor and 1 or 0, "NoxUIBarresNoms")
                     pcall(NoxUI.SetCVar, "nameplateUseClassColorForFriendlyPlayerUnitNames", ns.FriendlyNameClassCVar(p), "NoxUIBarresNoms")
                 else
-                    -- Disabling: reset the three CVars EUI uniquely manages (name-only override + class color) to Blizzard defaults for a clean slate; visibility CVars stay untouched so Blizzard's panel keeps the user's values.
+                    -- Disabling: reset the three CVars NoxUI uniquely manages (name-only override + class color) to Blizzard defaults for a clean slate; visibility CVars stay untouched so Blizzard's panel keeps the user's values.
                     if GetCVarDefault then
                         for _, cvar in ipairs({
                             "nameplateShowOnlyNameForFriendlyPlayerUnits",
@@ -115,7 +128,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
             NoxUI:RefreshPage()
           end,
           disabled = friendlyPlayersOff,
-          disabledTooltip = "Show EUI Friendly Player Nameplates" });  friendlyRow = _; y = y - h
+          disabledTooltip = "Show NoxUI Friendly Player Nameplates" });  friendlyRow = _; y = y - h
 
     ---------------------------------------------------------------
     --  Friendly Player cog popup (size, health text, class colours, target border)
@@ -310,7 +323,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
         { type="dropdown", text="Subtitle Text",
           tooltip="Show the player's title inline with their name, and/or their guild on a line below it, on friendly nameplates.",
           disabled=friendlyPlayersOff,
-          disabledTooltip="Show EUI Friendly Player Nameplates",
+          disabledTooltip="Show NoxUI Friendly Player Nameplates",
           values={ none="None", title="Player Title", guild="Guild Name", both="Title & Guild" },
           order={ "none", "title", "guild", "both" },
           getValue=function() return DBVal("friendlyBelowName") or "none" end,
@@ -322,7 +335,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
         { type="multiSwatch", text="Guild Text Color",
           disabled=subtitleGuildOff,
           disabledTooltip=function()
-              if friendlyPlayersOff() then return "Show EUI Friendly Player Nameplates" end
+              if friendlyPlayersOff() then return "Show NoxUI Friendly Player Nameplates" end
               return "This option requires Subtitle Text to include the Guild Name"
           end,
           rawTooltip=function() return not friendlyPlayersOff() end,
@@ -336,7 +349,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
         NoxUI.BuildInlineCog(subtitleRow._leftRegion, {
             chain = false,
             disabled = friendlyPlayersOff,
-            disabledTooltip = "Show EUI Friendly Player Nameplates",
+            disabledTooltip = "Show NoxUI Friendly Player Nameplates",
             title = "Name Text Settings",
             rows = {
                 -- WoW Forever names it for players, as Forever Essentials' Name
@@ -565,7 +578,7 @@ local function BuildGeneralPage(pageName, parent, yOffset)
           end,
           tooltip="Adjusts the vertical spacing between stacked nameplates. 100% = default, lower = tighter, higher = more spread." });  y = y - h
 
-    -- Replace the placeholder dropdown with a multi-select checkbox dropdown; Enemy and Friendly stacking are independent toggles over the Midnight stacking bitfield. Friendly locks out while EUI isn't managing friendly plates (Blizzard owns that bit then).
+    -- Replace the placeholder dropdown with a multi-select checkbox dropdown; Enemy and Friendly stacking are independent toggles over the Midnight stacking bitfield. Friendly locks out while NoxUI isn't managing friendly plates (Blizzard owns that bit then).
     if not NoxUI._prebuilding then
         local leftRgn = stackingRow._leftRegion
         if leftRgn._control then leftRgn._control:Hide() end

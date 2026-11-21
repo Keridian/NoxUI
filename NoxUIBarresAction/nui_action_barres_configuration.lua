@@ -41,7 +41,7 @@ local ApplyAll = I.ApplyAll
 local RegisterWithUnlockMode, RestoreBarPositions = I.RegisterWithUnlockMode, I.RestoreBarPositions
 
 -------------------------------------------------------------------------------
---  Edit Mode Icon Count Sync: when EUI's configured icon count for a bar
+--  Edit Mode Icon Count Sync: when NoxUI's configured icon count for a bar
 --  exceeds Edit Mode's setting, update the Edit Mode layout data via
 --  C_EditMode.SaveLayouts so Blizzard's own code applies the higher count
 --  (untainted). Avoids writing numButtonsShowable directly, which taints.
@@ -95,7 +95,7 @@ local function SyncEditModeIconCounts()
 
     -- Check ALL saved layouts so switching never reverts to fewer icons. The merged-in presets
     -- are read-only (SaveLayouts drops edits to them), so they are carried through untouched.
-    -- Each row is noted for Uninstall EUI: a raised count is put back when its earlier value is
+    -- Each row is noted for Uninstall NoxUI: a raised count is put back when its earlier value is
     -- known, and bar art is noted every time (shown is Blizzard's default, the fallback for an
     -- account older than the record).
     for layoutIndex, layout in ipairs(layoutInfo.layouts) do
@@ -739,7 +739,7 @@ function EAB:FinishSetup()
                         end
                     end
                     -- Fade back out if mouseover-enabled and not hovered. Skip
-                    -- position-only Blizzard-owned bars (the QueueStatus eye): EUI
+                    -- position-only Blizzard-owned bars (the QueueStatus eye): NoxUI
                     -- controls only their position, never fades them out.
                     if s.mouseoverEnabled and not info.noManagedVisibility then
                         if not (state and state.isHovered) then

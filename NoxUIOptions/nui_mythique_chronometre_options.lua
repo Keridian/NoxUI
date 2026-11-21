@@ -234,7 +234,7 @@ initFrame:SetScript("OnEvent", function(self)
         end
     end
 
-    -- Auto-disable the preview when the EUI options window closes, so the preview
+    -- Auto-disable the preview when the NoxUI options window closes, so the preview
     -- frame doesn't linger after the user is done configuring. Installed once, the
     -- first time the M+ Timer page is built (which guarantees NoxUIFrame exists).
     local function _installPreviewAutoOff()

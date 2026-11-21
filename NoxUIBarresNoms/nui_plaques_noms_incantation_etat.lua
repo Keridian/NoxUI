@@ -341,7 +341,7 @@ local function SetupAuraCVars()
         local nameOnly = (db.friendlyNameOnly ~= false)
         local showPlayers = (db.showFriendlyPlayers ~= false)
         local showNPCs = (db.showFriendlyNPCs == true)
-        -- Friendly player CVars are written ONLY while EUI manages friendly player nameplates;
+        -- Friendly player CVars are written ONLY while NoxUI manages friendly player nameplates;
         -- under the Blizzard Default Friendly Nameplate Style we relinquish them entirely to
         -- Blizzard's own settings. Friendly NPC and enemy pet CVars are always managed.
         if showPlayers then
@@ -383,7 +383,7 @@ local function SetupAuraCVars()
         -- Forever caps this cvar at 45; a higher value shortens its plate range
         NoxUI.SetCVar("nameplateMaxDistance", NoxUI.IS_FOREVER and 45 or 60, "NoxUIBarresNoms")
         NoxUI.SetCVar("nameplateMaxScale", 1, "NoxUIBarresNoms")
-        -- Neutralize Blizzard's selected-target scaling: the EUI plate is a child of the base
+        -- Neutralize Blizzard's selected-target scaling: the NoxUI plate is a child of the base
         -- nameplate, so Blizzard's scaling shows through our own SetScale (min/max pinned to 1
         -- for the same reason). Pinned to 1, "Scale Target Nameplate" is the sole authority.
         NoxUI.SetCVar("nameplateSelectedScale", 1, "NoxUIBarresNoms")

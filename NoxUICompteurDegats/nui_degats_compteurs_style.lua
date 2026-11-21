@@ -65,7 +65,7 @@ function ns.DMStyle()
     end
     return v
 end
--- Stock-art mode: true for both stock styles (what they share: no EUI window
+-- Stock-art mode: true for both stock styles (what they share: no NoxUI window
 -- or bar borders, no header bottom border).
 function ns.DMBlizz() return ns.DMStyle() ~= "eui" end
 function ns.DMClassic() return ns.DMStyle() == "classic" end
@@ -127,8 +127,8 @@ end
 --  are 32x32 with a 19x18 button at columns 6..24, rows 7..24; the refresh
 --  and plus buttons fill their 16x16; the quest log book fills its 64x64
 --  bar a texel) and vanilla spell icons for the meter types, drawn a little
---  smaller than the EUI glyphs with a gap between them (the art fills its
---  crop, the glyphs carry their own margin). Blizzard Style keeps the EUI
+--  smaller than the NoxUI glyphs with a gap between them (the art fills its
+--  crop, the glyphs carry their own margin). Blizzard Style keeps the NoxUI
 --  glyphs (no entries). A key with no entry keeps the glyph. Stock art is
 --  coloured: no desaturation, no Icon Colour tint, hover is a brightness
 --  step, and an entry with hover art swaps it in.
@@ -158,7 +158,7 @@ ns.DM_HDR_ART = {
 }
 ns.DM_HDR_IDLE, ns.DM_HDR_HOVER = 0.85, 1
 ns.DM_HDR_CLASSIC_SCALE, ns.DM_HDR_CLASSIC_PAD = 0.85, 2
--- The stock-style art entry for a header key this session (nil = EUI glyph).
+-- The stock-style art entry for a header key this session (nil = NoxUI glyph).
 -- WoW Forever reads its own set; an atlas entry the client lacks keeps the
 -- glyph.
 function ns.DMHdrArt(key)
@@ -223,7 +223,7 @@ function ns.DMApplyHdrArt(tex, art)
     ns.DMSeatHdrArt(tex)
 end
 -- Paints a header key's stock art on a texture; false when the key keeps
--- the EUI glyph (the caller paints that).
+-- the NoxUI glyph (the caller paints that).
 function ns.DMPaintHdrArt(tex, key)
     local art = ns.DMHdrArt(key)
     if not art then
@@ -235,7 +235,7 @@ function ns.DMPaintHdrArt(tex, key)
     return true
 end
 -- Hover / idle (and the dimmed state a locked window puts on its close
--- icon) on a stock-art texture; false when the texture carries the EUI
+-- icon) on a stock-art texture; false when the texture carries the NoxUI
 -- glyph, whose tint the caller owns.
 function ns.DMHdrHover(tex, hover, dimmed)
     local art = tex._hdrArt
@@ -251,7 +251,7 @@ function ns.DMHdrHover(tex, hover, dimmed)
     return true
 end
 -- The mode button's icon for a meter type: the vanilla spell icon under
--- Classic WoW UI, the tinted glyph on a plate under WoW Forever, the EUI
+-- Classic WoW UI, the tinted glyph on a plate under WoW Forever, the NoxUI
 -- glyph otherwise (its desaturation and tint were set when the button was
 -- built and stay).
 function ns.DMSetTypeIcon(tex, dmType)
@@ -280,7 +280,7 @@ end
 -- is), the way the stock meter's header stands off its body: the window
 -- colour is the trailing winR/winG/winB when given (a window body tinted
 -- from its own settings), the main meter's otherwise; the configured colour
--- on the EUI look.
+-- on the NoxUI look.
 function ns.DMPaintHeaderBg(tex, r, g, b, a, winR, winG, winB)
     local style = ns.DMStyle()
     if style == "blizzard" then
@@ -392,7 +392,7 @@ function ns.DMClassicInset()
 end
 -- The header's bottom line under Classic WoW UI: one hairline (h = the
 -- caller's physical pixel) in the chat tab rim's own grey (0x68 on the top
--- rim), whatever the header border setting says (that line is an EUI-look
+-- rim), whatever the header border setting says (that line is an NoxUI-look
 -- control). Returns true when it painted.
 function ns.DMClassicSeparator(tex, h)
     if not ns.DMClassic() then return false end
@@ -401,7 +401,7 @@ function ns.DMClassicSeparator(tex, h)
     tex:Show()
     return true
 end
--- Window background: the configured colour on the EUI look, drawn through the
+-- Window background: the configured colour on the NoxUI look, drawn through the
 -- texKey bar texture when one is given (the meter windows pass their
 -- Background Texture; Spell History passes none); the classic box above under
 -- Classic WoW UI (`edged` = this texture's window wears the edge).
@@ -721,7 +721,7 @@ function ns.DMFvPlate(tex, hover)
 end
 -- A context menu panel in Forever's dropdown art (what Blizzard's menus wear
 -- on that client: a bronze line round a black body, soft shadow), its line
--- 1px outside our flush panel, in place of the EUI fill and border. False
+-- 1px outside our flush panel, in place of the NoxUI fill and border. False
 -- off the variant or without the art.
 function ns.DMFvMenuArt(f, bg)
     local atlas = ns.DM_FV.menu

@@ -19,7 +19,7 @@ local min, max, floor, abs = min, max, floor, math.abs
 local CFD, EnsureChatClampInsets = I.CFD, I.EnsureChatClampInsets
 
 -------------------------------------------------------------------------------
---  Chat position: owned by EUI unlock mode once a position is saved (genesis-
+--  Chat position: owned by NoxUI unlock mode once a position is saved (genesis-
 --  captured otherwise). Two writers place ChatFrame1: Edit Mode on every
 --  layout apply (login, layout switches, Edit Mode exit, every layout save,
 --  spec changes -- which WoW Forever also fires on level-ups) and
@@ -226,7 +226,7 @@ local function EMChatSizeAgrees(sys, setEnum, w, h)
     return sw ~= nil and abs(sw - w) <= 1 and abs(sh - h) <= 1
 end
 
--- One size row (added when the entry lacks it), noted for Uninstall EUI
+-- One size row (added when the entry lacks it), noted for Uninstall NoxUI
 -- first. pairID: the dimension's other row, which goes back with it.
 local function EMChatSetRow(layout, sys, id, value, pairID)
     local row = EMChatSettingRow(sys, id)
@@ -240,7 +240,7 @@ local function EMChatSetRow(layout, sys, id, value, pairID)
 end
 
 -- Writes emAnchor and, with w, the size into sys (chat's entry of layout),
--- each change noted for Uninstall EUI first.
+-- each change noted for Uninstall NoxUI first.
 local function EMChatWrite(layout, sys, setEnum, w, h)
     if not EMChatAnchorAgrees(sys) then
         NoxUI.NoteEditModeAnchor(layout, sys, emAnchor)
@@ -610,7 +610,7 @@ end
 -- Genesis capture: on the first settled sight with no saved position,
 -- ChatFrame1's current (Edit-Mode-placed) rect becomes OUR saved position.
 -- Pixel-identical takeover -- users see no change on update; from then on
--- chat position is an EUI unlock element.
+-- chat position is an NoxUI unlock element.
 -- The sidebar's footprint left of the chat panel under the current look: its
 -- width, a Separate Sidebar's gap, less the stock column's seat overlap; 0
 -- while it sits on the right or never shows.

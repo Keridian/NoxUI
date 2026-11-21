@@ -33,10 +33,10 @@ I.profileSetters[#I.profileSetters + 1] = function(v) p = v end
 --  UI: the flat vanilla plate -- the user's fill inside a fixed 1px black
 --  edge on the health and cast bars, square full-art icons, the stock
 --  dispel-type border on harmful auras; no ring, mask, panel or bevel. Every
---  EUI feature keeps working; the EUI borders and textures step aside.
+--  NoxUI feature keeps working; the NoxUI borders and textures step aside.
 --  Reload-gated per-profile flags, read only on build/restyle paths. Atlases
 --  are validated once per session so a missing one leaves that piece on the
---  EUI look. ns fields (local cap).
+--  NoxUI look. ns fields (local cap).
 -------------------------------------------------------------------------------
 ns.NP_BLIZZ = {
     bar = "UI-HUD-CoolDownManager-Bar", barBg = "UI-HUD-CoolDownManager-Bar-BG",
@@ -341,7 +341,7 @@ function ns.NP_ApplyClassicCastArt(plate, castH)
     plate.castLeftBorder:Hide()
 end
 -- The vanilla spark: a square on the fill's leading edge, not a bar-tall
--- sliver. Every caller that sizes the spark for the EUI look routes here
+-- sliver. Every caller that sizes the spark for the NoxUI look routes here
 -- under Classic WoW UI instead, so none of them can squash it back.
 function ns.NP_ClassicSpark(plate, k)
     local cast, spark = plate and plate.cast, plate and plate.castSpark
@@ -379,7 +379,7 @@ function ns.NP_Style()
     return v
 end
 -- Stock-art mode: true for both stock styles (the geometry, gating and
--- chrome they share -- zoom 0 icons, no EUI icon borders, no custom border).
+-- chrome they share -- zoom 0 icons, no NoxUI icon borders, no custom border).
 function ns.NP_Blizz() return ns.NP_Style() ~= "eui" end
 function ns.NP_Classic() return ns.NP_Style() == "classic" end
 -- WoW Forever variant: NP_Style() still reads "blizzard" (every stock site
@@ -471,7 +471,7 @@ end
 -- stock plate anchors it, plus the bar's inner shadow. The fill keeps the
 -- user's own Bar Texture (the stock fill art is pre-coloured and darkened
 -- every colour rule), so colours, textures and opacity render as on the
--- EUI look.
+-- NoxUI look.
 function ns.NP_ApplyBlizzBarArt(plate)
     local health = plate.health
     local B = ns.NP_BLIZZ
@@ -1071,7 +1071,7 @@ function ns.NP_BasicBorderColor(plate, r, g, b, a)
     if plate._npRounded then NoxUI.RoundedBorderColor(plate.health, r, g, b, a) end
 end
 
--- Cast bar texture: mirrors ApplyHealthBarTexture with the same texture set (EUI built-ins +
+-- Cast bar texture: mirrors ApplyHealthBarTexture with the same texture set (NoxUI built-ins +
 -- SharedMedia, appended into ns.healthBarTextures at options-build time). On ns (local cap).
 function ns.ApplyCastBarTexture(plate)
     local cast = plate.cast

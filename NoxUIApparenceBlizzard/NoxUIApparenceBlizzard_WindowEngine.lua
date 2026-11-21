@@ -12,7 +12,7 @@ if NUI_CLIENT_BLOQUE then return end -- pre-12.1 client failsafe (NoxUI_ClientGa
 --    "modern" -> identical skin, but the shell backdrop is a flat user-set
 --                color + opacity (one global Modern color, applied live).
 --    "off"    -> the window pack never runs (reload-gated).
---  EUI vs Modern differ ONLY in the shell backdrop; every other element
+--  NoxUI vs Modern differ ONLY in the shell backdrop; every other element
 --  (buttons, tabs, borders, insets) is identical. eui<->modern applies LIVE
 --  via RefreshStyles(); only off<->on needs a reload.
 --
@@ -231,7 +231,7 @@ local function ApplyShellStyle(winKey)
     local entry = _shells[winKey]
     if not entry then return end
     -- a window's own background color/opacity: the backdrop fades with the
-    -- opacity, the tint takes the color (EUI._ShellLooks[winKey] returns both)
+    -- opacity, the tint takes the color (NoxUI._ShellLooks[winKey] returns both)
     local look = EUI and EUI._ShellLooks and EUI._ShellLooks[winKey]
     local tint, opacity
     if look then tint, opacity = look() end
@@ -1505,7 +1505,7 @@ end
 function WSkin.NormalizeTabRow(tabs)
     if not tabs then return end
     -- One physical pixel in the TAB's own coordinate space. Blizzard windows
-    -- run at UIParent scale, NOT the EUI options-panel scale, so PanelPP.mult
+    -- run at UIParent scale, NOT the NoxUI options-panel scale, so PanelPP.mult
     -- is the wrong multiplier -- it lands the gap between 1 and 2 physical
     -- pixels and rounds inconsistently. PP.perfect (= 1 physical pixel at
     -- scale 1) divided by the tab's effective scale is exact at any scale.

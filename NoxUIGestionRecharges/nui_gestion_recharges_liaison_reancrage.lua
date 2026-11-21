@@ -535,7 +535,7 @@ local function CollectAndReanchor()
                                 -- Blizzard's own potion / healthstone row (Combat
                                 -- Potion, Health Potion, Healthstone, Demonic
                                 -- Healthstone: spell categories 4 / 30 / 1711 / 2566,
-                                -- Blizzard's own table): claimed under the EUI item
+                                -- Blizzard's own table): claimed under the NoxUI item
                                 -- preset's key, so it takes the preset's slot and
                                 -- settings, and the preset's own frame stands down
                                 -- while it is live (Phase 3). The key is the row's

@@ -66,7 +66,7 @@ ns.BlockFactories.audio = function(blockCfg, slot, content, barCtx)
     -- synchronously and the block's handler repaints the bar (and the owned tip,
     -- outside a drag), so callers never repaint on their own. Plain SetCVar, not
     -- NoxUI.SetCVar: this is the player's own volume (and mute), which
-    -- Uninstall EUI leaves as it is.
+    -- Uninstall NoxUI leaves as it is.
     local function SetChanVol(ch, v)
         SetCVar(ch.cvar, Clamp(v, 0, 1))
     end

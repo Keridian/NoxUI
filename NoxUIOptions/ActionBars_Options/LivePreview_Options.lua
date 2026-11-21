@@ -166,7 +166,7 @@ local function BuildLivePreview(parent, yOff)
     -- on the icon and the icon-frame ring at its stock 46x45-on-45 ratio.
     -- Classic WoW UI: the vanilla slot ring at 66/36 of the button
     -- (CENTER 0,-1/36), the empty-slot art on an empty slot, no mask. No
-    -- EUI border, shape or backdrop either way. Built once per button,
+    -- NoxUI border, shape or backdrop either way. Built once per button,
     -- re-sized per pass; the kit not in use steps aside.
     local blizzMaskInfo
     local function ApplyBlizzPreviewButton(entry, bf, icon, classic, filled)
@@ -298,7 +298,7 @@ local function BuildLivePreview(parent, yOff)
         local zoom = ((settings.iconZoom or EAB.db.profile.iconZoom or 5.5)) / 100
         local square    = EAB.db.profile.squareIcons
         -- Stock styles: stock button art (see ApplyBlizzPreviewButton);
-        -- shapes, zoom and EUI borders do not apply, as on the live bars.
+        -- shapes, zoom and NoxUI borders do not apply, as on the live bars.
         local abStyle   = NoxUI.BlizzStyle.Active("actionbars")
         local blizzAB   = abStyle ~= "eui"
         local classicAB = abStyle == "classic"
@@ -542,7 +542,7 @@ local function BuildLivePreview(parent, yOff)
                 if blizzAB then
                     ApplyBlizzPreviewButton(entry, bf, icon, classicAB, iconTex and true or false)
                 else
-                -- The styles' rings and mask step aside on the EUI look (the
+                -- The styles' rings and mask step aside on the NoxUI look (the
                 -- flag is a live read: a profile switch can flip it mid-page).
                 if entry.blizzRing then entry.blizzRing:Hide() end
                 if entry.blizzMask then entry.blizzMask:Hide() end
@@ -748,7 +748,7 @@ local function BuildLivePreview(parent, yOff)
                         end
                     end
                 end
-                end -- close Blizzard Style / EUI look split
+                end -- close Blizzard Style / NoxUI look split
                 local keybindFS = entry.keybind
                 if hideKB then
                     keybindFS:SetText("")

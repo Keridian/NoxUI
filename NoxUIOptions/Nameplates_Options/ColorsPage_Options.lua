@@ -1908,7 +1908,7 @@ local function BuildColorsPage(pageName, parent, yOffset)
     -- Show Threat On: which parts of the plate carry the threat colors above. Border and
     -- Name are second signals beside the Health Bar, so the bar can keep its Enemy Types
     -- color (Caster / Mini-Boss / Boss) while the border and the name show aggro.
-    -- Border locks while no EUI border is drawn (None, or a stock style). Built as a
+    -- Border locks while no NoxUI border is drawn (None, or a stock style). Built as a
     -- placeholder dropdown (its disabled config dims the label and blocks the slot) and
     -- replaced below in whichever half of chanRow holds it.
     local chanCfg = { type="dropdown", text="Show Threat On",

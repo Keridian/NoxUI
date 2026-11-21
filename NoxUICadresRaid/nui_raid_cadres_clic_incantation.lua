@@ -1970,7 +1970,7 @@ local function DoRegisterFrame(frame)
     local cc = GetClickCastDB()
     if not (cc and cc.enabled) then return end
     -- No early-out on registeredFrames[frame]: re-registration MUST re-apply click
-    -- attributes. EUI frames first register mid-spawn (via oUF's ClickCastFrames add);
+    -- attributes. NoxUI frames first register mid-spawn (via oUF's ClickCastFrames add);
     -- SetupUnitMenu then re-attaches the secure menu (AttachSecureUnitMenu wipes type2
     -- and re-sets the *type2 menu wildcard) and re-adds the frame -- short-circuiting
     -- would leave the menu in charge and silently revert bound right-clicks every
@@ -1990,7 +1990,7 @@ local function DoRegisterFrame(frame)
     if not wrappedFrames[frame] then
         wrappedFrames[frame] = true
         header:WrapScript(frame, "OnEnter", [[
-            -- Record the hovered EUI frame (the state-driver clear guard reads it),
+            -- Record the hovered NoxUI frame (the state-driver clear guard reads it),
             -- run the per-frame keyboard setup, then SET the hover override binding
             -- right now if it isn't already active -- so a keypress on arrival can
             -- never lose the race against the binding being set.
@@ -2004,7 +2004,7 @@ local function DoRegisterFrame(frame)
         header:WrapScript(frame, "OnLeave", [[
             -- Forget the hovered frame (so the guard stops protecting it) and run
             -- the per-frame keyboard teardown. The hover binding itself is left to
-            -- the guarded state driver so moving onto a non-EUI frame keeps it.
+            -- the guarded state driver so moving onto a non-NoxUI frame keeps it.
             if eui_hoverframe == self then eui_hoverframe = nil end
             control:RunFor(self, control:GetAttribute("eui_setup_onleave"))
         ]])
@@ -2428,7 +2428,7 @@ function ns.CC_ApplyBindings()
     -- Hovercast + frame keyboard failsafe, unified on ONE header state driver
     -- (eui_cc, [@mouseover,exists]). Override is SET instantly on the frame's
     -- OnEnter (eui_hover_set) so a keypress on arrival never loses the race; the
-    -- driver ALSO sets on "on" (covers non-EUI targets like nameplates with no
+    -- driver ALSO sets on "on" (covers non-NoxUI targets like nameplates with no
     -- OnEnter wrap) and on "off" clears + runs the keyboard failsafe, GUARDED
     -- so a transient exists==0 flicker (common in follower dungeons) while the
     -- last-hovered frame is still under the cursor can't strand it cleared.
@@ -3042,7 +3042,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
     local ICON_SZ      = 36
     local ADD_BTN_H    = 30
     local ADD_BTN_PAD  = 10
-    local SPELL_STRIP_W = 57  -- narrow spell icon strip (outside the root, on EUI window edge)
+    local SPELL_STRIP_W = 57  -- narrow spell icon strip (outside the root, on NoxUI window edge)
     local SIDEBAR_PCT  = 0.24
     local sidebarW     = floor(parentW * SIDEBAR_PCT)
     local centerW      = parentW - sidebarW * 2
@@ -3688,7 +3688,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
         local btnMidYG = select(2, addGlobalBtn:GetCenter()) or 0
         local sidebarMidYG = select(2, leftOuter:GetCenter()) or 0
         local offsetYG = btnMidYG - sidebarMidYG
-        -- Clamp so popup bottom doesn't go below root (EUI window)
+        -- Clamp so popup bottom doesn't go below root (NoxUI window)
         local rootBot = root:GetBottom() or 0
         local popupBotG = btnMidYG - popupHG / 2
         if popupBotG < rootBot then offsetYG = offsetYG + (rootBot - popupBotG) end
@@ -4243,7 +4243,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
         local btnMidY = select(2, addSpecBtn:GetCenter()) or 0
         local sidebarMidY = select(2, rightOuter:GetCenter()) or 0
         local offsetY = btnMidY - sidebarMidY
-        -- Clamp so popup bottom doesn't go below root (EUI window)
+        -- Clamp so popup bottom doesn't go below root (NoxUI window)
         local rootBotR = root:GetBottom() or 0
         local popupBotR = btnMidY - popupH2 / 2
         if popupBotR < rootBotR then offsetY = offsetY + (rootBotR - popupBotR) end
@@ -4461,7 +4461,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
 
     ---------------------------------------------------------------------------
     --  CENTER CONTENT
-    --  Uses the standard EUI row pattern: ROW_H=50 frames with RowBg,
+    --  Uses the standard NoxUI row pattern: ROW_H=50 frames with RowBg,
     --  SIDE_PAD=20, label on left, control on right.
     ---------------------------------------------------------------------------
     local centerFrame = CreateFrame("Frame", nil, root)
@@ -4613,7 +4613,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
     do
         local row = MakeRow(centerY)
         RowLabel(row, "Mouseover Frames")
-        local mfValues = { all = "All Unit Frames", rf = "EUI Raid & Party Frames" }
+        local mfValues = { all = "All Unit Frames", rf = "NoxUI Raid & Party Frames" }
         local mfOrder = { "all", "rf" }
         local ddCtrl = NoxUI.BuildDropdownControl(
             row, 190, row:GetFrameLevel() + 2,
@@ -4895,7 +4895,7 @@ function ns.CC_BuildPage(pageName, parent, yOffset)
         local SS_PAD = 10
         local SS_GAP = 4
 
-        -- Parent to the EUI panel (outside the scroll system) so it's flush with the window edge
+        -- Parent to the NoxUI panel (outside the scroll system) so it's flush with the window edge
         local euiPanel = scrollFrame:GetParent()
         local host = euiPanel or root
         local stripOuter = ns._ccSpellStrip
