@@ -1,6 +1,6 @@
 NoxUI
 Version actuelle de NoxUI : 0.2.5.0
 
-Base de travail issue de la version 9.8.4 fournie par le propriétaire du projet.
+Base de travail issue de la version 0.2.5.0 fournie par le propriétaire du projet.
 Renommage automatique initial : validation fonctionnelle en jeu nécessaire.
 Les licences ont été conservées sans modification. Les autorisations relatives aux composants tiers doivent être vérifiées avant redistribution.
