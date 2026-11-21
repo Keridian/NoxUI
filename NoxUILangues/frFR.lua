@@ -7308,6 +7308,7 @@ L["Draws the dispel-colored ring in this border style's shape instead of flat li
 L["Wraps into a new row (or column for vertical growth) after this many icons; below 2 keeps one continuous run."] = "Passe à une nouvelle rangée après ce nombre d'icônes, ou à une nouvelle colonne pour une disposition verticale. Une valeur inférieure à 2 conserve une seule ligne."
 L["Character Sheet: Blizz Default"] = "Feuille de personnage Blizzard par défaut"
 L["How enchants show beside each item."] = "Détermine l'affichage des enchantements à côté de chaque objet."
+L["Show each item's own stats, armor and weapon DPS. To hide enchantment bonuses beside the slots, set Enchants to None."] = "Affiche les caractéristiques propres à l’objet, son armure et le DPS des armes. Pour masquer les bonus d’enchantement à côté des emplacements, règle Enchantements sur Aucun."
 L["Secondary Stats or Tertiary Stats"] = "Caractéristiques secondaires ou tertiaires"
 L["This option does not work with the Gamepad interface style."] = "Cette option ne fonctionne pas avec le style d'interface manette."
 L["On NoxUI nameplates."] = "Sur les barres de noms NoxUI."

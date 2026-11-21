@@ -1622,7 +1622,7 @@ initFrame:SetScript("OnEvent", function(self)
             local statsRow
             statsRow, h = W:DualRow(parent, y,
                 { type="toggle", text="Show Item Stats",
-                  tooltip="Show each item's main and secondary stat (or its armor) and each weapon's damage per second beside its slot.",
+                  tooltip="Show each item's own stats, armor and weapon DPS. To hide enchantment bonuses beside the slots, set Enchants to None.",
                   getValue=function() return NoxUIDB and NoxUIDB.showUpgradeTrack ~= false end,
                   setValue=function(v)
                       if not NoxUIDB then NoxUIDB = {} end
