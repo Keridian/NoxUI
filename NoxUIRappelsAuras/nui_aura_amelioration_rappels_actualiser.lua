@@ -928,6 +928,124 @@ local function MissingAwarenessItem(auraLock)
     if CachedGetItemCount(281371) > 0 then return 281371 end
 end
 
+do
+    -- Each entry lists the item's aura in descending strength order.
+    local reminders = {
+        { key="intellect", label="Intelligence", family="ai", items={
+            {9179,11396,25},{250328,1250918,25},{13447,17535,18},{10308,12176,16},{4419,8098,12},
+            {250354,1250989,10},{2290,8097,8},{250353,1250988,6},{955,8096,4},{3383,3166,3} } },
+        { key="strength", label="Force", items={
+            {250351,1250986,25},{9206,11405,25},{250350,1250985,18},{10310,12179,17},{4426,8120,13},
+            {250349,1250984,10},{2289,8119,9},{3391,3164,8},{6662,8212,8},{954,8118,5},{2454,2367,4} } },
+        { key="agility", label="Agilité", items={
+            {13452,17538,25},{250328,1250918,25},{9187,11334,25},{250350,1250985,18},{10309,12174,17},
+            {8949,11328,15},{4425,8117,13},{1477,8116,9},{3390,3160,8},{3012,8115,5},{2457,2374,4} } },
+        { key="stamina", label="Endurance", family="fort", items={
+            {10307,12178,16},{4422,8101,12},{1711,8100,8},{1180,8099,4} } },
+        { key="spirit", label="Esprit", family="spirit", items={
+            {250348,1250981,25},{250338,1250941,25},{13447,17535,18},{250347,1250979,18},{10306,12177,15},
+            {4424,8114,11},{250346,1250978,10},{1712,8113,7},{250345,1250976,6},{1181,8112,3},{250344,1250974,3} } },
+        { key="health", label="Santé", items={
+            {250335,1250931,400},{250334,1250928,200},{3825,3593,120},{2458,2378,27} } },
+        { key="armor", label="Armure", items={
+            {250329,1250920,500},{13445,11348,450},{8951,11349,250},{10305,12175,240},{4421,8095,180},
+            {3389,3220,150},{1478,8094,120},{3013,8091,60},{5997,673,50} } },
+    }
+
+    function NoxUI.GetStatConsumableChoices(key)
+        local values, order = { [0] = "Automatique" }, { 0 }
+        for _, reminder in ipairs(reminders) do
+            if reminder.key == key then
+                for _, item in ipairs(reminder.items) do
+                    local itemID = item[1]
+                    local name = C_Item.GetItemNameByID and C_Item.GetItemNameByID(itemID)
+                    if isSecret(name) or type(name) ~= "string" then name = nil end
+                    values[itemID] = name or ("Objet " .. itemID)
+                    order[#order + 1] = itemID
+                end
+                break
+            end
+        end
+        return values, order
+    end
+
+    function EABR.CollectStatConsumables(missing, options)
+        local class = GetPlayerClass()
+        local perClass = options.statConsumablesByClass
+        local settings = type(perClass) == "table" and perClass[class] or options.statConsumables
+        if type(settings) ~= "table" then return end
+        local preferred = options.statConsumablePreferred and options.statConsumablePreferred[class]
+        local thresholds = options.statConsumableWarning and options.statConsumableWarning[class]
+        local upgrades = options.statConsumableUpgrades and options.statConsumableUpgrades[class]
+        local alreadySuggested = {}
+        for _, reminder in ipairs(reminders) do
+            if settings[reminder.key] then
+                local active, readable, expiration, indefinite = false, true, nil, false
+                local activeAmount, expiring, classAura = 0, false, false
+                for _, item in ipairs(reminder.items) do
+                    local ok, aura = pcall(C_UnitAuras.GetPlayerAuraBySpellID, item[2])
+                    if not ok or isSecret(aura) then readable = false; break end
+                    if aura then
+                        active = true
+                        if item[3] > activeAmount then activeAmount = item[3] end
+                        local ending = FvAuraExpiration(aura)
+                        if not ending then indefinite = true
+                        elseif not expiration or ending > expiration then expiration = ending end
+                    end
+                end
+                local warning = thresholds and thresholds[reminder.key] or 0
+                if active and not indefinite and expiration and warning > 0 and EABR.ShowUnderThresholdApplies() then
+                    local remaining = expiration - GetTime()
+                    if remaining > 0 and FvNeeds(remaining, warning * 60) then active, expiring = false, true end
+                end
+                local family = reminder.family and NoxUI.FOREVER_BUFF_FAMILIES
+                    and NoxUI.FOREVER_BUFF_FAMILIES[reminder.family]
+                if readable and family and type(family.ids) == "table" then
+                    if NoxUI.AuraKit.AurasRestricted() and not EABR.FvRanksReadable(family.ids) then
+                        readable = false
+                    elseif PlayerHasAuraByID(family.ids) then
+                        active, classAura = true, true
+                    end
+                end
+                local canUpgrade = upgrades and upgrades[reminder.key] and active and not classAura
+                if readable and (not active or canUpgrade) and not _dismissedUntilLoad["forever:stat:" .. reminder.key] then
+                    local selected = preferred and preferred[reminder.key]
+                    local choices = {}
+                    if selected then
+                        for _, item in ipairs(reminder.items) do
+                            if item[1] == selected then choices[#choices + 1] = item; break end
+                        end
+                    end
+                    for _, item in ipairs(reminder.items) do
+                        if item[1] ~= selected then choices[#choices + 1] = item end
+                    end
+                    for _, item in ipairs(choices) do
+                        local itemID = item[1]
+                        local count = CachedGetItemCount(itemID)
+                        local ok, usable = pcall(C_Item.IsUsableItem, itemID)
+                        if not isSecret(count) and type(count) == "number" and count > 0
+                            and (not canUpgrade or item[3] > activeAmount)
+                            and not alreadySuggested[itemID] and ok and not isSecret(usable) and usable then
+                            local entry = AcquireEntry()
+                            entry.mode, entry.itemID = "item", itemID
+                            entry.texture = C_Item.GetItemIconByID(itemID) or Tex(item[2])
+                            entry.label = reminder.label
+                            entry.bagCount = count
+                            if expiration and expiring then
+                                entry.expireAt, entry.expireTotal = expiration, expiration - GetTime()
+                            end
+                            entry.cat, entry.dismissKey = "forever", "forever:stat:" .. reminder.key
+                            missing[#missing + 1] = entry
+                            alreadySuggested[itemID] = true
+                            break
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
 function EABR.CollectForever(missing, inInstance, inPvP)
     local fo = db.profile.forever
     local shows = fo and not InCombat() and EABR.SectionShows(fo.whereToShow, inInstance)
@@ -957,7 +1075,9 @@ function EABR.CollectForever(missing, inInstance, inPvP)
         local _, instanceType = IsInInstance()
         wantCenser = instanceType == "party"
     end
-    EABR.FvSyncBagEvent(shows and (fo.weapon == true or sleepBag or wantCenser) or false)
+    local statClasses = fo and fo.statConsumablesByClass
+    local stats = type(statClasses) == "table" and statClasses[GetPlayerClass()] or fo and fo.statConsumables
+    EABR.FvSyncBagEvent(shows and (fo.weapon == true or sleepBag or wantCenser or (type(stats) == "table" and next(stats) ~= nil)) or false)
     local watchPickerSpells = shows and PickerEnabled() or false
     if watchPickerSpells ~= (EABR._fvPickerSpellEvents or false) then
         EABR.FvSyncPickerSpellEvents(watchPickerSpells)
@@ -968,6 +1088,7 @@ function EABR.CollectForever(missing, inInstance, inPvP)
         return
     end
     local open = not inPvP
+    if open then EABR.CollectStatConsumables(missing, fo) end
     -- Under the aura lock a secret aura reads absent, so an aura reminder
     -- shows only while none of its spells is secret.
     local auraLock = NoxUI.AuraKit.AurasRestricted()

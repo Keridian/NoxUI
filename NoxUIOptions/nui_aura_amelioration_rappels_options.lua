@@ -1952,6 +1952,77 @@ initFrame:SetScript("OnEvent", function(self)
                       RefreshAll()
                   end } or NoxUI.BlankRowCfg()); y = y - h
 
+            local function StatSettings(create)
+                local f = FDB()
+                local class = select(2, UnitClass("player"))
+                if not f or not class then return end
+                if not f.statConsumablesByClass then
+                    if not create then return f.statConsumables end
+                    f.statConsumablesByClass = {}
+                end
+                local settings = f.statConsumablesByClass[class]
+                if not settings and create then
+                    settings = {}
+                    for key, value in pairs(f.statConsumables or {}) do settings[key] = value end
+                    f.statConsumablesByClass[class] = settings
+                end
+                return settings
+            end
+            local function ClassValue(store, key, value, write)
+                local f = FDB()
+                local class = select(2, UnitClass("player"))
+                if not f or not class then return end
+                if write then
+                    f[store] = f[store] or {}
+                    f[store][class] = f[store][class] or {}
+                    f[store][class][key] = value ~= 0 and value or nil
+                    RefreshAll()
+                end
+                return f[store] and f[store][class] and f[store][class][key]
+            end
+            local function ConsumableOption(key, label)
+                return { type="toggle", text=label,
+                    tooltip="Rappelle un consommable disponible lorsque son amélioration est absente.",
+                    getValue=function() local t = StatSettings(); return t and t[key] == true end,
+                    setValue=function(value)
+                        local t = StatSettings(true)
+                        if t then t[key] = value and true or nil; RefreshAll() end
+                    end }
+            end
+            local function ConsumableCog(region, key, label)
+                local values, order = { [0] = "Automatique" }, { 0 }
+                if NoxUI.GetStatConsumableChoices then
+                    values, order = NoxUI.GetStatConsumableChoices(key)
+                end
+                NoxUI.BuildInlineCog(region, {
+                    title=label,
+                    disabled=function() local t = StatSettings(); return not (t and t[key]) end,
+                    rows={
+                        { type="dropdown", label="Consommable préféré", values=values, order=order, ddWidth=220,
+                          get=function() return ClassValue("statConsumablePreferred", key) or 0 end,
+                          set=function(v) ClassValue("statConsumablePreferred", key, v, true) end },
+                        { type="toggle", label="Proposer un consommable plus puissant",
+                          get=function() return ClassValue("statConsumableUpgrades", key) == true end,
+                          set=function(v) ClassValue("statConsumableUpgrades", key, v and true or 0, true) end },
+                        { type="slider", label="Prévenir avant expiration (minutes)", min=0, max=10, step=1,
+                          get=function() return ClassValue("statConsumableWarning", key) or 0 end,
+                          set=function(v) ClassValue("statConsumableWarning", key, v, true) end },
+                    },
+                })
+            end
+            local function ConsumableRow(first, second)
+                local row
+                row, h = W:DualRow(parent, y, ConsumableOption(first[1], first[2]),
+                    second and ConsumableOption(second[1], second[2]) or NoxUI.BlankRowCfg())
+                y = y - h
+                ConsumableCog(row._leftRegion, first[1], first[2])
+                if second then ConsumableCog(row._rightRegion, second[1], second[2]) end
+            end
+            ConsumableRow({"intellect", "Consommable d'intelligence"}, {"strength", "Consommable de force"})
+            ConsumableRow({"agility", "Consommable d'agilité"}, {"stamina", "Consommable d'endurance"})
+            ConsumableRow({"spirit", "Consommable d'esprit"}, {"armor", "Consommable d'armure"})
+            ConsumableRow({"health", "Consommable de santé"})
+
             -- Well Fed | Gathering Tracking (+ class tracking cog)
             local gatherRow
             gatherRow, h = W:DualRow(parent, y,

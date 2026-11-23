@@ -328,7 +328,12 @@ do
             f._cachedPresetSID = sid
         end
         local want, opted
-        local cas = sid and ns._cdmAnyCustomRangeColor and ns.GetEffectiveCustomActiveState(sid)
+        local settingID = sid
+        if f._rankSID then
+            local frameData = _ecmeFC[f]
+            settingID = (frameData and frameData.spellID) or sid
+        end
+        local cas = settingID and ns._cdmAnyCustomRangeColor and ns.GetEffectiveCustomActiveState(settingID)
         if cas and cas.outOfRangeColoring then
             opted = true
             local ovr = C_SpellBook.FindSpellOverrideByID(sid)

@@ -397,6 +397,7 @@ local function BuildBars()
         local healthAnchorKey = NormalizeAnchorKey(hp.anchorTo)
         if NoxUI._TryOverrideAnchor and NoxUI._TryOverrideAnchor("ERB_Health", healthBar) then
             -- Override anchor owns positioning; only update size
+            ApplyBarAnchor(healthBar, "none")
             local ow, oh = OrientedSize(hpWidth, hpHeight, hpOri)
             healthBar:SetSize(ow, oh)
         elseif healthAnchorKey ~= "none" then
@@ -405,6 +406,8 @@ local function BuildBars()
             healthBar:SetSize(ow, oh)
             if not ApplyBarAnchor(healthBar, healthAnchorKey, hp.anchorPosition, offsetX, offsetY, hp.growthDirection, hp.growCentered) then
                 ApplyFreeBarPosition(healthBar, hp, 0, -64, ow, oh)
+            elseif healthAnchorKey == "mouse" then
+                I.PlaceCursorStandIn(healthBar, "ERB_Health", hp, 0, -64, ow, oh)
             end
         elseif hp.unlockPos and hp.unlockPos.point then
             local rp = hp.unlockPos.relPoint or hp.unlockPos.point
@@ -572,8 +575,9 @@ local function BuildBars()
         local primaryOverrideOwned = NoxUI._TryOverrideAnchor
             and NoxUI._TryOverrideAnchor("ERB_Power", primaryBar)
         local primaryUnlockAnchored = NoxUI.IsUnlockAnchored("ERB_Power")
-        if primaryOverrideOwned or primaryUnlockAnchored then
+        if primaryOverrideOwned or (primaryUnlockAnchored and primaryAnchorKey ~= "mouse") then
             -- Unlock anchor system / override anchor owns positioning; only update size
+            ns.ERB_LeaveCursorForLink(primaryBar, "ERB_Power", primaryOverrideOwned)
             local ow, oh = OrientedSize(ppWidth, ppHeight, ppOri)
             primaryBar:SetSize(ow, oh)
         elseif primaryAnchorKey ~= "none" then
@@ -582,6 +586,9 @@ local function BuildBars()
             primaryBar:SetSize(ow, oh)
             if not ApplyBarAnchor(primaryBar, primaryAnchorKey, pp.anchorPosition, offsetX, offsetY, pp.growthDirection, pp.growCentered) then
                 ApplyFreeBarPosition(primaryBar, pp, 0, -54, ow, oh)
+            elseif primaryAnchorKey == "mouse" then
+                I.PlaceCursorStandIn(primaryBar, "ERB_Power", pp, 0, -54, ow, oh,
+                    ppExpandDelta > 0 and ppDirSign * ppExpandDelta * 0.5 or 0)
             end
         elseif pp.unlockPos and pp.unlockPos.point then
             local rp = pp.unlockPos.relPoint or pp.unlockPos.point
@@ -819,14 +826,17 @@ local function BuildBars()
         local secondaryOverrideOwned = NoxUI._TryOverrideAnchor
             and NoxUI._TryOverrideAnchor("ERB_ClassResource", secondaryFrame)
         local secondaryUnlockAnchored = NoxUI.IsUnlockAnchored("ERB_ClassResource")
-        if secondaryOverrideOwned or secondaryUnlockAnchored then
+        if secondaryOverrideOwned or (secondaryUnlockAnchored and secondaryAnchorKey ~= "mouse") then
             -- Unlock anchor system / override anchor owns positioning; only update size
+            ns.ERB_LeaveCursorForLink(secondaryFrame, "ERB_ClassResource", secondaryOverrideOwned)
             secondaryFrame:SetSize(frameW, frameH)
         elseif secondaryAnchorKey ~= "none" then
             local offsetX, offsetY = GetAnchorOffsets(sp)
             secondaryFrame:SetSize(frameW, frameH)
             if not ApplyBarAnchor(secondaryFrame, secondaryAnchorKey, sp.anchorPosition, offsetX, offsetY, sp.growthDirection, sp.growCentered) then
                 ApplyFreeBarPosition(secondaryFrame, sp, 0, -38, frameW, frameH)
+            elseif secondaryAnchorKey == "mouse" then
+                I.PlaceCursorStandIn(secondaryFrame, "ERB_ClassResource", sp, 0, -38, frameW, frameH)
             end
         elseif sp.unlockPos and sp.unlockPos.point then
             ApplyBarAnchor(secondaryFrame, "none")
@@ -1498,6 +1508,8 @@ local function BuildBars()
             end
         end
     end
+
+    I.ResolveCursorFollowers()
 
     -- WoW Forever druid mana bar (nui_ressource_barres_forever_druide_mana.lua):
     -- restyled after every Power Bar build; nil on every other client/class.

@@ -62,7 +62,7 @@ do
         local prof = sp[specKey]
         if not prof then
             if not create then return nil end
-            prof = { barSpells = {} }
+            prof = NoxUI.NewCooldownSpecProfile()
             sp[specKey] = prof
         end
         if not prof.tbbUnlockLinks and create then
@@ -478,7 +478,7 @@ function ns.AddBarToAllSpecs(srcIdx)
         if specID then
             local key = tostring(specID)
             if key ~= activeKey then
-                if not sp[key] then sp[key] = { barSpells = {} } end
+                if not sp[key] then sp[key] = NoxUI.NewCooldownSpecProfile() end
                 local prof = sp[key]
                 if not prof.trackedBuffBars then
                     prof.trackedBuffBars = { selectedBar = 1, bars = {} }

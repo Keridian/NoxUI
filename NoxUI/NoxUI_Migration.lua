@@ -61,6 +61,16 @@ local function GetFlagTable(host)
     return host._migrations
 end
 
+-- New specializations already use the current storage layout.
+function NoxUI.NewCooldownSpecProfile()
+    local profile = { barSpells = {} }
+    local flags = GetFlagTable(profile)
+    for _, migration in ipairs(_migrations) do
+        if migration.scope == "specProfile" then flags[migration.id] = true end
+    end
+    return profile
+end
+
 -- Run a single migration body, stamp the flag on success, log on error.
 local function RunOne(spec, ctx, flagHost)
     local flags = GetFlagTable(flagHost)

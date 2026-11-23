@@ -25,7 +25,7 @@ d.dungeonCard = true            -- the card open (false: folded to its title)
 d.dungeonLevels = true          -- each entrance's level range under its icon
 d.dungeonHints = 0              -- dungeon maps opened with the how-to-leave hint (it shows for the first few)
 d.dungeonTab = "floors"         -- the dungeon map's side panel: floors, bosses, quests or loot
-d.dungeonDockTab = "dungeon"    -- the tab picked beside the quest log on a dungeon's map: "dungeon" or "quests"
+d.dungeonInside = true          -- the map opened inside a dungeon shows its map (off: as the game would)
 d.entrances = {}                -- lines /openmap entrance recorded, to paste into build.py
 d.bossPlaced = {}               -- bosses placed with /openmap bosses: [instance key][boss] = { floor, x, y }
 
@@ -39,6 +39,10 @@ local WING_FLOORS = {
 	["Scarlet Monastery - Graveyard"] = "Graveyard", ["Scarlet Monastery - Library"] = "Library",
 	["Scarlet Monastery - Armory"] = "Armory", ["Scarlet Monastery - Cathedral"] = "Cathedral",
 }
+-- client/journal names that differ from Places.lua's instance names (#289)
+local NAME_ALIASES = {
+	["Stormwind Stockade"] = { "The Stockade", "The Stockades", "Stockade" },
+}
 local CARD_W = 270
 
 local map, sc, chooser, card
@@ -47,6 +51,7 @@ local byMap                     -- a dungeon's map (each floor) -> { insts = { .
 local returnTo                  -- the world as it was when a dungeon's map was opened: { u, v, zoom, maps = { [mapID] = true } }
 local away = {}                 -- maps off the stitched world a dock has opened (Zephras Isle): [mapID] = true
 local shownMap, lastMap         -- the map the window shows, and the one before it
+local hiddenAt, hiddenWith      -- when the map last closed, and the view that was up then: { inst, its entrance's u, v, the floor }
 
 local function MapsOn() return mod.db.dungeonMaps ~= false end   -- (Options' Dungeon maps)
 mod.DungeonMapsOn = MapsOn
@@ -87,7 +92,12 @@ end
 -- a dungeon's map in this client (Blizzard's, found by its name), every floor of it
 local function BaseMap(inst)
 	local real = GetRealZoneText and inst[1] > 0 and Safe.Call(GetRealZoneText, inst[1])
-	return (real and real ~= "" and S.InstanceMap(real)) or S.InstanceMap(inst[2])
+	local id = (real and real ~= "" and S.InstanceMap(real)) or S.InstanceMap(inst[2])
+	if id then return id end
+	for _, alt in ipairs(NAME_ALIASES[inst[2]] or {}) do
+		id = S.InstanceMap(alt)
+		if id then return id end
+	end
 end
 
 local function Floors(id)
@@ -275,6 +285,23 @@ local function CloseView()
 	Sound("IG_QUEST_LOG_CLOSE")
 	view:Hide()
 	RefreshCard()
+	-- (opened as the map opened inside the dungeon: under it is the game's map of the instance, not the
+	-- stitched world, and closing the view left you on that: up to the world around its entrance)
+	if map and map:IsShown() and not mod.IsStitched() and not PadView() and not (mod.PadWaits and mod.PadWaits()) then
+		local u, v, zoom = view.fromU, view.fromV, nil
+		if not u and mod.InstanceEntranceView then u, v, zoom = mod.InstanceEntranceView() end
+		-- (an entrance the tables don't place: where you last were outdoors, Nav.lua's)
+		local last = mod.outsideInstanceView
+		if not u and last then u, v = last[1], last[2] end
+		local chain = u and S.ChainAt(u, v)
+		local zone = chain and chain[#chain]
+		if zone then
+			S.OpenMap(zone)
+			if mod.IsStitched() then mod.ShowNow(u, v, zoom or math.max(mod.FitZoom(zone) * 2, 6)) end
+		elseif map.NavigateToParentMap then
+			map:NavigateToParentMap()
+		end
+	end
 end
 
 local function Wheel(delta)
@@ -300,7 +327,7 @@ local function BuildView()
 	view:SetClipsChildren(true)
 	-- (the gamepad's cursor presses its tabs and buttons, and A on it isn't the map's under it: Gamepad.lua)
 	mod.padRoots[#mod.padRoots + 1] = view
-	tinsert(UISpecialFrames, "OpenMapDungeonView")
+	if not PadView() then tinsert(UISpecialFrames, "OpenMapDungeonView") end   -- (the Gamepad UI reads that list)
 	local bg = view:CreateTexture(nil, "BACKGROUND")
 	bg:SetAllPoints()
 	bg:SetColorTexture(0.05, 0.04, 0.03, 0.96)
@@ -366,6 +393,30 @@ local function BuildView()
 		GameTooltip:Show()
 	end)
 	view.back:SetScript("OnLeave", GameTooltip_Hide)
+	-- inside the dungeon itself: the game's own map instead, one click away (Dungeon maps inside dungeons
+	-- off, as the menu's row does; players looked for that switch, #371). Only OpenMap's frames: fine in combat
+	view.gameMap = CreateFrame("Button", nil, bar, "UIPanelButtonTemplate")
+	view.gameMap:SetHeight(24)
+	view.gameMap:SetPoint("RIGHT", view.back, "LEFT", -6, 0)
+	view.gameMap:SetText(L["The game's map"])
+	view.gameMap:SetWidth((view.gameMap:GetFontString():GetStringWidth() or 90) + 28)
+	view.gameMap:SetScript("OnClick", function()
+		mod.db.dungeonInside = false
+		ns:Print(L["OpenMap's dungeon maps are off inside dungeons. To turn them back on: OpenMap's menu > Dungeons > Dungeon maps inside dungeons."])
+		Sound("IG_QUEST_LOG_CLOSE")
+		view:Hide()                                 -- (the game's map of where you are, under it)
+		RefreshCard()
+		if ns.NotifyOptions then ns.NotifyOptions() end
+		if mod.RefreshPanel then mod:RefreshPanel() end
+	end)
+	view.gameMap:SetScript("OnEnter", function(self)
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+		GameTooltip:AddLine(L["The game's map"], 1, 1, 1)
+		GameTooltip:AddLine(L["Inside dungeons, open the game's own map instead of OpenMap's dungeon map. Turn it back on any time: OpenMap's menu > Dungeons > Dungeon maps inside dungeons."], 0.8, 0.8, 0.8, true)
+		GameTooltip:Show()
+	end)
+	view.gameMap:SetScript("OnLeave", GameTooltip_Hide)
+	view.gameMap:Hide()
 	view.where = Look:Font(bar:CreateFontString(nil, "OVERLAY"), 12)
 	view.where:SetPoint("LEFT", 12, 0)
 	view.where:SetTextColor(0.8, 0.7, 0.5)
@@ -567,7 +618,6 @@ local function BuildView()
 			if log and log:IsVisible() then
 				if view.dockTab == self.key then return end
 				view.dockTab = self.key
-				mod.db.dungeonDockTab = self.key   -- (kept: the next dungeon's map opens at it too)
 				Sound("IG_CHARACTER_INFO_TAB")
 				Dock()
 				return
@@ -640,6 +690,40 @@ local function BuildView()
 		Dock()                                      -- (out of the quest log, if it was in it)
 		if card and card:IsShown() then C_Timer.After(0, RefreshCard) end
 	end)
+	-- Escape: back to the world, as a right-click. Escape's own list (UISpecialFrames) closes the game's
+	-- panels in the same go, the map window among them: the whole map shut, and inside a dungeon it then
+	-- opened on the dungeon again, never the world. So the key is taken here, unless another window of
+	-- Escape's is up (it closes that). Not in combat, where a key can't be kept from the game: the map
+	-- closes then, as it did
+	-- (keys are passed on except that Escape: passing them on can't be set in combat, so the keyboard is
+	-- taken only while it's known to pass them on; a view holding it without would swallow every key,
+	-- abilities too)
+	local passing = false
+	local function TakeKeys()
+		if InCombatLockdown() then
+			if not passing then view:EnableKeyboard(false) end
+			return
+		end
+		view:SetPropagateKeyboardInput(true)
+		passing = true
+		view:EnableKeyboard(true)
+	end
+	if not PadView() then
+		TakeKeys()
+		view:HookScript("OnShow", TakeKeys)
+		ns.RegisterEvent(view, "PLAYER_REGEN_ENABLED", function() if view:IsShown() then TakeKeys() end end)
+		view:SetScript("OnKeyDown", function(self, key)
+			if key ~= "ESCAPE" or InCombatLockdown() or self.leaving then return end
+			for _, name in ipairs(UISpecialFrames) do
+				local f = _G[name]
+				if f and f ~= self and type(f) == "table" and f.IsShown and f:IsShown() then return end
+			end
+			self:SetPropagateKeyboardInput(false)
+			passing = false
+			CloseView()
+			C_Timer.After(0, TakeKeys)
+		end)
+	end
 	view:Hide()
 end
 
@@ -1060,6 +1144,12 @@ function mod.PlaceDungeonTabs()
 	end
 end
 
+-- whether you're inside that very dungeon (its map's "The game's map" button, #371)
+function mod.InsideThisDungeon(inst)
+	if not inst or not inst[1] or inst[1] == 0 or not (IsInInstance and IsInInstance()) then return false end
+	return select(8, GetInstanceInfo()) == inst[1]
+end
+
 -- a dungeon's map in the view: its wing's first floor, else its first; grown out of `pin` (the entrance)
 local function OpenView(inst, pin)
 	local t0 = debugprofilestop and debugprofilestop()
@@ -1090,10 +1180,14 @@ local function OpenView(inst, pin)
 	local info = zone and zone[#zone] and C_Map.GetMapInfo(zone[#zone])
 	view.back:SetText("|cffffd100<|r  " .. (info and info.name and L["Back to %s"]:format(info.name) or L["Back"]))
 	view.back:SetWidth((view.back:GetFontString():GetStringWidth() or 80) + 28)
+	-- (the game's own map instead: only inside this very dungeon, and not on the controller view)
+	view.gameMap:SetShown(mod.InsideThisDungeon(inst) and not PadView())
 	view.leaving = nil
 	view:SetAlpha(1)
 	view:Show()
-	view.dockTab = mod.db.dungeonDockTab == "quests" and "quests" or "dungeon"   -- (the tab last picked)
+	-- (beside the quest log, always your quests first: the dungeon's panel only when you pick its tab, for this
+	-- map. It covered the quest log every time, the tab once picked being kept: players' reports)
+	view.dockTab = "quests"
 	Dock()
 	view.floor = nil
 	ShowFloor(first, true)
@@ -1133,38 +1227,16 @@ local function PadWaits()
 end
 mod.PadWaits = PadWaits      -- (Quests.lua's quest icons wait too: opening a quest's details sets the pad's buttons)
 
--- Dungeon Journal (by Exehn, for WoW Forever: /dj): its pages are by its own names for the
--- dungeons ("Scarlet Monastery: Graveyard", "Hall of Thanes"), matched to ours loosely
-local function Journal()
-	local dj = _G.ForeverDungeonJournal_NS
-	if type(dj) == "table" and type(dj.DB) == "table" and type(dj.OpenBossPage) == "function" then return dj end
-end
-local function Plain(name)
+local function DungeonNameKey(name)
 	name = (name or ""):lower():gsub("^the ", ""):gsub("%s*[-:]%s*", ": ")
 	return name
 end
-local function JournalName(inst)
-	local dj = Journal()
-	if not dj then return end
-	local want = Plain(inst[2])
-	for key, entry in pairs(dj.DB) do
-		if type(entry) == "table" and not entry.previewOnly and Plain(key) == want then return key end
-	end
-end
--- its window at the dungeon's page (bosses, or `quests`); false where it has none
-local function OpenJournal(inst, quests)
-	local dj, key = Journal(), JournalName(inst)
-	if not key then return false end
-	-- (shown first: showing it puts up the page it was last on)
-	local frame, toggle = _G.ForeverDungeonJournalFrame, _G.ForeverDungeonJournal_Toggle
-	if not (frame and frame:IsShown()) and type(toggle) == "function" then pcall(toggle) end
-	local open = quests and type(dj.OpenQuestPage) == "function" and dj.OpenQuestPage or dj.OpenBossPage
-	return (pcall(open, key))
-end
+mod.DungeonNameKey = DungeonNameKey
+mod.DungeonNameAliases = NAME_ALIASES   -- (the Stockade's other names, #289: DungeonJournal.lua)
 
 local function Open(inst, pin)
 	if chooser then chooser:Hide() end
-	if mod.db.entranceClick == "journal" and OpenJournal(inst) then return end
+	if mod.db.entranceClick == "journal" and mod.OpenDungeonJournal(inst) then return end
 	local id = MapsOn() and not PadView() and DungeonMap(inst)
 	if id then
 		if PadWaits() then return end
@@ -1294,7 +1366,7 @@ local function Chooser()
 	chooser:EnableMouse(true)
 	chooser:SetClampedToScreen(true)
 	chooser.pad = { Look:Dropdown(chooser) }      -- (the game's own dropdowns' look)
-	tinsert(UISpecialFrames, "OpenMapDungeonChooser")
+	if not PadView() then tinsert(UISpecialFrames, "OpenMapDungeonChooser") end   -- (the Gamepad UI reads that list)
 	chooser.rows = {}
 	chooser:SetScript("OnShow", function(self) self:RegisterEvent("GLOBAL_MOUSE_DOWN") end)
 	chooser:SetScript("OnHide", function(self) self:UnregisterEvent("GLOBAL_MOUSE_DOWN") end)
@@ -1430,13 +1502,12 @@ end
 -- where a dungeon's quests come from: the one chosen, else the first there of Questie (listed here),
 -- Dungeon Journal and NeedRoll (opened at them); nil with none
 local function QuestSource()
-	local have = { questie = _G.QuestieLoader ~= nil, journal = Journal() ~= nil, needroll = NeedRoll() ~= nil }
+	local have = { questie = _G.QuestieLoader ~= nil, journal = mod.HasDungeonJournal(), needroll = NeedRoll() ~= nil }
 	local want = mod.db.questSource
 	if have[want] then return want end
 	return have.questie and "questie" or have.journal and "journal" or have.needroll and "needroll" or nil
 end
 mod.DungeonQuestSource = QuestSource
-mod.HasDungeonJournal = function() return Journal() ~= nil end
 
 -- a dungeon's area as Questie has it: its own, the dungeon its part of belongs to
 local function DungeonArea(zones, areaId)
@@ -1781,8 +1852,8 @@ FillSide = function()
 				end }
 		end
 		if #bosses == 0 then Text("|cff998866" .. L["The game lists no bosses for it."] .. "|r") end
-		if JournalName(inst) then
-			items[#items + 1] = { kind = "button", L["Open in Dungeon Journal"], click = function() OpenJournal(inst) end }
+		if mod.DungeonJournalPage(inst) then
+			items[#items + 1] = { kind = "button", L["Open in Dungeon Journal"], click = function() mod.OpenDungeonJournal(inst) end }
 		end
 		-- other addons' sections (API.lua)
 		for _, section in ipairs(mod.CardSections and mod.CardSections() or {}) do
@@ -1797,9 +1868,9 @@ FillSide = function()
 	elseif tab == "quests" then
 		local source = QuestSource()
 		if source == "journal" then
-			if JournalName(inst) then
+			if mod.DungeonJournalPage(inst) then
 				Text(L["Dungeon Journal has this dungeon's quests: where each one starts, what it asks and what it gives."])
-				items[#items + 1] = { kind = "button", L["Open in Dungeon Journal"], click = function() OpenJournal(inst, true) end }
+				items[#items + 1] = { kind = "button", L["Open in Dungeon Journal"], click = function() mod.OpenDungeonJournal(inst, true) end }
 			else
 				Text("|cff998866" .. L["Dungeon Journal has no page for this dungeon."] .. "|r")
 			end
@@ -2204,10 +2275,11 @@ function mod:Entrance(name)
 		ns:Print(L["Stand in the portal and say which: /openmap entrance Dire Maul - East (the name as OpenMap lists it)."])
 		return
 	end
-	local mapID = C_Map.GetBestMapForUnit and Safe.Call(C_Map.GetBestMapForUnit, "player")
-	local pos = mapID and C_Map.GetPlayerMapPosition(mapID, "player")
-	local x, y = Safe.XY(pos)
-	local ok, cont, world = pcall(C_Map.GetWorldPosFromMapPos, mapID, pos)
+	local mapID, x, y, pos = Safe.PlayerPos()
+	local ok, cont, world
+	if pos then
+		ok, cont, world = pcall(C_Map.GetWorldPosFromMapPos, mapID, pos)
+	end
 	local wx, wy = Safe.XY(world)
 	if not (x and ok and wx and S.Rect(mapID)) then
 		ns:Print(L["Where you are isn't on the world map here."])
@@ -2237,6 +2309,8 @@ function mod:DungeonOptions(opts, get, set, off)
 	opts.dungeonMaps = { type = "toggle", name = L["Dungeon maps"], order = 31.02, width = "full", get = get, disabled = off,
 		set = function(_, v) mod.SetDungeonMaps(v) end,
 		desc = L["OpenMap's maps of dungeons and raids: Blizzard's where the client has one, the ones drawn for WoW Forever's where it has none. Off: inside a dungeon the map stays the world map, and an entrance's card opens over it instead."] }
+	opts.dungeonInside = { type = "toggle", name = L["Dungeon maps inside dungeons"], order = 31.025, width = "full", get = get, set = set, disabled = off,
+		desc = L["Opening the map inside a dungeon or raid shows that dungeon's map. Off: the map opens there as the game's own would, and a dungeon's map still opens from its entrance on the world map. With Dungeon Journal installed, its map is left to it inside a dungeon it has a page for."] }
 	opts.dungeonBosses = { type = "toggle", name = L["Dungeon maps: bosses"], order = 31.1, width = "full", get = get, set = set, disabled = off,
 		desc = L["A dungeon's map lists its bosses, in the game's order, and pins where they are."] }
 	opts.dungeonMinimap = { type = "toggle", name = L["Dungeon maps from the minimap"], order = 31.03, width = "full", get = get, disabled = off,
@@ -2255,22 +2329,192 @@ function mod:DungeonOptions(opts, get, set, off)
 		desc = L["With Dungeon Journal installed, an entrance can open that dungeon's page in it instead of its map (its map still opens where Dungeon Journal has no page for it)."] }
 end
 
+-- Forever's LFGDungeons table distinguishes these wings. The Dungeon Finder lists
+-- Scarlet Monastery as one dungeon, so its wings use the portal or area name.
+local WING_LFG = {
+	[189] = {},
+	[229] = { [31] = "Lower Blackrock Spire", [43] = "Upper Blackrock Spire" },
+	[429] = { [33] = "Dire Maul - East", [35] = "Dire Maul - West", [37] = "Dire Maul - North" },
+}
+-- Outdoor portal centers in world yards, by world map ID, from Classic Era's AreaTrigger table:
+-- https://github.com/Vladinator/wow-dbc-archive/blob/release/wow_classic_era_latest/areatrigger.csv
+local WING_PORTALS = {
+	[0] = { instanceID = 189, radius = 10,  -- Tirisfal Glades
+		{ 2924.38, -798.429, "Scarlet Monastery - Graveyard" },
+		{ 2925.18, -820.545, "Scarlet Monastery - Cathedral" },
+		{ 2877.98, -839.267, "Scarlet Monastery - Armory" },
+		{ 2859.73, -824.91, "Scarlet Monastery - Library" },
+	},
+	-- Forever's East entrance was observed 27 yards from the Era center.
+	[1] = { instanceID = 429, radius = 35,  -- Feralas
+		{ -3730.48, 933.975, "Dire Maul - East" },
+		{ -3981.58, 771.193, "Dire Maul - East" },
+		{ -4028.21, 123.966, "Dire Maul - East" },
+		{ -3837.79, 1250.23, "Dire Maul - West" },
+		{ -3741.96, 1249.18, "Dire Maul - West" },
+		{ -3520.65, 1068.72, "Dire Maul - North" },
+	},
+}
+local wingNames = {}
+local pendingPortal
+local confirmedWing                   -- a wing identified during this visit
+
+local function SavedWing()
+	return mod.char and mod.char.dungeonWing or confirmedWing
+end
+
+function mod.SampleDungeonPortal()
+	pendingPortal = nil
+	if Safe.Call(IsInInstance) ~= false then return end
+	-- The outdoor position can already be gone by PLAYER_LEAVING_WORLD.
+	local ok, x, y, _, worldID = pcall(UnitPosition, "player")
+	if not ok or not Safe.Finite(x, y, worldID) or (x == 0 and y == 0) then return end
+	local portals = WING_PORTALS[worldID]
+	if not portals then return end
+	local radiusSquared = portals.radius^2
+	for _, portal in ipairs(portals) do
+		if (x - portal[1])^2 + (y - portal[2])^2 <= radiusSquared then
+			pendingPortal = { instanceID = portals.instanceID, wing = portal[3] }
+			return
+		end
+	end
+end
+
+local function InstanceIDs()
+	if not Safe.Call(IsInInstance) then return end
+	local _, _, _, _, _, _, _, instID, _, lfgID = GetInstanceInfo()
+	instID = Safe.Value(instID)
+	if instID and instID ~= 0 then return instID, Safe.Value(lfgID) end
+end
+
+local function WingHere(instID, lfgID, portalWing)
+	local lfgs = ns.Client == "Forever" and WING_LFG[instID]
+	if not lfgs then return end
+	local wing = lfgs[lfgID]
+	if not wing then
+		local names = wingNames[instID]
+		if not names then
+			names = {}
+			for _, floor in ipairs((ns.MapDungeonMaps or {})[instID] or {}) do
+				local name = floor.wing or (instID == 189 and floor.name and "Scarlet Monastery - " .. floor.name)
+				if name then
+					names[DungeonNameKey(name)] = name
+					if floor.name then names[DungeonNameKey(floor.name)] = name end
+				end
+			end
+			for id, name in pairs(lfgs) do
+				local info = C_LFGInfo and Safe.Call(C_LFGInfo.GetDungeonInfo, id)
+				local localized = info and Safe.Value(info.name)
+				if localized and localized ~= "" then names[DungeonNameKey(localized)] = name end
+			end
+			wingNames[instID] = names
+		end
+		wing = names[DungeonNameKey(Safe.Call(GetSubZoneText))] or names[DungeonNameKey(Safe.Call(GetMinimapZoneText))]
+			or names[DungeonNameKey(Safe.Call(GetZoneText))]
+	end
+	wing = wing or portalWing
+	local saved = SavedWing()
+	if wing then
+		if type(saved) ~= "table" or saved[1] ~= instID or saved[2] ~= wing then
+			saved = { instID, wing }
+		end
+		confirmedWing = saved
+		if mod.char then mod.char.dungeonWing = saved end
+	end
+	if type(saved) == "table" and saved[1] == instID then return saved[2], saved end
+end
+
+local function ConfirmPortalWing(event, instID, initialLogin, reloading)
+	local portal = pendingPortal
+	if not portal then return end
+	if event == "PLAYER_ENTERING_WORLD" then
+		if initialLogin or reloading then pendingPortal = nil return end
+		portal.entered = true
+	elseif event == "LOADING_SCREEN_DISABLED" then
+		portal.closedAt = GetTime()
+	else
+		return
+	end
+	if not portal.entered then return end
+	-- The instance ID can catch up as the loading screen closes. Either event can arrive first.
+	local matches = instID == portal.instanceID and (not portal.closedAt or GetTime() - portal.closedAt <= 2)
+	if matches or portal.closedAt then pendingPortal = nil end
+	if matches then return portal.wing end
+end
+
 -- the dungeon you're in, as Places.lua has it (nil: not in one, or one it doesn't list); one with no
 -- entrance yet (unplaced) too. (WoW Forever's own the tables had no mapID for were never found: The
 -- Drowned City's map didn't open inside it; they have their instance's mapID now, #149)
 local function InstanceHere()
-	if not IsInInstance or not IsInInstance() then return end
-	local instID = select(8, GetInstanceInfo())
-	if not instID or instID == 0 then return end   -- (0: no instance, never one of the name-keyed)
+	local instID, lfgID = InstanceIDs()
+	if not instID then return end
+	local wing, record = WingHere(instID, lfgID)
 	local places = Places()
+	local first
 	for _, g in ipairs(places.instances or {}) do
 		for _, inst in ipairs(g[4]) do
-			if inst[1] == instID then return inst end
+			if inst[1] == instID then
+				if not wing then return inst end
+				if inst[2] == wing then return inst, record end
+				first = first or inst
+			end
 		end
 	end
+	if first then return first end
 	for _, inst in ipairs(places.unplaced or {}) do
 		if inst[1] == instID then return inst end
 	end
+end
+
+function mod.ActiveDungeonWing()
+	if not (map and map:IsShown() and MapsOn()) or mod.db.dungeonInside == false or NeedRoll() then return end
+	local record = SavedWing()
+	if type(record) == "table" and InstanceIDs() == record[1] then return record, record == confirmedWing end
+end
+
+-- Instance and zone events can arrive before Blizzard's world map has loaded.
+function mod.NoteDungeonWing(event, initialLogin, reloading)
+	if ns.Client ~= "Forever" then return end
+	local previous = confirmedWing
+	if event == "PLAYER_ENTERING_WORLD" then confirmedWing = nil end
+	local instID, lfgID = InstanceIDs()
+	local portalWing = ConfirmPortalWing(event, instID, initialLogin, reloading)
+	if not instID then return end
+	WingHere(instID, lfgID, portalWing)
+	if confirmedWing and confirmedWing ~= previous and map and map:IsShown() and not (view and view:IsShown())
+		and MapsOn() and mod.db.dungeonInside ~= false and not NeedRoll() then
+		local inst, record = InstanceHere()
+		if inst and record then mod.DungeonJournalHandlesMap(inst, record, true) end
+	end
+end
+
+-- a dungeon you've been inside counts as found ("Only places you've found"), remembered per character:
+-- an entrance whose ground the map's explored pieces don't cover (Blackfathom Deeps, under the Zoram
+-- Strand's water; or reached by the group finder) never showed, done or not (#256)
+local function NoteEntered()
+	local inst = InstanceHere()
+	if not inst or inst[1] == 0 or not mod.char then return end
+	mod.char.entered = mod.char.entered or {}
+	if mod.char.entered[inst[1]] then return end
+	mod.char.entered[inst[1]] = true
+	if S.RefreshFound then S.RefreshFound() end
+end
+-- the first dungeon you're in, once per account: where OpenMap's map of it can be turned off (players hunted
+-- for the switch). Not where Dungeon Journal's or NeedRoll's map is left to them, nor with it off already
+local function NoteDungeonMap()
+	local inst = InstanceHere()
+	if not inst or mod.db.dungeonMapNoted or not MapsOn() or mod.db.dungeonInside == false then return end
+	if mod.DungeonJournalHandlesMap(inst) or NeedRoll() then return end
+	mod.db.dungeonMapNoted = true
+	ns:Print(L["Opening the map in a dungeon shows OpenMap's map of it. To turn that off: OpenMap's menu > Dungeons > Dungeon maps inside dungeons."])
+end
+function S.Entered(pin)
+	local seen = mod.char and mod.char.entered
+	if not seen or not pin.instances then return false end
+	for _, inst in ipairs(pin.instances) do
+		if seen[inst[1]] then return true end
+	end
+	return false
 end
 
 -- The outdoor entrance is a useful world position while the player's coordinates are indoors.
@@ -2362,8 +2606,7 @@ function mod:SetupDungeons(worldMap)
 		if not (view and view:IsShown()) then return end
 		if pick then
 			-- (opened from one of the tabs: that one, kept; else the tab last picked)
-			if view.wantTab then mod.db.dungeonDockTab = view.wantTab end
-			view.dockTab = mod.db.dungeonDockTab == "quests" and "quests" or "dungeon"
+			view.dockTab = view.wantTab or view.dockTab or "quests"
 		end
 		Dock()
 		FillSide()
@@ -2379,6 +2622,18 @@ function mod:SetupDungeons(worldMap)
 	-- the map opened inside a dungeon the client has no map of (WoW Forever: none of them): its own
 	-- map, as its entrance would open it, not the world with no one on it
 	map:HookScript("OnShow", function()
+		-- (shown again a moment after it was hidden: another addon laying the window out again with a
+		-- hide and a show (ClassicUI Forever's World map does), not the map opened: it stays as it was,
+		-- the dungeon's view back if it was up, the world if you'd gone back to it, never forced back in)
+		if hiddenAt and GetTime() - hiddenAt < 0.25 then
+			local was = hiddenWith
+			hiddenAt, hiddenWith = nil, nil
+			if was and MapsOn() and not (view and view:IsShown()) then
+				OpenView(was[1], was[2] and { u = was[2], v = was[3] } or nil)
+				if was[4] and was[4] ~= view.floor then ShowFloor(was[4], true) end
+			end
+			return
+		end
 		C_Timer.After(0.1, function()
 			if not map:IsShown() or (view and view:IsShown()) then return end
 			-- on a map off the stitched world (Zephras Isle): its own map, as its airship opens it, not
@@ -2395,13 +2650,18 @@ function mod:SetupDungeons(worldMap)
 				end
 				here = info.parentMapID
 			end
-			local inst = InstanceHere()
-			if not inst or not MapsOn() then return end
+			local inst, record = InstanceHere()
+			if not inst or not MapsOn() or mod.db.dungeonInside == false then return end   -- (Dungeon maps inside dungeons)
+			-- (Dungeon Journal shows its own map of the dungeon you're in, its bosses on it: OpenMap's isn't put
+			-- over it as the map opens there, #302. An entrance clicked on the world map still opens OpenMap's)
+			local sharedInstance = ns.Client == "Forever" and WING_LFG[inst[1]] ~= nil
+			if NeedRoll() or mod.DungeonJournalHandlesMap(inst, record, sharedInstance) then return end   -- (NeedRoll's own map: #267)
 			local id = DungeonMap(inst)
 			if not id then OpenView(inst, nil) elseif map:GetMapID() ~= id then S.OpenMap(id) end
 		end)
 	end)
 	map:HookScript("OnHide", function()
+		hiddenAt, hiddenWith = GetTime(), view and view:IsShown() and { view.inst, view.fromU, view.fromV, view.floor } or nil
 		returnTo, shownMap, lastMap, portalCard = nil, nil, nil, nil
 		if chooser then chooser:Hide() end
 		if view then view:Hide() end
@@ -2423,7 +2683,7 @@ function mod:SetupDungeons(worldMap)
 		C_Timer.After(0, function() Recolour() RefreshCard() end)   -- (UnitLevel catches up after the event)
 	end)
 	-- (into a dungeon or out: its floors held, or let go; a moment after the loading screen)
-	local function Rehold() C_Timer.After(2, mod.HoldDungeonHere) end
+	local function Rehold() C_Timer.After(2, function() mod.HoldDungeonHere() NoteEntered() NoteDungeonMap() end) end
 	ns.RegisterEvent(events, "PLAYER_ENTERING_WORLD", Rehold)
 	ns.RegisterEvent(events, "ZONE_CHANGED_NEW_AREA", Rehold)
 	Rehold()                                      -- (set up already inside one)

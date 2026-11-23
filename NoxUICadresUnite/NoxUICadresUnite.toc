@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Simple unit frames with a modern visual style.
 ## Author: Nox
-## Version: 0.2.5.0
+## Version: 0.2.5.5
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIUnitFramesDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

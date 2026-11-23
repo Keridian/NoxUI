@@ -321,6 +321,17 @@ _G._EUI_BuildForeverGeneralPage = function(pageName, parent, yOffset)
     end
 
     ---------------------------------------------------------------------------
+    local LZ = NoxUI._LFGZones
+    if LZ then
+        _, h = W:DualRow(parent, y,
+            { type="toggle", text="Show Solo Player Zones",
+              tooltip="Shows the zone of players listed alone in the group finder.",
+              getValue=function() return LZ.Get("enabled") end,
+              setValue=function(v) LZ.Cfg().enabled = v; LZ.Apply() end },
+            BLANK()); y = y - h
+    end
+
+    ---------------------------------------------------------------------------
     --  NAME FORMAT (while a module with a Name Format is on)
     ---------------------------------------------------------------------------
     local sources = NameFormatSources()

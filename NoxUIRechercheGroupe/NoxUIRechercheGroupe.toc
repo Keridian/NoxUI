@@ -5,7 +5,7 @@
 ## Group: NoxUI
 ## Notes: Premade Group search filters, group list, applicant list, and application tools.
 ## Author: Nox
-## Version: 0.2.5.0
+## Version: 0.2.5.5
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIGroupFinderDB
 ## SavedVariablesPerCharacter: NoxUIGroupFinderCharDB

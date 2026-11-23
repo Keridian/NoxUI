@@ -1705,6 +1705,7 @@ L["Enabled Classes"]            = "Classes activées"
 L["Enabled Currencies"]         = "Monnaies activées"
 L["Enables a three-tier tank aggro system: has aggro, losing aggro, and no aggro colors override all mob-type colors."] = "Active un système d'aggro de tank à trois niveaux : les couleurs « a l'aggro », « perd l'aggro » et « pas d'aggro » remplacent toutes les couleurs par type de créature."
 L["Enables auto loot and hides the loot window when looting. Hold Shift when looting to show."] = "Active le butin automatique et masque la fenêtre de butin lors du ramassage. Maintenez Maj en ramassant pour l'afficher."
+L["Speeds up looting when the game is using automatic loot. Manual looting remains available according to the game settings and modifier key."] = "Accélère le ramassage lorsque le jeu utilise le butin automatique. Le ramassage manuel reste accessible selon les réglages et la touche de modification du jeu."
 L["Enables sharpening to improve image clarity. Especially noticeable at lower render scales."] = "Active la netteté pour améliorer la clarté de l'image. Particulièrement visible aux faibles échelles de rendu."
 L["Enabling the LFG Reminder requires a reload to take effect."] = "L'activation du rappel LFG nécessite un rechargement pour prendre effet."
 L["Enchant missing"]            = "Enchantement manquant"
@@ -7413,3 +7414,17 @@ L["Selected"] = "Sélectionné"
 
 L["Vertical Icon Flow"] = "Remplir les icônes de haut en bas"
 L["Number of Columns"] = "Nombre de colonnes"
+
+L["When each healer's name is shown before the number."] = "Détermine quand le nom de chaque soigneur apparaît avant sa valeur."
+
+L["In Party & Raid"] = "En groupe et en raid"
+
+L["In Raid"] = "En raid"
+
+L["Show Solo Player Zones"] = "Afficher la zone des joueurs seuls"
+
+L["Shows the zone of players listed alone in the group finder."] = "Affiche la zone des joueurs inscrits seuls dans la recherche de groupe."
+
+L["Choose Languages"] = "Choisir les langues"
+
+L["Search Ticked Languages"] = "Rechercher dans les langues sélectionnées"

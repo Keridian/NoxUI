@@ -37,6 +37,40 @@ local IsEquippableItem = C_Item.IsEquippableItem
 -- GetItemByID shows the unscaled base item's level (reads red). Prefer bag slot > link > ID; cache by link, cleared on a level-up or a skill change.
 local _canUseCache = {}
 local ITEM_CLASS_RECIPE = Enum.ItemClass.Recipe
+local pendingTooltips = {}
+local tooltipWatcher = CreateFrame("Frame")
+local tooltipTimer
+local recentlyUpdated = {}
+tooltipWatcher:SetScript("OnEvent", function(_, _, instanceID)
+    local items = pendingTooltips[instanceID]
+    if not items then return end
+    pendingTooltips[instanceID] = nil
+    for item in pairs(items) do
+        _canUseCache[item] = nil
+        recentlyUpdated[item] = true
+    end
+    if InCombatLockdown() then
+        EUI_Bags._refreshPendingCombat = true
+        return
+    end
+    if EUI_Bags._tintRetry then EUI_Bags._tintRetry() end
+    if EUI_BankFrame and EUI_BankFrame._tintRetry then EUI_BankFrame._tintRetry() end
+end)
+local function WatchTooltip(tip, item)
+    local id = tip and tip.dataInstanceID
+    if not id or recentlyUpdated[item] then return end
+    if not next(pendingTooltips) then tooltipWatcher:RegisterEvent("TOOLTIP_DATA_UPDATE") end
+    pendingTooltips[id] = pendingTooltips[id] or {}
+    pendingTooltips[id][item] = true
+    if tooltipTimer then return end
+    tooltipTimer = true
+    C_Timer.After(2, function()
+        wipe(pendingTooltips)
+        wipe(recentlyUpdated)
+        tooltipWatcher:UnregisterEvent("TOOLTIP_DATA_UPDATE")
+        tooltipTimer = nil
+    end)
+end
 local function BagsItemUnusable(bagID, slot, itemLink, itemID)
     local item = itemLink or itemID
     if not item then return false end
@@ -44,19 +78,34 @@ local function BagsItemUnusable(bagID, slot, itemLink, itemID)
     if cached ~= nil then return cached end
     local unusable = false
 
-    -- Recipes also have a spell (the teach effect), so they'd hit the tooltip scan
-    -- below. Skip that: the scan can see red from the crafted item's own preview
-    -- stats, not just from the recipe's learn requirements. Use the usable check
-    -- instead, which reflects skill/known state directly.
     local _, _, _, _, _, classID = GetItemInfoInstant(item)
     if classID == ITEM_CLASS_RECIPE then
-        local usable = C_Item.IsUsableItem(item)
-        unusable = not usable
+        local tip
+        if bagID and slot then
+            tip = C_TooltipInfo.GetBagItem(bagID, slot)
+        elseif itemLink then
+            tip = C_TooltipInfo.GetHyperlink(itemLink)
+        end
+        WatchTooltip(tip, item)
+        if not tip or not tip.lines or #tip.lines == 0 then return false end
+        for _, row in ipairs(tip.lines) do
+            local text, color = row.leftText, row.leftColor
+            if ITEM_SPELL_KNOWN and text == ITEM_SPELL_KNOWN then
+                unusable = true
+                break
+            elseif text and ITEM_SPELL_TRIGGER_ONUSE
+                and text:sub(1, #ITEM_SPELL_TRIGGER_ONUSE) == ITEM_SPELL_TRIGGER_ONUSE then
+                unusable = false
+            elseif color and color.r > 0.9 and color.g < 0.2 and color.b < 0.2 then
+                unusable = true
+            end
+        end
         _canUseCache[item] = unusable
         return unusable
     end
 
-    if IsEquippableItem(item) or C_Item.GetItemSpell(item) then
+    local consumable = Enum.ItemClass.Consumable
+    if IsEquippableItem(item) or C_Item.GetItemSpell(item) or (consumable and classID == consumable) then
         -- Only use a tooltip from the real bag slot or real item link; both carry
         -- bonus IDs, which set the item's true required level. A bare itemID lacks
         -- those and can read the wrong level requirement either way.
@@ -67,6 +116,10 @@ local function BagsItemUnusable(bagID, slot, itemLink, itemID)
         elseif itemLink then
             tip = C_TooltipInfo.GetHyperlink(itemLink)
             reliable = true
+        end
+        WatchTooltip(tip, item)
+        if not tip or not tip.lines or #tip.lines == 0 then
+            return false
         end
         if tip and tip.lines then
             for _, row in ipairs(tip.lines) do
@@ -102,6 +155,7 @@ do
     f:RegisterEvent("PLAYER_LEVEL_CHANGED")
     -- A skill rank gates recipes and some items without a level change.
     f:RegisterEvent("SKILL_LINES_CHANGED")
+    f:RegisterEvent("NEW_RECIPE_LEARNED")
     f:SetScript("OnEvent", function(_, event)
         if event == "SKILL_LINES_CHANGED" and InCombatLockdown() then
             -- A rank gained in a fight (weapon and defense skill, by the dozen while

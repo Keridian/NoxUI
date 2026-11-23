@@ -395,9 +395,28 @@ local function HookQuestieTitles()
 end
 
 local hookedSearch
+local settingsHooked
 local function Discover(_, event, addon)
+    if not settingsHooked and SettingsPanel and SettingsPanel.HookScript then
+        settingsHooked = true
+        SettingsPanel:HookScript("OnShow", function()
+            if syndicatorCanvas or not _G.Syndicator then return end
+            C_Timer.After(0, function()
+                FindSyndicatorCanvas()
+                Refresh()
+            end)
+        end)
+    end
     if event == "PLAYER_LOGIN" or addon == "Questie" then HookQuestieTitles() end
-    if event == "PLAYER_LOGIN" or addon == "Syndicator" then FindSyndicatorCanvas() end
+    if event == "PLAYER_LOGIN" or event == "PLAYER_REGEN_ENABLED" or addon == "Syndicator" then
+        FindSyndicatorCanvas()
+        if not syndicatorCanvas and _G.Syndicator then
+            C_Timer.After(0, function()
+                FindSyndicatorCanvas()
+                Refresh()
+            end)
+        end
+    end
     local search = _G.Syndicator and _G.Syndicator.Search
     if search and search.GetSearchEverywhereInterface and not hookedSearch then
         -- The search widget exposes a skin callback but its frame has no global name.

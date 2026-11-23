@@ -312,6 +312,25 @@ do
     end
 end
 
+local function ImportProtectionKey(protected, id)
+    if protected[id] then return id end
+    local base = ns.NormalizeToBase(id)
+    local name = ns.CDMRankName and ns.CDMRankName(id)
+    for key in pairs(protected) do
+        if ns.NormalizeToBase(key) == base then return key end
+        if name and ns.CDMRankName(key) == name then return key end
+    end
+end
+
+local function ReleaseImportProtection(profile, protected, id)
+    local key = ImportProtectionKey(protected, id)
+    while key do
+        protected[key] = nil
+        key = ImportProtectionKey(protected, id)
+    end
+    if not next(protected) then profile._importKeep = nil end
+end
+
 --- ns.ReconcileAssignedSpellDrops(barKey): single resident implementation of
 --- the 3-way keep/drop pass (formerly inline in the options panel's
 --- EnsureAssignedSpells). Interactive options edits call this directly;
@@ -538,6 +557,7 @@ function ns.ReconcileAssignedSpellDrops(barKey)
         if defaultHidden == nil then defaultHidden = ns.CDMDefaultHiddenSet() or false end
         return not defaultHidden or ns.CDMIsDefaultHidden(defaultHidden, id)
     end
+    local importKeep = aprof._importKeep
     local writeIdx = 1
     for readIdx = 1, #sd.assignedSpells do
         local id = sd.assignedSpells[readIdx]
@@ -571,8 +591,9 @@ function ns.ReconcileAssignedSpellDrops(barKey)
             local have = IsPlayerSpell and (IsPlayerSpell(id)
                          or IsPlayerSpell(NormalizeToBase(id))
                          or IsPlayerSpell(ResolveToLive(id)))
+            local tracked = false
             if shown then
-                keep = true
+                keep, tracked = true, true
             elseif catalogSet
                    and (catalogSet[id] or catalogSet[NormalizeToBase(id)]
                         or catalogSet[ResolveToLive(id)]) then
@@ -580,7 +601,7 @@ function ns.ReconcileAssignedSpellDrops(barKey)
                 -- untalented, conditionally pooled, or a BASE id whose
                 -- tracked cooldown is a talent override the player dropped.
                 -- Hold rank.
-                keep = true
+                keep, tracked = true, true
             elseif DefaultHidden(id) then
                 -- WoW Forever: in Not Displayed by Blizzard's default, not by
                 -- the player: it holds its slot until displayed.
@@ -610,6 +631,13 @@ function ns.ReconcileAssignedSpellDrops(barKey)
                 -- rank as the safe fallback so a transient gap never wipes
                 -- an untalented assignment.
                 keep = true
+            end
+            if importKeep then
+                if tracked then
+                    ReleaseImportProtection(aprof, importKeep, id)
+                elseif not keep and ImportProtectionKey(importKeep, id) then
+                    keep = true
+                end
             end
         elseif sd.nativeItems and sd.nativeItems[id] and ns.IsItemPresetKey(id) then
             -- An entry the reseed listed for Blizzard's own item row: it goes
@@ -1235,7 +1263,11 @@ function ns.ReconcileBuffFamilyDrops(barKey)
                     end
                 end
             end
-            if vouched and not anyPresent and not unseen then
+            local importKeep = prof._importKeep
+            if importKeep and anyPresent then
+                ReleaseImportProtection(prof, importKeep, id)
+            elseif vouched and not anyPresent and not unseen
+                and not (importKeep and ImportProtectionKey(importKeep, id)) then
                 keep = false
                 dropped = true
             end
@@ -1342,6 +1374,8 @@ function ns.RepopulateFromBlizzard(fromRequest)
         FilterListPreservingUserAdded(ghostSD, ghostSD.assignedSpells)
         FilterSetPreservingUserAdded(ghostSD, ghostSD.removedSpells)
     end
+    local profiles = ns.GetActiveSpecProfiles and ns.GetActiveSpecProfiles()
+    if profiles and profiles[specKey] then profiles[specKey]._importKeep = nil end
     -- Ghost buff bar removed: buff visibility managed by Blizzard CDM.
 
     local buffSD = ns.GetBarSpellData("buffs")

@@ -2062,6 +2062,7 @@ local function SnapshotProfileCDMSpells(profileName, includedFolders, cdmSpecs)
             if type(copy.barSpells) == "table" then copy.barSpells.__ghost_cd = nil end
             copy._barFilterModelV6 = nil
             copy._importGhostMode = nil
+            copy._importKeep = nil
             snap[specKey] = copy
         end
     end
@@ -3353,6 +3354,22 @@ local function BuildImportedCDMSpellBucket(profileName, activeName, incomingSpec
             -- drag-arranged buffDisplayOrder without the flag; stamp it or the first
             -- live reconcile resyncs the imported order to Blizzard order (idempotent).
             NoxUI.MigrateCdmBuffOrderUserFlag(specProf)
+            local protected
+            for _, bar in pairs(type(specProf.barSpells) == "table" and specProf.barSpells or {}) do
+                if type(bar) == "table" and type(bar.assignedSpells) == "table" then
+                    for _, id in ipairs(bar.assignedSpells) do
+                        if type(id) == "number" and id > 0
+                            and not (bar.customSpellIDs and bar.customSpellIDs[id])
+                            and not (bar.customSpellDurations and bar.customSpellDurations[id])
+                            and not (bar.spellDurations and bar.spellDurations[id])
+                            and not (bar.customSpellGroups and bar.customSpellGroups[id]) then
+                            protected = protected or {}
+                            protected[id] = true
+                        end
+                    end
+                end
+            end
+            specProf._importKeep = protected
         end
     end
 end

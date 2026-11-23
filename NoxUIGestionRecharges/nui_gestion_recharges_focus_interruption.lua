@@ -340,6 +340,28 @@ function ns.ResolveCastableInterrupt(sid)
         and C_SpellBook.IsSpellKnownOrInSpellBook(sid, Enum.SpellBookSpellBank.Pet) then
         return sid
     end
+    -- On Forever, different ranks have distinct IDs but share a name.
+    if NoxUI.IS_FOREVER and C_Spell and C_Spell.GetSpellName then
+        local ok, name = pcall(C_Spell.GetSpellName, sid)
+        if ok and type(name) == "string" and not (issecretvalue and issecretvalue(name)) then
+            local info = C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(name)
+            local rank = info and info.spellID
+            if type(rank) == "number" and not (issecretvalue and issecretvalue(rank))
+                and knownInBook(rank) then return rank end
+        end
+    end
+    local family = ns.CDMRankFamily and ns.CDMRankFamily(sid)
+    if family then
+        if family.known and knownInBook(family.known) then return family.known end
+        if C_SpellBook and C_SpellBook.IsSpellKnownOrInSpellBook and Enum and Enum.SpellBookSpellBank then
+            for index = #family.list, 1, -1 do
+                local rank = family.list[index]
+                if rank ~= sid and C_SpellBook.IsSpellKnownOrInSpellBook(rank, Enum.SpellBookSpellBank.Pet) then
+                    return rank
+                end
+            end
+        end
+    end
     return nil
 end
 

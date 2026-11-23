@@ -4756,7 +4756,7 @@ local function ShowSpellPicker(anchorFrame, barKey, slotIndex, excludeSet, onSel
                 -- copy of the spell + its per-spell settings onto the SAME bar in the picked specs; specs that already have it anywhere are skipped. Self-contained row (MakeActionRow helpers are out of scope).
                 if sd.customSpellIDs and sd.customSpellIDs[spellID] then
                     -- Label flips to Remove once the spell lives on other specs.
-                    local otherSpecs = (ns.SpecsWithCustomSpell and ns.SpecsWithCustomSpell(spellID)) or {}
+                    local otherSpecs = (ns.SpecsWithCustomSpell and ns.SpecsWithCustomSpell(spellID, isHostedBuff)) or {}
                     local isRemove = next(otherSpecs) ~= nil
                     local copyRow = CreateFrame("Button", nil, inner)
                     copyRow:SetHeight(ITEM_H)
@@ -4804,7 +4804,7 @@ local function ShowSpellPicker(anchorFrame, barKey, slotIndex, excludeSet, onSel
                                 foreverActiveKey = curKey,
                                 onConfirm     = function(selectedSpecs)
                                     if ns.RemoveCustomSpellFromSpecs then
-                                        ns.RemoveCustomSpellFromSpecs(spellID, selectedSpecs)
+                                        ns.RemoveCustomSpellFromSpecs(spellID, selectedSpecs, isHostedBuff)
                                     end
                                 end,
                             })
@@ -4820,7 +4820,7 @@ local function ShowSpellPicker(anchorFrame, barKey, slotIndex, excludeSet, onSel
                                 foreverActiveKey = curKey,
                                 onConfirm     = function(selectedSpecs)
                                     if ns.CopyCustomSpellToSpecs then
-                                        ns.CopyCustomSpellToSpecs(barKey, spellID, selectedSpecs)
+                                        ns.CopyCustomSpellToSpecs(barKey, spellID, selectedSpecs, isHostedBuff)
                                     end
                                 end,
                             })

@@ -139,6 +139,159 @@ if NoxUI.IS_FOREVER then
 end
 ns.CDMRankName = RankName
 
+local RankFamily, DropRankFamilies
+if RankName then
+    local index          -- key -> { ids = set, book = spellbook IDs in book order }
+    local indexLoaded    -- built with Blizzard's catalogue loaded (its icon classes)
+    local fams = {}      -- id -> record
+    -- id -> the record a drop replaced (the oldest since the last notice), and
+    -- an empty table to swap in while the notice compares.
+    local dropped, spare = {}, {}
+    local shell, resync  -- the learned-spell ear and the next-frame notice
+
+    local function Notify(self)
+        self:SetScript("OnUpdate", nil)
+        self:Hide()
+        resync = false
+        -- A drop while comparing (the catalogue loading under an early index)
+        -- lands in the empty table and arms the next notice.
+        local prev = dropped
+        dropped, spare = spare, prev
+        local changed = false
+        for id, rec in pairs(prev) do
+            local now = RankFamily(id)
+            if not now or now.sig ~= rec.sig or now.known ~= rec.known then
+                changed = true
+                break
+            end
+        end
+        wipe(prev)
+        if not changed then return end
+        if ns.UpdateCustomBuffAuraTracking then ns.UpdateCustomBuffAuraTracking() end
+        if ns.CDM_AuraIconsRanksChanged then ns.CDM_AuraIconsRanksChanged() end
+    end
+
+    DropRankFamilies = function()
+        if not (index and shell) then return end
+        index, indexLoaded = nil, nil
+        for id, rec in pairs(fams) do
+            if dropped[id] == nil then dropped[id] = rec end
+        end
+        wipe(fams)
+        shell:UnregisterEvent("LEARNED_SPELL_IN_SKILL_LINE")
+        if not resync then
+            resync = true
+            shell:SetScript("OnUpdate", Notify)
+            shell:Show()
+        end
+    end
+
+    local function Note(id, inBook)
+        if not _IsUsableSID(id) then return end
+        local k = RankName(id)
+        if not k then return end
+        local e = index[k]
+        if not e then e = { ids = {} }; index[k] = e end
+        e.ids[id] = true
+        if inBook then
+            local b = e.book
+            if not b then b = {}; e.book = b end
+            b[#b + 1] = id
+        end
+    end
+
+    local function BuildIndex()
+        if not shell then
+            shell = ns.TakeShell()
+            shell:Hide()
+            shell:SetScript("OnEvent", DropRankFamilies)
+        end
+        shell:RegisterEvent("LEARNED_SPELL_IN_SKILL_LINE")
+        index, indexLoaded = {}, ns._cdmDataLoaded and true or false
+        local CV = C_CooldownViewer
+        local getSet = CV and CV.GetCooldownViewerCategorySet
+        local getInfo = CV and CV.GetCooldownViewerCooldownInfo
+        if getSet and getInfo then
+            for cat = 0, 8 do
+                local ok, ids = pcall(getSet, cat, true)
+                if ok and type(ids) == "table" then
+                    for i = 1, #ids do
+                        local okI, info = pcall(getInfo, ids[i])
+                        if okI and type(info) == "table" then
+                            Note(info.spellID)
+                            local linked = info.linkedSpellIDs
+                            if type(linked) == "table" then
+                                for j = 1, #linked do Note(linked[j]) end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        local buffFams = NoxUI.FOREVER_BUFF_FAMILIES
+        if type(buffFams) == "table" then
+            for _, fam in pairs(buffFams) do
+                local ids = type(fam) == "table" and fam.ids
+                if type(ids) == "table" then
+                    for i = 1, #ids do Note(ids[i]) end
+                end
+            end
+        end
+        local SB = C_SpellBook
+        local spellKind = Enum and Enum.SpellBookItemType and Enum.SpellBookItemType.Spell
+        local bank = Enum and Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player
+        if SB and SB.GetNumSpellBookSkillLines and SB.GetSpellBookSkillLineInfo
+           and SB.GetSpellBookItemType and spellKind and bank then
+            pcall(function()
+                for line = 1, (SB.GetNumSpellBookSkillLines() or 0) do
+                    local li = SB.GetSpellBookSkillLineInfo(line)
+                    local offset = li and li.itemIndexOffset or 0
+                    for slot = offset + 1, offset + (li and li.numSpellBookItems or 0) do
+                        local kind, _, sid = SB.GetSpellBookItemType(slot, bank)
+                        if kind == spellKind then Note(sid, true) end
+                    end
+                end
+            end)
+        end
+    end
+
+    RankFamily = function(id)
+        if not _IsUsableSID(id) then return nil end
+        -- Built before the catalogue loaded: its keys miss the icon classes.
+        if index and not indexLoaded and ns._cdmDataLoaded then DropRankFamilies() end
+        local rec = fams[id]
+        if rec then return rec end
+        local k = RankName(id)
+        if not k then return nil end
+        if not index then BuildIndex() end
+        local e = index[k]
+        local forms, list = { [id] = true }, { id }
+        if e then
+            for f in pairs(e.ids) do
+                if not forms[f] then
+                    forms[f] = true
+                    list[#list + 1] = f
+                end
+            end
+        end
+        table.sort(list)
+        local known = false
+        local book = e and e.book
+        if book then
+            local info = C_Spell.GetSpellInfo(C_Spell.GetSpellName(id) or "")
+            local top = info and info.spellID
+            for i = 1, #book do
+                if book[i] == top then known = top; break end
+            end
+            if not known then known = book[#book] end
+        end
+        rec = { key = k, forms = forms, list = list, sig = table.concat(list, ","), known = known }
+        fams[id] = rec
+        return rec
+    end
+end
+ns.CDMRankFamily = RankFamily
+
 -------------------------------------------------------------------------------
 --  CDM category-set constants (Midnight's 9-value CooldownViewerCategory).
 --  CDM_ICON_CD_CATS: cooldown/utility icon categories (Essential, Utility,
@@ -1657,6 +1810,7 @@ local _cdmSpellCacheDirty = true
 
 function ns.MarkCDMSpellCacheDirty()
     _cdmSpellCacheDirty = true
+    if DropRankFamilies then DropRankFamilies() end
 end
 
 local function RebuildCDMSpellCaches()

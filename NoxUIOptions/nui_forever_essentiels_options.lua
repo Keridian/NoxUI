@@ -293,6 +293,8 @@ initFrame:SetScript("OnEvent", function(self)
                 local mf = NoxUIDB.worldMapFade
                 NoxUIDB.worldMapFade = mf and mf.mapFadeWas ~= nil and { mapFadeWas = mf.mapFadeWas } or nil
                 NoxUIDB.gatherSkill = nil
+                NoxUIDB.lfgZones = nil
+                NoxUIDB.lfgLanguages = nil
                 if NoxUIDB.unlockAnchors then
                     NoxUIDB.unlockAnchors.EUI_FlightTimer = nil
                     NoxUIDB.unlockAnchors.EUI_ThreatMeter = nil
@@ -331,6 +333,7 @@ initFrame:SetScript("OnEvent", function(self)
             if NoxUI._MapTravel then NoxUI._MapTravel.Apply() end
             if NoxUI._MapFade then NoxUI._MapFade.Apply() end
             if NoxUI._GatherSkill then NoxUI._GatherSkill.Apply() end
+            if NoxUI._LFGZones then NoxUI._LFGZones.Apply() end
             NoxUI:InvalidatePageCache()
         end,
     })

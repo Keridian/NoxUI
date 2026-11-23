@@ -1392,25 +1392,33 @@ qolFrame:SetScript("OnEvent", function(self)
     ---------------------------------------------------------------------------
     do
         local lootFrame
+        local lootGeneration = 0
         NoxUI._applyQuickLoot = function()
             if NoxUIDB and NoxUIDB.quickLoot then
                 if not lootFrame then
                     lootFrame = CreateFrame("Frame")
-                    lootFrame:SetScript("OnEvent", function()
-                        if IsShiftKeyDown() then return end
+                    lootFrame:SetScript("OnEvent", function(_, event, autoLoot)
+                        lootGeneration = lootGeneration + 1
+                        if event ~= "LOOT_READY" or not autoLoot then return end
+                        local generation = lootGeneration
                         -- Nothing to take: no slot empties, so the window would never close by itself.
                         if GetNumLootItems() == 0 then CloseLoot() return end
                         for i = 1, GetNumLootItems() do
                             local index = i
                             C_Timer.After(0.05 * index, function()
-                                LootSlot(index)
+                                if generation == lootGeneration and NoxUIDB and NoxUIDB.quickLoot then
+                                    LootSlot(index)
+                                end
                             end)
                         end
                     end)
                 end
                 lootFrame:RegisterEvent("LOOT_READY")
+                lootFrame:RegisterEvent("LOOT_CLOSED")
             elseif lootFrame then
+                lootGeneration = lootGeneration + 1
                 lootFrame:UnregisterEvent("LOOT_READY")
+                lootFrame:UnregisterEvent("LOOT_CLOSED")
             end
         end
         NoxUI._applyQuickLoot()

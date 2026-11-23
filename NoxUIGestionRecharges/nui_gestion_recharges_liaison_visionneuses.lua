@@ -193,6 +193,7 @@ function ns.SetupViewerHooks()
     -- Track which frames have been hooked (weak-keyed, no taint)
     local _activeStateHooked = setmetatable({}, { __mode = "k" })
     local _activeStateReanchorPending = false
+    local _inactiveReanchorFrame
 
     local function InstallBuffFrameHooks(viewer)
         if not viewer or not viewer.itemFramePool then return end
@@ -233,6 +234,17 @@ function ns.SetupViewerHooks()
                         -- return below, which any buff item's change holds for two frames.
                         if isBarViewer and ns.WakeTBBTickIfParked then ns.WakeTBBTickIfParked(itemFrame) end
                         ReapplyPositions()
+                        local frameData = _ecmeFC[itemFrame]
+                        if frameData and frameData.barKey and not itemFrame:IsActive() then
+                            if not _inactiveReanchorFrame then
+                                _inactiveReanchorFrame = ns.TakeShell()
+                                _inactiveReanchorFrame:SetScript("OnUpdate", function(self)
+                                    self:Hide()
+                                    CollectAndReanchor()
+                                end)
+                            end
+                            _inactiveReanchorFrame:Show()
+                        end
                         if _activeStateReanchorPending then return end
                         _activeStateReanchorPending = true
                         _asDeferTicks = 0

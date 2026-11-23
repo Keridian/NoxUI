@@ -539,7 +539,20 @@ function _AC.AddSpellForms(map, sid)
     if ovr and ovr > 0 then map[ovr] = true end
     local base = C_Spell and C_Spell.GetBaseSpell and C_Spell.GetBaseSpell(sid)
     if base and base > 0 then map[base] = true end
+    local family = ns.CDMRankFamily and ns.CDMRankFamily(sid)
+    if family then
+        for id in pairs(family.forms) do map[id] = true end
+    end
     return map
+end
+
+local function CastOfRank(sid)
+    local family = ns.CDMRankFamily and next(_pendingCastIDs) and ns.CDMRankFamily(sid)
+    if not family then return false end
+    for castID in pairs(_pendingCastIDs) do
+        if family.forms[castID] then return true end
+    end
+    return false
 end
 
 function _AC.FixedIconStyleKey(barKey, sid)
@@ -743,7 +756,7 @@ local function UpdateCustomBuffBars()
                             local timerKey = barKey .. ":" .. sid
                             local timer = _customAuraTimers[timerKey]
 
-                            if _pendingCastIDs[sid] and duration > 0 then
+                            if (_pendingCastIDs[sid] or CastOfRank(sid)) and duration > 0 then
                                 _customAuraTimers[timerKey] = {
                                     start = now,
                                     duration = duration,
@@ -855,7 +868,7 @@ local function UpdateCustomBuffBars()
                 for _, sid in ipairs(spellList) do
                     if type(sid) == "number" and sid > 0 and (durs[sid] or 0) > 0 then
                         local tkey = barData.key .. ":" .. sid
-                        if _pendingCastIDs[sid] then
+                        if _pendingCastIDs[sid] or CastOfRank(sid) then
                             _customAuraTimers[tkey] = {
                                 start = now, duration = durs[sid],
                             }
@@ -926,6 +939,13 @@ function ns.UpdateCustomBuffAuraTracking()
                                 end
                             end
                         end
+                        local rankSig
+                        if ns.CDMRankFamily then
+                            for i = 1, #sids do
+                                local family = ns.CDMRankFamily(sids[i])
+                                if family then rankSig = (rankSig or "|rk") .. ":" .. family.sig end
+                            end
+                        end
                         -- Structural only: the id list plus the geometry the
                         -- engine flow owns. Everything else is appearance and
                         -- rides ns.RefreshAuraCustomStyle without a rebuild.
@@ -940,6 +960,7 @@ function ns.UpdateCustomBuffAuraTracking()
                             -- its exact signature.
                             .. ((bd.iconShape == "cropped") and ("|crop" .. ns.CdmCropPercent(bd)) or "")
                             .. (ciSig or "")
+                            .. (rankSig or "")
                         local rec = _AC.bars[bd.key]
                         if not rec then rec = {}; _AC.bars[bd.key] = rec end
                         rec.bdRef = bd

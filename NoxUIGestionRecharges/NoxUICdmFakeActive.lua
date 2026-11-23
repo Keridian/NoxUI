@@ -1509,10 +1509,12 @@ local function EvalCdStateRule(rule, icons, FCt)
     if soundKey == "none" then soundKey = nil end
     local stance = ns.CdmStanceBarOf(cas)
     if hide or glow or soundKey or stance then
-        local onCD = PresetOnCD(rule.spellID)
+        local rankOf = ns._cdmRankOf
+        local cdKey = rankOf and rankOf[rule.spellID] or rule.spellID
+        local onCD = PresetOnCD(cdKey)
         -- Separate read for the Hidden (CD Ready) effects: a charge spell is
         -- ready only at max charges (items fall through to "not onCD").
-        local ready = PresetCdReady(rule.spellID, onCD)
+        local ready = PresetCdReady(cdKey, onCD)
         -- Hidden Until Usable paints as Hidden (On CD) with "not usable"
         -- counting as unavailable, Hidden Outside Form/Stance with only the
         -- form deciding (ns.CD_STATE_HIDE); the glow and the sound below keep
@@ -1522,9 +1524,9 @@ local function EvalCdStateRule(rule, icons, FCt)
         if m and (m.usable or m.form) then
             hide = m.shift and "hiddenOnCDShift" or "hiddenOnCD"
             if m.form then
-                hideCD = PresetSpellTest(rule.spellID, ns.CdmSpellOutsideForm)
+                hideCD = PresetSpellTest(cdKey, ns.CdmSpellOutsideForm)
             elseif not onCD then
-                hideCD = PresetSpellTest(rule.spellID, ns.CdmSpellNotUsable)
+                hideCD = PresetSpellTest(cdKey, ns.CdmSpellNotUsable)
             end
         end
         -- Stance Bar: hidden on (or off) a stance bar page whatever the
@@ -1613,6 +1615,9 @@ end
 local function MapCast(rule)
     local spells, pending = ResolveCastSpells(rule.triggerSpellID or rule.spellID)
     _pendingCastRules[rule] = pending and next(pending) and pending or nil
+    local ranks = ns._cdmRankOf
+    local rank = ranks and not rule.triggerSpellID and ranks[rule.spellID]
+    if rank then spells[#spells + 1] = rank end
     for i = 1, #spells do
         local sp = spells[i]
         local list = _castMap[sp]
@@ -1647,6 +1652,14 @@ RetryPendingCasts = function(itemID, success)
         end
     end
     if changed and not next(_pendingCastRules) then UpdateListeners() end
+end
+
+function ns.FakeActive_RankChanged(sid)
+    for i = 1, #_rules do
+        local rule = _rules[i]
+        if rule.spellID == sid and rule.trigger == "cast" then MapCast(rule) end
+    end
+    QueueCdStateEval()
 end
 
 local function AddRule(rule)

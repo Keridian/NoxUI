@@ -773,6 +773,10 @@ local function StartAddon()
         C_Timer.After(0.1, FireRefresh)
     end
 
+    EUI_Bags._tintRetry = function()
+        if EUI_Bags:IsVisible() then ScheduleRefresh() end
+    end
+
     -- Cooldown-only repaint of the shown item buttons, once per frame at most.
     -- Each button keeps the cooldown it was last painted with (_cdS / _cdD, set
     -- by the full refresh too): an item shown twice, in Pinned or Recent Items
@@ -828,6 +832,7 @@ local function StartAddon()
     EUI_Bags:RegisterEvent("GOSSIP_CLOSED")
     -- A skill rank change can flip an item's unusable tint (BagsItemUnusable)
     EUI_Bags:RegisterEvent("SKILL_LINES_CHANGED")
+    EUI_Bags:RegisterEvent("NEW_RECIPE_LEARNED")
     -- Using an item that is not consumed changes no slot, so only this event
     -- reports its cooldown. Listened to while the bags show.
     EUI_Bags:HookScript("OnShow", function(self) self:RegisterEvent("BAG_UPDATE_COOLDOWN") end)
@@ -1042,7 +1047,7 @@ local function StartAddon()
             if EUI_Bags:IsVisible() then ScheduleRefresh() end
             return
         end
-        if event == "SKILL_LINES_CHANGED" then
+        if event == "SKILL_LINES_CHANGED" or event == "NEW_RECIPE_LEARNED" then
             -- Weapon skill ups land mid-fight: repaint once when combat ends
             if InCombatLockdown() then EUI_Bags._refreshPendingCombat = true; return end
             if EUI_Bags:IsVisible() then ScheduleRefresh() end

@@ -2164,6 +2164,10 @@ ns.OnSlotMetrics(function(m)
 end)
 
 local BuildBankSidebar  -- defined further down
+EUI_Bank._tintRetry = function()
+    if EUI_Bank:IsVisible() then EUI_Bank:RefreshBank() end
+end
+
 function EUI_Bank:RefreshBank()
     if not EUI_Bank:IsVisible() then return end
     local forever = ns.BagsForever()
@@ -3554,6 +3558,7 @@ eventFrame:RegisterEvent("BANK_TAB_SETTINGS_UPDATED")
 eventFrame:RegisterEvent("PLAYER_ACCOUNT_BANK_TAB_SLOTS_CHANGED")
 -- A skill rank change can flip an item's unusable tint, which the bank draws too.
 eventFrame:RegisterEvent("SKILL_LINES_CHANGED")
+eventFrame:RegisterEvent("NEW_RECIPE_LEARNED")
 if EUI.IS_FOREVER then eventFrame:RegisterEvent("BAG_CONTAINER_UPDATE") end
 eventFrame:SetScript("OnEvent", function(_, event)
     if event == "BANKFRAME_OPENED" then
@@ -3684,7 +3689,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
         end
 
     elseif event == "BAG_UPDATE" or event == "PLAYERBANKSLOTS_CHANGED"
-        or event == "PLAYER_ACCOUNT_BANK_TAB_SLOTS_CHANGED" or event == "SKILL_LINES_CHANGED" then
+        or event == "PLAYER_ACCOUNT_BANK_TAB_SLOTS_CHANGED" or event == "SKILL_LINES_CHANGED" or event == "NEW_RECIPE_LEARNED" then
         if EUI_Bank:IsVisible() then
             ScheduleBankRefresh()
         end

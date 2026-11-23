@@ -762,6 +762,8 @@ local function GetSocialNameColor(unit, profile)
     local isPlayer, hostile, self = UnitIsPlayer(unit), UnitCanAttack("player", unit), UnitIsUnit(unit, "player")
     if issecretvalue and (issecretvalue(isPlayer) or issecretvalue(hostile) or issecretvalue(self)) then return end
     if not isPlayer or hostile or self then return end
+    local friendly = UnitIsFriend("player", unit)
+    if (issecretvalue and issecretvalue(friendly)) or not friendly then return end
     if profile.colorGroupNames and IsGroupMember(unit) then return socialNameColors.group end
     if profile.colorGuildNames and IsOwnGuildMember(unit) then return socialNameColors.guild end
     if profile.colorFriendNames and IsListedFriend(unit) then return socialNameColors.friend end
@@ -1503,6 +1505,9 @@ end
 -------------------------------------------------------------------------------
 hooksecurefunc(NamePlateDriverFrame, "OnNamePlateAdded", function(_, unit)
     if not unit or unit == "preview" then return end
+    local plate = C_NamePlate.GetNamePlateForUnit(unit)
+    local name = plate and plate.UnitFrame and plate.UnitFrame.name
+    if name and nameFSUnits[name] then DetachNameOnlyText(name) end
     if UnitCanAttack("player", unit) then return end
     if UnitIsUnit(unit, "player") then return end
 

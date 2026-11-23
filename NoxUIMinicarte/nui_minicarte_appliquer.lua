@@ -77,6 +77,19 @@ local addonButtonPoll = nil
 local _mmKeyHidden
 I.mmKeyHiddenSetters[#I.mmKeyHiddenSetters + 1] = function(v) _mmKeyHidden = v end
 
+local rotationReady = false
+local rotationWatcher = CreateFrame("Frame")
+rotationWatcher:RegisterEvent("CVAR_UPDATE")
+rotationWatcher:SetScript("OnEvent", function(_, _, name, value)
+    if not rotationReady or TEMP_DISABLED.minimap or type(name) ~= "string" then return end
+    local cvar = name:lower()
+    if cvar ~= "rotateminimap" and cvar ~= "rotate_minimap" then return end
+    local p = EBS.db and EBS.db.profile and EBS.db.profile.minimap
+    if not p then return end
+    if value == "1" or value == 1 then p.rotateMinimap = true
+    elseif value == "0" or value == 0 then p.rotateMinimap = false end
+end)
+
 local function ApplyMinimap()
     if TEMP_DISABLED.minimap then return end
     if InCombatLockdown() then QueueApplyAll(); return end
@@ -87,6 +100,7 @@ local function ApplyMinimap()
 
     -- Rotate Minimap: enforce the CVar to match our setting (out of combat only).
     NoxUI.SetCVar("rotateMinimap", p.rotateMinimap and "1" or "0", "NoxUIMinicarte")
+    rotationReady = true
     -- Icon Size: nothing while unset (Edit Mode's value stands).
     EBS._ApplyMinimapIconScale()
 

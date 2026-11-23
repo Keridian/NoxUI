@@ -181,6 +181,21 @@ _G._EUI_BuildAlertsSection = function(parent, yOffset, W, PP)
     ); y = y - h
 
     if NoxUI.IS_FOREVER then
+        _, h = W:DualRow(parent, y,
+            { type = "toggle", text = "Rappel de pause",
+              tooltip = "Affiche un rappel après la durée choisie. Le compteur se suspend pendant une absence et le rappel attend la fin du combat.",
+              getValue = function() return NoxUIDB and NoxUIDB.noxBreakEnabled or false end,
+              setValue = function(value)
+                  NoxUIDB = NoxUIDB or {}; NoxUIDB.noxBreakEnabled = value
+                  if NoxUI.ApplyBreakReminder then NoxUI.ApplyBreakReminder() end
+              end },
+            { type = "slider", text = "Délai entre les rappels", min = 15, max = 240, step = 5,
+              getValue = function() return NoxUIDB and NoxUIDB.noxBreakMinutes or 60 end,
+              setValue = function(value)
+                  NoxUIDB = NoxUIDB or {}; NoxUIDB.noxBreakMinutes = value
+                  if NoxUI.ApplyBreakReminder then NoxUI.ApplyBreakReminder() end
+              end })
+        y = y - h
         _, h = W:SectionHeader(parent, "OBJETS ET MATÉRIAUX", y)
         y = y - h
         _, h = W:DualRow(parent, y,
@@ -190,18 +205,47 @@ _G._EUI_BuildAlertsSection = function(parent, yOffset, W, PP)
                   NoxUIDB = NoxUIDB or {}
                   NoxUIDB.noxItemQuestTitle = value
               end },
-            { type = "input", text = "Matériau épinglé",
-              inputStyle = "popup", placeholder = "Identifiant de l’objet",
-              tooltip = "Saisis un identifiant ou colle un lien d’objet. Vide le champ pour retirer le compteur.",
-              getValue = function() return tostring(NoxUIDB and NoxUIDB.noxTrackedMaterial or "") end,
+            { type = "input", text = "Matériaux épinglés",
+              inputStyle = "popup", placeholder = "Identifiants ou liens d’objets",
+              tooltip = "Saisis jusqu’à six identifiants ou liens d’objets, séparés par des virgules. Vide le champ pour retirer le compteur.",
+              getValue = function()
+                  local db = NoxUIDB
+                  if db and type(db.noxTrackedMaterials) == "table" then
+                      local values = {}
+                      for _, id in ipairs(db.noxTrackedMaterials) do values[#values + 1] = tostring(id) end
+                      return table.concat(values, ", ")
+                  end
+                  return tostring(db and db.noxTrackedMaterial or "")
+              end,
               setValue = function(value)
                   if type(value) ~= "string" then return end
-                  local id = tonumber(value:match("^%s*(%d+)%s*$") or value:match("|Hitem:(%d+)"))
-                  if not id and value:find("%S") then return end
+                  local ids, seen = {}, {}
+                  value = value:gsub("|c%x%x%x%x%x%x%x%x(|Hitem:[^|]+|h%[[^%]]+%]|h)|r", "%1")
+                  value = value:gsub("|Hitem:(%d+)[^|]*|h%[[^%]]+%]|h", "%1")
+                  for part in (value .. ","):gmatch("(.-),") do
+                      local token = part:match("^%s*(.-)%s*$")
+                      if token ~= "" then
+                          local id = token:match("^%d+$") and tonumber(token)
+                          if not id or id <= 0 or id > 2147483647 then return end
+                          if not seen[id] then ids[#ids + 1] = id; seen[id] = true end
+                          if #ids > 6 then return end
+                      end
+                  end
                   NoxUIDB = NoxUIDB or {}
-                  NoxUIDB.noxTrackedMaterial = id and id > 0 and id <= 2147483647 and id or nil
+                  NoxUIDB.noxTrackedMaterials = ids
+                  NoxUIDB.noxTrackedMaterial = ids[1]
                   if NoxUI.RefreshTrackedMaterial then NoxUI.RefreshTrackedMaterial() end
               end })
+        y = y - h
+        _, h = W:DualRow(parent, y,
+            { type = "toggle", text = "Matériaux nécessaires dans l’infobulle",
+              tooltip = "Affiche les matériaux connus pour les objets combinables lorsque le jeu fournit leurs données.",
+              getValue = function() return NoxUIDB and NoxUIDB.noxItemReagents or false end,
+              setValue = function(value) NoxUIDB = NoxUIDB or {}; NoxUIDB.noxItemReagents = value end },
+            { type = "toggle", text = "Ouvrir la quête depuis l’objet",
+              tooltip = "Un Ctrl clic sur un objet de quête dans le sac ouvre sa quête si elle figure dans le journal.",
+              getValue = function() return NoxUIDB and NoxUIDB.noxItemQuestOpen or false end,
+              setValue = function(value) NoxUIDB = NoxUIDB or {}; NoxUIDB.noxItemQuestOpen = value end })
         y = y - h
     end
 

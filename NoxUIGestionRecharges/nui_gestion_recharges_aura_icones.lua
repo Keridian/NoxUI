@@ -366,6 +366,15 @@ local function BuffProvider(sid)
     return p
 end
 
+function ns.CDM_AuraIconsRanksChanged()
+    local changed = false
+    for id in pairs(buffProviders) do
+        local entry = entries["buff:" .. id]
+        if entry then entry.dirty = true; changed = true end
+    end
+    if changed and ns.QueueReanchor then ns.QueueReanchor() end
+end
+
 -- A custom buff's hosted marker no Blizzard frame or placeholder claimed: its
 -- frame on this bar.
 function ns.CDM_AuraIconForBuff(barKey, sid)

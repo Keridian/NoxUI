@@ -151,7 +151,7 @@ function ns.GetBarSpellData(barKey)
     end
     local prof = sp[specKey]
     if not prof then
-        prof = { barSpells = {} }
+        prof = NoxUI.NewCooldownSpecProfile()
         sp[specKey] = prof
     end
     if not prof.barSpells then prof.barSpells = {} end
@@ -387,7 +387,7 @@ function ns.GetSpellSettingsStore(barKeyOrBd, create)
     local prof = sp[specKey]
     if not prof then
         if not create then return nil end
-        prof = { barSpells = {} }
+        prof = NoxUI.NewCooldownSpecProfile()
         sp[specKey] = prof
     end
     local st = ns.GetSpellSettingsStoreForProf(prof, famKey, create)
@@ -493,42 +493,55 @@ end
 -- exists in every spec). A target spec that already has the spell on ANY bar is skipped whole
 -- (never duplicates within a spec). Custom Active State is NOT copied: it lives in the
 -- profile-level customActiveStates store, already shared across specs. Returns the count copied to.
-function ns.CopyCustomSpellToSpecs(barKey, spellID, specKeys)
+local function BarHasCustomSpell(bar, spellID, hosted)
+    if type(bar) ~= "table" or type(bar.assignedSpells) ~= "table" then return false end
+    local marker = hosted and ns.HostedBuffMarker(spellID)
+    for _, id in ipairs(bar.assignedSpells) do
+        if hosted and (id == marker or (id == spellID and bar.hostedBuffSpellIDs and bar.hostedBuffSpellIDs[spellID])) then
+            return true
+        elseif not hosted and id == spellID then
+            return true
+        end
+    end
+    return false
+end
+
+function ns.CopyCustomSpellToSpecs(barKey, spellID, specKeys, hosted)
     if not barKey or type(spellID) ~= "number" or spellID == 0 then return 0 end
     if type(specKeys) ~= "table" then return 0 end
     local sp = ns.GetActiveSpecProfiles and ns.GetActiveSpecProfiles()
     if not sp then return 0 end
     local curKey = ns.GetActiveSpecKey and ns.GetActiveSpecKey()
-    local famKey = ns.SettingsFamilyKey(barKey)
+    hosted = hosted and spellID > 0 or false
+    local famKey = hosted and "spellSettingsBuff" or ns.SettingsFamilyKey(barKey)
     local DeepCopy = NoxUI.Lite and NoxUI.Lite.DeepCopy
 
     -- Source metadata from the ACTIVE spec (the bar the menu was opened on).
     local srcSd = ns.GetBarSpellData(barKey)
     local dur = srcSd and srcSd.spellDurations and srcSd.spellDurations[spellID]
-    local srcStore = ns.GetSpellSettingsStore(barKey)
+    local srcStore = ns.GetSpellSettingsStore(hosted and "buffs" or barKey)
     local srcSettings = srcStore and srcStore[spellID]
 
     local copied = 0
     for key, on in pairs(specKeys) do
         if on and key ~= curKey and key ~= "0" then
             local prof = sp[key]
-            if not prof then prof = { barSpells = {} }; sp[key] = prof end
+            if not prof then prof = NoxUI.NewCooldownSpecProfile(); sp[key] = prof end
             if not prof.barSpells then prof.barSpells = {} end
             -- Present anywhere in this spec? Skip the whole spec.
             local exists = false
             for _, bs in pairs(prof.barSpells) do
-                if type(bs) == "table" and type(bs.assignedSpells) == "table" then
-                    for _, id in ipairs(bs.assignedSpells) do
-                        if id == spellID then exists = true; break end
-                    end
-                end
-                if exists then break end
+                if BarHasCustomSpell(bs, spellID, hosted) then exists = true; break end
             end
             if not exists then
                 local bs = prof.barSpells[barKey]
                 if not bs then bs = {}; prof.barSpells[barKey] = bs end
                 if not bs.assignedSpells then bs.assignedSpells = {} end
-                bs.assignedSpells[#bs.assignedSpells + 1] = spellID
+                bs.assignedSpells[#bs.assignedSpells + 1] = hosted and ns.HostedBuffMarker(spellID) or spellID
+                if hosted then
+                    bs.hostedBuffSpellIDs = bs.hostedBuffSpellIDs or {}
+                    bs.hostedBuffSpellIDs[spellID] = true
+                end
                 if not bs.customSpellIDs then bs.customSpellIDs = {} end
                 bs.customSpellIDs[spellID] = true
                 if dur and dur > 0 then
@@ -555,7 +568,7 @@ end
 
 -- Set of OTHER specs (this class, active profile) with the spell on ANY bar. Drives the
 -- per-spell menu's Copy/Remove label + the Remove picker's pre-check. Excludes the active spec.
-function ns.SpecsWithCustomSpell(spellID)
+function ns.SpecsWithCustomSpell(spellID, hosted)
     local out = {}
     if type(spellID) ~= "number" or spellID == 0 then return out end
     local sp = ns.GetActiveSpecProfiles and ns.GetActiveSpecProfiles()
@@ -570,12 +583,7 @@ function ns.SpecsWithCustomSpell(spellID)
                     and NoxUI.SpecClassOf(tonumber(key)) == ns._playerClass) then
             local found = false
             for _, bs in pairs(prof.barSpells) do
-                if type(bs) == "table" and type(bs.assignedSpells) == "table" then
-                    for _, id in ipairs(bs.assignedSpells) do
-                        if id == spellID then found = true; break end
-                    end
-                end
-                if found then break end
+                if BarHasCustomSpell(bs, spellID, hosted and spellID > 0) then found = true; break end
             end
             if found then out[key] = true end
         end
@@ -586,12 +594,14 @@ end
 -- Inverse of CopyCustomSpellToSpecs: remove the spell + its per-spell settings from the picked
 -- specs (scans every bar). Never touches the active spec or the profile-level customActiveState
 -- (that stays while the spell exists on ANY spec, incl. the current one). Returns the count removed.
-function ns.RemoveCustomSpellFromSpecs(spellID, specKeys)
+function ns.RemoveCustomSpellFromSpecs(spellID, specKeys, hosted)
     if type(spellID) ~= "number" or spellID == 0 then return 0 end
     if type(specKeys) ~= "table" then return 0 end
     local sp = ns.GetActiveSpecProfiles and ns.GetActiveSpecProfiles()
     if not sp then return 0 end
     local curKey = ns.GetActiveSpecKey and ns.GetActiveSpecKey()
+    hosted = hosted and spellID > 0 or false
+    local marker = hosted and ns.HostedBuffMarker(spellID)
     local removed = 0
     for key, on in pairs(specKeys) do
         if on and key ~= curKey and key ~= "0" then
@@ -601,21 +611,33 @@ function ns.RemoveCustomSpellFromSpecs(spellID, specKeys)
                 for _, bs in pairs(prof.barSpells) do
                     if type(bs) == "table" and type(bs.assignedSpells) == "table" then
                         local hitHere = false
+                        local hasMarker = false
+                        if hosted then
+                            for _, entry in ipairs(bs.assignedSpells) do
+                                if entry == marker then hasMarker = true; break end
+                            end
+                        end
                         for i = #bs.assignedSpells, 1, -1 do
-                            if bs.assignedSpells[i] == spellID then
+                            local id = bs.assignedSpells[i]
+                            local matches = hosted and (id == marker or (not hasMarker and id == spellID and bs.hostedBuffSpellIDs and bs.hostedBuffSpellIDs[spellID]))
+                                or (not hosted and id == spellID)
+                            if matches then
                                 table.remove(bs.assignedSpells, i)
                                 hitHere = true; didRemove = true
                             end
                         end
                         -- Clean the per-id metadata on the bar it lived on.
                         if hitHere then
-                            if bs.customSpellIDs then bs.customSpellIDs[spellID] = nil end
-                            if bs.spellDurations then bs.spellDurations[spellID] = nil end
-                            if bs.customSpellDurations then bs.customSpellDurations[spellID] = nil end
-                            if bs.customSpellGroups then
-                                for variantID, primaryID in pairs(bs.customSpellGroups) do
-                                    if primaryID == spellID or variantID == spellID then
-                                        bs.customSpellGroups[variantID] = nil
+                            if hosted and bs.hostedBuffSpellIDs then bs.hostedBuffSpellIDs[spellID] = nil end
+                            if not BarHasCustomSpell(bs, spellID, not hosted) then
+                                if bs.customSpellIDs then bs.customSpellIDs[spellID] = nil end
+                                if bs.spellDurations then bs.spellDurations[spellID] = nil end
+                                if bs.customSpellDurations then bs.customSpellDurations[spellID] = nil end
+                                if bs.customSpellGroups then
+                                    for variantID, primaryID in pairs(bs.customSpellGroups) do
+                                        if primaryID == spellID or variantID == spellID then
+                                            bs.customSpellGroups[variantID] = nil
+                                        end
                                     end
                                 end
                             end
@@ -624,8 +646,14 @@ function ns.RemoveCustomSpellFromSpecs(spellID, specKeys)
                 end
                 if didRemove then
                     -- Drop the per-spell settings entry (keyed by spellID, so clearing both family stores is safe -- only one holds it).
-                    if prof.spellSettingsCD then prof.spellSettingsCD[spellID] = nil end
-                    if prof.spellSettingsBuff then prof.spellSettingsBuff[spellID] = nil end
+                    if not hosted and prof.spellSettingsCD then prof.spellSettingsCD[spellID] = nil end
+                    local keepBuffSettings = false
+                    if not hosted then
+                        for _, bar in pairs(prof.barSpells) do
+                            if BarHasCustomSpell(bar, spellID, true) then keepBuffSettings = true; break end
+                        end
+                    end
+                    if not keepBuffSettings and prof.spellSettingsBuff then prof.spellSettingsBuff[spellID] = nil end
                     -- Entry deletion (belt: non-active specs by contract).
                     ns._cdmResGen = ns._cdmResGen + 1
                     removed = removed + 1

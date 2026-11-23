@@ -1,0 +1,8 @@
+<Bindings>
+    <Binding name="NOXUI_QUEST_NEXT" header="NOXUI_QUEST_CYCLE">
+        if NoxUI and NoxUI.CycleTrackedQuest then NoxUI.CycleTrackedQuest(1) end
+    </Binding>
+    <Binding name="NOXUI_QUEST_PREVIOUS" header="NOXUI_QUEST_CYCLE">
+        if NoxUI and NoxUI.CycleTrackedQuest then NoxUI.CycleTrackedQuest(-1) end
+    </Binding>
+</Bindings>

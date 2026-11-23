@@ -222,6 +222,18 @@ local function CollectAndReanchor()
                                 repSID = (dedupKey and ns._buffReplaceTargetCd[dedupKey])
                                     or ns._buffReplaceTarget[displaySID]
                                     or (baseSID and ns._buffReplaceTarget[baseSID]) or nil
+                                if not repSID and ns._buffReplaceBars and ns._buffReplaceBars[targetBar] then
+                                    local frameData = _ecmeFC[frame]
+                                    local linked = frameData and frameData.linkedSpellIDs
+                                    if linked then
+                                        for _, spellID in ipairs(linked) do
+                                            if ns._buffReplaceTarget[spellID] then
+                                                repSID = ns._buffReplaceTarget[spellID]
+                                                break
+                                            end
+                                        end
+                                    end
+                                end
                             end
                             if dedupKey and not barSeen[dedupKey] then
                                 if frame:IsShown() then
@@ -502,6 +514,9 @@ local function CollectAndReanchor()
                                                 fc.barKey = targetBar
                                                 fc.spellID = realSID
                                                 fc.isHostedBuff = true
+                                                local frameData = _ecmeFC[frame]
+                                                fc.slotBase = baseSID
+                                                fc.slotLinked = frameData and frameData.linkedSpellIDs or nil
                                             else
                                                 if not barLists[targetBar] then barLists[targetBar] = {} end
                                                 barLists[targetBar][#barLists[targetBar] + 1] =
@@ -1156,12 +1171,20 @@ local function CollectAndReanchor()
             if frames then
                 for i = #frames, 1, -1 do
                     local fc = _ecmeFC[frames[i]]
-                    if fc and not fc.replacesCd and fc.spellID then
+                    if fc and not fc.replacesCd and not fc.isHostedBuff and fc.spellID then
                         local hit = targets[fc.spellID]
                             or (fc.baseSpellID and targets[fc.baseSpellID])
                         if not hit then
                             for t in pairs(targets) do
                                 if ns.IsVariantOf(fc.spellID, t) then hit = true; break end
+                            end
+                        end
+                        if not hit and ns.CDMRankName then
+                            local name = ns.CDMRankName(fc.spellID)
+                            if name then
+                                for target in pairs(targets) do
+                                    if ns.CDMRankName(target) == name then hit = true; break end
+                                end
                             end
                         end
                         if hit then table.remove(frames, i) end
@@ -1497,10 +1520,20 @@ local function CollectAndReanchor()
                             elseif not hasClaim then
                                 local isRacial = ns._myRacialsSet and ns._myRacialsSet[sid]
                                 local isCustomSpell = sd and sd.customSpellIDs and sd.customSpellIDs[sid]
-                                -- Keep saved placement, but do not inject an unlearned talent.
+                                local liveSID
+                                -- Keep the saved ID as the slot identity and resolve the known rank for display.
                                 if isCustomSpell then
-                                    isCustomSpell = ns.IsSpellInPlayerBook(sid, false)
+                                    local inBook = ns.IsSpellInPlayerBook(sid, false)
+                                    isCustomSpell = inBook
                                         or C_SpellBook.IsSpellKnownOrInSpellBook(sid, Enum.SpellBookSpellBank.Pet, false)
+                                    if not isRacial and ns.CDMRankFamily and (inBook or not isCustomSpell) then
+                                        local family = ns.CDMRankFamily(sid)
+                                        local rank = family and family.known
+                                        if rank and rank ~= sid and not _globalClaimSet[rank] then
+                                            liveSID = rank
+                                            isCustomSpell = true
+                                        end
+                                    end
                                 end
                                 -- FRAMES AS TRUTH (native-first, injection-fallback): a racial
                                 -- with a LIVE Blizzard frame anywhere is a regular native
@@ -1546,7 +1579,7 @@ local function CollectAndReanchor()
                                         if f.SetMouseClickEnabled then f:SetMouseClickEnabled(false) end
                                         f:SetScript("OnEnter", function(self)
                                             local ffc = _ecmeFC[self]
-                                            local spid = ffc and ffc.spellID
+                                            local spid = self._rankSID or (ffc and ffc.spellID)
                                             local bd2 = ffc and ffc.barKey and barDataByKey[ffc.barKey]
                                             if not bd2 or not bd2.showTooltip then return end
                                             -- Honor the global "Show Tooltips" mode (Blizzard Skin).
@@ -1567,10 +1600,24 @@ local function CollectAndReanchor()
                                         _presetFrames[fkey] = f
                                         _RegisterPresetLive(f, fkey)
                                     end
-                                    local spInfo = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(sid)
+                                    if (liveSID or f._rankSID) and f._rankSID ~= liveSID then
+                                        f._rankSID = liveSID
+                                        f._cachedPresetSID = liveSID or sid
+                                        f._racialCdDirty = true
+                                        f._cdPushArm = true
+                                        local ranks = ns._cdmRankOf
+                                        if liveSID and not ranks then ranks = {}; ns._cdmRankOf = ranks end
+                                        if ranks then
+                                            ranks[sid] = liveSID
+                                            if ns.FakeActive_RankChanged then ns.FakeActive_RankChanged(sid) end
+                                        end
+                                        if f._rangeOpted then ns.SyncCustomSpellRange(f) end
+                                    end
+                                    local shownSID = liveSID or sid
+                                    local spInfo = C_Spell and C_Spell.GetSpellInfo and C_Spell.GetSpellInfo(shownSID)
                                     if spInfo and spInfo.iconID and f._tex then f._tex:SetTexture(spInfo.iconID) end
                                     if not f._cdSet or f._racialCdDirty then
-                                        local durObj = C_Spell.GetSpellCooldownDuration and C_Spell.GetSpellCooldownDuration(sid)
+                                        local durObj = C_Spell.GetSpellCooldownDuration and C_Spell.GetSpellCooldownDuration(shownSID)
                                         if durObj and f._cooldown.SetCooldownFromDurationObject then
                                             f._cooldown:SetCooldownFromDurationObject(durObj, true)
                                         end
@@ -1580,7 +1627,7 @@ local function CollectAndReanchor()
                                         -- swipe the same way the 10Hz pass does.
                                         -- barKey is passed explicitly: the frame's
                                         -- cache entry is only stamped further down.
-                                        ApplyPresetGCDSwipe(f, sid, nil, barKey)
+                                        ApplyPresetGCDSwipe(f, shownSID, nil, barKey)
                                         f._cdSet = true; f._racialCdDirty = false
                                     end
                                     frames[#frames + 1] = f
@@ -1646,6 +1693,14 @@ local function CollectAndReanchor()
                     if not key and fc and fc.linkedSpellIDs then
                         for _, lid in ipairs(fc.linkedSpellIDs) do
                             if lid and lid > 0 and map[lid] then key = map[lid]; break end
+                        end
+                    end
+                    if not key and fc and (fc.slotBase or fc.slotLinked) then
+                        if fc.slotBase and fc.slotBase > 0 then key = map[fc.slotBase] end
+                        if not key and fc.slotLinked then
+                            for _, id in ipairs(fc.slotLinked) do
+                                if id and id > 0 and map[id] then key = map[id]; break end
+                            end
                         end
                     end
                     return key

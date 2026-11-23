@@ -3061,6 +3061,7 @@ function NoxUI.MakeUnlockElement(opts)
         saveRawPosition   = opts.saveRawPos,
         noAnchorTarget    = opts.noAnchorTarget,
         noAnchorTo        = opts.noAnchorTo,
+        anchorStandIn     = opts.anchorStandIn,
         -- allowMatchSource: show the width/height MATCH buttons even when resize is
         -- disabled (noResize), so the element can size-match TO another element.
         -- noSizeMatchTarget: other elements may NOT size-match TO this one.
@@ -3534,7 +3535,7 @@ end
 -------------------------------------------------------------------------------
 --  Slash commands
 -------------------------------------------------------------------------------
-NoxUI.VERSION = "0.2.5.0"
+NoxUI.VERSION = "0.2.5.5"
 
 -- Register this addon's version into a shared global table (taint-free at load time)
 if not _G._EUI_AddonVersions then _G._EUI_AddonVersions = {} end

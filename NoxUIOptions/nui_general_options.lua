@@ -109,6 +109,35 @@ end
 --  deep-links via NavigateToElementSettings(module, page, section, preSelect, highlight).
 -------------------------------------------------------------------------------
 NoxUI._WHATSNEW_PATCHES = {
+    { version = "0.2.5.5", features = {
+            { title = "Rappel de pause", desc = "Une option propose un rappel à intervalle réglable. Le compteur se suspend pendant une absence et l'alerte attend la fin du combat." },
+            { title = "Objets et journal de quêtes", desc = "Une option permet d'ouvrir la quête associée à un objet du sac par Ctrl clic, lorsqu'elle est présente dans le journal et hors combat." },
+            { title = "Ramassage rapide", desc = "Le ramassage rapide respecte le choix de ramassage automatique du client. Les actions en attente sont annulées à la fermeture de la fenêtre de butin ou à la désactivation du réglage." },
+            { title = "Parcours des quêtes suivies", desc = "Deux raccourcis configurables permettent de sélectionner la quête suivie suivante ou précédente hors combat. Aucune touche n'est attribuée automatiquement." },
+            { title = "Matériaux et objets combinables", desc = "Le compteur peut suivre jusqu'à six matériaux. Les objets combinables peuvent afficher leurs matériaux nécessaires lorsque le client fournit la recette et que l'option est activée." },
+            { title = "Objets de quête", desc = "L'infobulle des objets de quête peut indiquer si la quête est en cours ou prête à rendre lorsque le jeu fournit cette information." },
+            { title = "Rotation de la minicarte", desc = "Le raccourci du jeu synchronise la rotation avec le profil actif de NoxUI, afin de conserver le choix lors des prochains rafraîchissements." },
+            { title = "Exploration de la carte", desc = "Les zones explorées sont actualisées après la connexion et les changements de sous-zone. Le calcul des contours est limité pour améliorer la stabilité, notamment à la fermeture de la carte. La restauration de la carte après le combat a également été revue." },
+            { title = "Affichage des recharges", desc = "L'emplacement d'une amélioration expirée est actualisé plus rapidement." },
+            { title = "Recherche de groupe", desc = "La recherche de groupe permet de sélectionner des langues supplémentaires. Une option affiche la zone des joueurs inscrits seuls." },
+            { title = "Placement des ressources", desc = "Les barres liées aux ressources conservent une référence de placement stable quand une barre suit le curseur. Les liens entre barres suivant le curseur restent coordonnés." },
+            { title = "Cadres de groupe et de raid", desc = "Le suivi du mana des soigneurs permet de choisir l'affichage des noms en groupe et en raid, en raid uniquement ou de le masquer." },
+            { title = "Rangs des sorts personnalisés", desc = "Les icônes de sorts personnalisés utilisent le rang connu pour leur affichage, leur recharge et leurs règles, tout en conservant leurs réglages." },
+            { title = "Rangs des améliorations", desc = "Les améliorations personnalisées reconnaissent les autres rangs recensés et actualisent leur suivi lorsque le livre de sorts change." },
+            { title = "Rappels de consommables", desc = "Des rappels par classe couvrent les parchemins et élixirs de caractéristiques et de santé. Chaque rappel permet de choisir un objet préféré, un délai avant expiration et la proposition d'un consommable plus puissant." },
+            { title = "Recettes et consommables", desc = "La couleur des recettes tient compte des prérequis et du statut connu sans confondre l'aperçu de l'objet fabriqué avec la recette. Les consommables sont également vérifiés." },
+            { title = "Syndicator", desc = "L'habillage des réglages Syndicator est recherché à nouveau lorsque leur fenêtre apparaît ou après le combat, si elle a été créée tardivement." },
+            { title = "Spécialisations", desc = "La copie et le retrait d'une amélioration hébergée entre spécialisations distinguent une recharge du même sort et conservent ses réglages." },
+            { title = "Temps de recharge", desc = "Une amélioration hébergée reste visible lorsqu'elle partage un sort avec une recharge remplacée. Les rangs équivalents sont reconnus." },
+            { title = "Incantations et interruptions", desc = "Le suivi d'interruption recherche le rang disponible du joueur et les rangs connus du familier présents dans le catalogue. Le bouclier des incantations non interruptibles peut apparaître sur les barres de cible et de focalisation." },
+            { title = "Noms flottants", desc = "Lorsqu'une plaque est réutilisée pour une autre unité, l'ancien nom et ses marqueurs sont détachés avant son nouvel affichage." },
+            { title = "Import des recharges", desc = "Les sorts d'une configuration importée restent en place pendant l'attente de leur suivi par le jeu. La protection s'efface lorsque le suivi est reconnu ou lors du retour à la disposition du jeu." },
+            { title = "Inventaire et banque", desc = "Les objets dont l'infobulle se complète sont réexaminés et leur couleur est actualisée dans les sacs et la banque. Apprendre une recette actualise l'inventaire et la banque." },
+            { title = "Profils et affichage", desc = "Les barres de recharge d’une nouvelle spécialisation conservent les choix du joueur au prochain chargement. Les alertes de discussion suivent le clignotement de l’onglet. Les couleurs sociales des noms sont réservées aux joueurs alliés. La police de combat personnalisée utilise la hauteur du client." },
+            { title = "Carte du monde", desc = "La carte continue dispose de sa propre vue en combat. Les lieux à explorer peuvent être affichés, la taille et la priorité de la flèche se règlent et les objectifs Questie passent devant les services de ville. Le clic droit peut être réservé aux autres addons." },
+            { title = "Campement", desc = "Désactiver le compte à rebours du sac de couchage masque l’estimation et conserve le panneau de campement et l’état de repos pendant le sommeil. Le panneau reconnaît aussi la proximité du sac d’un autre joueur lorsque le client expose son aura de repos. Le compte à rebours reste lié au sommeil." },
+            { title = "Fiche de personnage", desc = "L’infobulle des caractéristiques précise comment masquer les bonus d’enchantement avec leur réglage dédié." }
+    } },
     { version = "0.2.5.0", features = {
             { title = "Noms et barres de vie", desc = "Les amis, les amis Battle.net dont le personnage est identifiable et les anciens coéquipiers de la session peuvent avoir leur propre couleur. Groupe, raid et guilde restent prioritaires. Les états AFK et Ne pas déranger se mettent à jour sur les plaques alliées déjà visibles lorsque le client signale un changement." },
             { title = "Plaques alliées en instance", desc = "L’option Noms seuls en instance applique ce mode en donjon, raid et champ de bataille. Le mode habituel revient à la sortie. La taille de la ligne de guilde se règle indépendamment du nom dans les deux modes d’affichage." },

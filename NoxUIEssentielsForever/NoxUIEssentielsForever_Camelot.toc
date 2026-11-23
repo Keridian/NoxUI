@@ -5,12 +5,14 @@
 ## Group: NoxUI
 ## Notes: Essential tools for WoW Forever.
 ## Author: Nox
-## Version: 0.2.5.0
+## Version: 0.2.5.5
 ## Dependencies: NoxUI
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
 
 # Main Lua
 NoxUIEssentielsForever.lua
+NoxUIEssentielsForever_LFGLanguages.lua
+NoxUIEssentielsForever_LFGZones.lua
 NoxUIEssentielsForever_PhaseGroupe.lua
 EquipementForever.lua
 RappelsTalentsForever.lua

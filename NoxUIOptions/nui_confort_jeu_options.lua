@@ -678,7 +678,7 @@ initFrame:SetScript("OnEvent", function(self)
         local row2
         row2, h = W:DualRow(parent, y,
             { type="toggle", text="Quick Loot",
-              tooltip="Enables auto loot and hides the loot window when looting. Hold Shift when looting to show.",
+              tooltip="Speeds up looting when the game is using automatic loot. Manual looting remains available according to the game settings and modifier key.",
               getValue=function()
                   return NoxUIDB and NoxUIDB.quickLoot or false
               end,

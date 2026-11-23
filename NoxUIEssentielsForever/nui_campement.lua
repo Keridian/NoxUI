@@ -82,6 +82,20 @@ local function aura(id)
     local ok, data = pcall(C_UnitAuras.GetPlayerAuraBySpellID,id)
     if ok and not (issecretvalue and issecretvalue(data)) then return data end
 end
+local bagArea = false
+local function InBagArea()
+    local lookup = C_UnitAuras and C_UnitAuras.GetAuraDataByIndex
+    if not lookup then return false end
+    for index = 1, 40 do
+        local ok, data = pcall(lookup, "player", index, "HELPFUL")
+        if not ok or (issecretvalue and issecretvalue(data)) or not data then break end
+        local name, id = data.name, data.spellId
+        if not (issecretvalue and (issecretvalue(name) or issecretvalue(id)))
+            and type(name) == "string" and (id == nil or id == 0)
+            and (name == RESTING or name == "Au repos" or name == "Resting") then return true end
+    end
+    return false
+end
 local function remaining(data)
     local t = data and data.expirationTime
     if (issecretvalue and issecretvalue(t)) or type(t) ~= "number" or t <= 0 then return end
@@ -150,15 +164,16 @@ end
 local function Update()
     if InCombatLockdown() then return end
     local cfg = db()
-    local asleep = cfg.enabled ~= false and cfg.showSleepProgress ~= false and aura(sleepAura)
+    local asleep = cfg.enabled ~= false and aura(sleepAura)
     local actualStacks = bagStacks()
     local stacks = preview and 2 or actualStacks
     local sleepTime = SleepProgress(asleep, actualStacks, GetTime())
-    if preview and cfg.showSleepProgress ~= false then asleep, sleepTime = true, 38 end
+    local showProgress = cfg.showSleepProgress ~= false and (preview or asleep)
+    if preview and showProgress then sleepTime = 38 end
     local rest = aura(resting[1]) or aura(resting[2])
     local recharge = aura(cooldown)
-    local nearBag = nearPosition(bagPosition)
-    if not nearBag then bagPosition = nil end
+    local nearBag = bagArea or nearPosition(bagPosition)
+    if bagPosition and not nearPosition(bagPosition) then bagPosition = nil end
     if not nearPosition(campPosition) then campPosition = nil end
     local visible = preview or (cfg.enabled ~= false and (asleep or rest or aura(nearby) or campPosition or nearBag))
     if not visible then
@@ -169,7 +184,7 @@ local function Update()
     end
     local seconds = preview and 38 or remaining(rest)
     status:SetText(seconds and (clock(seconds).."\nCampement") or "Campement")
-    if asleep and stacks then
+    if showProgress and stacks then
         local label = ("Repos : %d/3"):format(stacks)
         restStatus:SetText(sleepTime and (label .. "  " .. clock(sleepTime)) or label)
     else
@@ -186,7 +201,6 @@ local function Update()
         bagButton:SetAttribute("type1", action)
     end
     bagButton:SetShown(expanded == true and not not (preview or nearBag or owned))
-    local stacks = preview and 2 or bagStacks()
     bagLabel:SetText("Sac de couchage" .. (stacks and ("\nRepos : %d/3"):format(stacks) or ""))
     detail:SetShown(expanded == true and showRest == true and (not (rest or preview) or recharge ~= nil))
     local delay = remaining(recharge)
@@ -285,6 +299,9 @@ events:SetScript("OnEvent",function(_,event,_,_,spellID)
         SleepProgress(false)
         expanded, showBonuses, showRest = nil,nil,nil
         return
+    end
+    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" or (event == "UNIT_AURA" and not InCombatLockdown()) then
+        bagArea = InBagArea()
     end
     if event == "PLAYER_REGEN_ENABLED" then
         if dragging then frame:StopMovingOrSizing(); dragging = nil end

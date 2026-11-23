@@ -28,6 +28,7 @@ EUI.Alerts = Alerts
 
 -- Stack order, top first. sizeKey/enabledKey are the alert's own settings.
 local DEFS = {
+    { id = "noxbreak", cinematic = true, sizeKey = "noxBreakAlertSize", enabledKey = "noxBreakEnabled", hold = 5 },
     { id = "noxrare", cinematic = true, sizeKey = "noxRareAlertSize", enabledKey = "noxRareAlert", hold = 3 },
     { id = "noxscenario", cinematic = true, sizeKey = "noxScenarioAlertSize", enabledKey = "noxScenarioAlert", hold = 3 },
     { id = "noxaccept", cinematic = true, sizeKey = "noxQuestAcceptSize", enabledKey = "noxQuestAccept", hold = 3 },

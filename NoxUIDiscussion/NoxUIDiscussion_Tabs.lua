@@ -168,12 +168,8 @@ local floatGhosts = {} -- per-window-id ghosts for undocked windows
 -- is identity-stable across minor upgrades, so caching the ref is safe).
 local lcaLib
 local function TabAlerting(tab)
-    if tab.alerting then return true end
-    -- Retail since 12.1.5 and WoW Forever keep the alert state off the tab,
-    -- so a tainted message filter cannot taint it, and never write
-    -- tab.alerting: ChatFrameUtil.IsTabAlerting is its reader there.
-    local util = ChatFrameUtil
-    if util and util.IsTabAlerting and util.IsTabAlerting(tab) then return true end
+    local flash = tab.glow and tab.glow.FlashAnim
+    if flash and flash:IsPlaying() then return true end
     lcaLib = lcaLib or (LibStub and LibStub("LibChatAnims", true))
     return lcaLib and lcaLib:IsAlerting(tab) and true or false
 end
