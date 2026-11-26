@@ -109,6 +109,15 @@ end
 --  deep-links via NavigateToElementSettings(module, page, section, preSelect, highlight).
 -------------------------------------------------------------------------------
 NoxUI._WHATSNEW_PATCHES = {
+    { version = "0.2.5.8", features = {
+            { title = "Conditions des profils", desc = "Une condition distingue les groupes de raid des instances de raid. Elle peut notamment être utilisée lors des donjons parcourus en raid et reste différée en combat." },
+        } },
+    { version = "0.2.5.7", features = {
+            { title = "Rappel de pause", desc = "Une absence suffisamment longue remet le compteur à zéro. La durée de pause et le report sont réglables ; le menu permet aussi de reporter le rappel ou de recommencer le délai." },
+        } },
+    { version = "0.2.5.6", features = {
+            { title = "Gains des quêtes et conteneurs", desc = "Les gains d'argent annoncés dans les messages du jeu alimentent le suivi de butin et le compteur de gains lorsqu'ils sont activés." },
+        } },
     { version = "0.2.5.5", features = {
             { title = "Rappel de pause", desc = "Une option propose un rappel à intervalle réglable. Le compteur se suspend pendant une absence et l'alerte attend la fin du combat." },
             { title = "Objets et journal de quêtes", desc = "Une option permet d'ouvrir la quête associée à un objet du sac par Ctrl clic, lorsqu'elle est présente dans le journal et hors combat." },

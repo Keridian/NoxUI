@@ -104,6 +104,7 @@ Cond.ICONS = {
     keybind      = "override-keybinds.png",
     dungeon      = "override-dungeons.png",
     raid         = "override-raid.png",
+    raidgroup    = "override-raid.png",
     arena        = "override-arena.png",
     battleground = "override-horde.png",
     solo         = "override-solo.png",

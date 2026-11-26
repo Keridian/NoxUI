@@ -3535,7 +3535,7 @@ end
 -------------------------------------------------------------------------------
 --  Slash commands
 -------------------------------------------------------------------------------
-NoxUI.VERSION = "0.2.5.5"
+NoxUI.VERSION = "0.2.5.8"
 
 -- Register this addon's version into a shared global table (taint-free at load time)
 if not _G._EUI_AddonVersions then _G._EUI_AddonVersions = {} end

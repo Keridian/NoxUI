@@ -2,7 +2,7 @@
 ## Title: |cffB8C3CCNoxUI|r
 ## Notes: Shared framework for the NoxUI addon suite
 ## Author: Nox
-## Version: 0.2.5.5
+## Version: 0.2.5.8
 ## SavedVariables: NoxUIDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga
 

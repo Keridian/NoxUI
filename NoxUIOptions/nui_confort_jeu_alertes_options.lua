@@ -196,6 +196,20 @@ _G._EUI_BuildAlertsSection = function(parent, yOffset, W, PP)
                   if NoxUI.ApplyBreakReminder then NoxUI.ApplyBreakReminder() end
               end })
         y = y - h
+        _, h = W:DualRow(parent, y,
+            { type = "slider", text = "Durée minimale de pause", min = 1, max = 30, step = 1,
+              tooltip = "Après cette durée en absence, le délai du prochain rappel repart de zéro.",
+              getValue = function() return NoxUIDB and NoxUIDB.noxBreakRestMinutes or 5 end,
+              setValue = function(value) NoxUIDB = NoxUIDB or {}; NoxUIDB.noxBreakRestMinutes = value end },
+            { type = "slider", text = "Durée du report", min = 1, max = 30, step = 1,
+              tooltip = "Délai appliqué au prochain rappel lorsque tu choisis de le reporter.",
+              getValue = function() return NoxUIDB and NoxUIDB.noxBreakDelayMinutes or 5 end,
+              setValue = function(value) NoxUIDB = NoxUIDB or {}; NoxUIDB.noxBreakDelayMinutes = value end })
+        y = y - h
+        _, h = W:WideDualButton(parent, "Reporter le rappel", "Recommencer le délai", y,
+            function() if NoxUI.DelayBreakReminder then NoxUI.DelayBreakReminder() end end,
+            function() if NoxUI.ResetBreakReminder then NoxUI.ResetBreakReminder() end end)
+        y = y - h
         _, h = W:SectionHeader(parent, "OBJETS ET MATÉRIAUX", y)
         y = y - h
         _, h = W:DualRow(parent, y,

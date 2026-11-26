@@ -7428,3 +7428,5 @@ L["Shows the zone of players listed alone in the group finder."] = "Affiche la z
 L["Choose Languages"] = "Choisir les langues"
 
 L["Search Ticked Languages"] = "Rechercher dans les langues sélectionnées"
+
+L["Raid (instance)"] = "Raid (instance)"

@@ -1207,6 +1207,10 @@ end
 local CHAT_EVENTS = {
     CHAT_MSG_LOOT = { setting = "items", handler = OnLoot, tracked = true },
     CHAT_MSG_MONEY = { setting = "money", handler = OnMoney, tracked = true },
+    CHAT_MSG_SYSTEM = { setting = "money", tracked = true, handler = function(message)
+        local amountText = Match("ERR_QUEST_REWARD_MONEY_S", message)
+        if amountText then OnMoney(amountText) end
+    end },
     CHAT_MSG_COMBAT_FACTION_CHANGE = { setting = "reputation", handler = OnFaction },
     CHAT_MSG_SKILL = { setting = "skills", handler = OnSkill },
 }

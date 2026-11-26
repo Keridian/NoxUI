@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Clean and beautiful visual refreshes for Blizzard UI elements.
 ## Author: Nox
-## Version: 0.2.5.5
+## Version: 0.2.5.8
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIBlizzardSkinDB, NoxUIDragonRidingDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

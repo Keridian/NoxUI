@@ -1,3 +1,21 @@
+NoxUI 0.2.5.8
+
+Conditions des profils
+Une condition distingue les groupes de raid des instances de raid. Elle peut notamment être utilisée lors des donjons parcourus en raid et reste différée en combat.
+
+
+NoxUI 0.2.5.7
+
+Rappel de pause
+Une absence suffisamment longue remet le compteur à zéro. La durée de pause et le report sont réglables. Le menu permet de reporter le rappel ou de recommencer le délai.
+
+
+NoxUI 0.2.5.6
+
+Gains des quêtes et conteneurs
+Les gains d'argent annoncés dans les messages du jeu alimentent le suivi de butin et le compteur de gains lorsqu'ils sont activés.
+
+
 NoxUI 0.2.5.5
 
 Rappel de pause

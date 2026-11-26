@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Modern chat enhancements with useful utilities.
 ## Author: Nox
-## Version: 0.2.5.5
+## Version: 0.2.5.8
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIChatDB
 ## SavedVariablesPerCharacter: NoxUIChatScrollDB

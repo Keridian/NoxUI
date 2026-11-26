@@ -4,7 +4,7 @@
 ## Group: NoxUI
 ## Notes: Incredibly light performance, modern raid and party frames with endless flexibility.
 ## Author: Nox
-## Version: 0.2.5.5
+## Version: 0.2.5.8
 ## Dependencies: NoxUI
 ## SavedVariables: NoxUIRaidFramesDB
 ## IconTexture: Interface\AddOns\NoxUI\media\eg-logo.tga

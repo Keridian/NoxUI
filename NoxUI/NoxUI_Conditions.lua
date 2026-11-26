@@ -51,8 +51,9 @@ end
 NoxUI.CONDITIONS = {
     { id = "keybind",      label = "Keybind (out of combat)" },
     { id = "party",        label = "Party (in a group, not a raid)" },
+    { id = "raidgroup",    label = "In Raid Group" },
     { id = "dungeon",      label = "Dungeon" },
-    { id = "raid",         label = "Raid" },
+    { id = "raid",         label = "Raid (instance)" },
     { id = "arena",        label = "Arena" },
     { id = "battleground", label = "Battleground" },
     { id = "solo",         label = "Solo (not in a group)" },
@@ -163,6 +164,13 @@ local function PartyGroup(groups)
     return nil
 end
 
+local function RaidGroup(groups)
+    if not IsInRaid() then return nil end
+    for _, group in ipairs(groups) do
+        if group.conds and group.conds.raidgroup then return group end
+    end
+end
+
 --- The currently-ACTIVE conditional group per the ladder, or nil.
 function NoxUI.Conditions_ActiveGroup()
     local groups = NoxUI.Conditions_GetGroups()
@@ -196,14 +204,17 @@ function NoxUI.Conditions_ActiveGroup()
     local _, instanceType = IsInInstance()
     local cond = instanceType and INSTANCE_COND[instanceType]
     if cond then
+        if cond == "dungeon" then
+            local raid = RaidGroup(groups)
+            if raid then return raid end
+        end
         for _, g in ipairs(groups) do
             if g.conds and g.conds[cond] then return g end
         end
-        -- In an instance: party can still apply, solo never does.
-        return PartyGroup(groups)
+        return PartyGroup(groups) or RaidGroup(groups)
     end
-    -- Tier 5: party.
-    local pg = PartyGroup(groups)
+    -- Party and raid membership may also apply outside an instance.
+    local pg = PartyGroup(groups) or RaidGroup(groups)
     if pg then return pg end
     -- Tier 6: solo.
     if not IsInGroup() then

@@ -1,6 +1,6 @@
 ## Interface: 16001
 ## Dependencies: NoxUI
-## Version: 0.2.5.5
+## Version: 0.2.5.8
 ## X-Upstream-Version: 1.7.5
 ## Title: NoxUI Waypoint UI
 ## Notes: An in-world waypoint and pinpoint to show relevant information directly in world-space.
